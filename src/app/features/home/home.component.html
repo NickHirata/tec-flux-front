@@ -1,0 +1,145 @@
+<div class="header">
+  <h1>Bem-vindo ao TecFlux</h1>
+</div>
+
+<div class="container">
+  <div class="content">
+    <h2>Transforme a Gestão de Chamados na Sua Empresa</h2>
+    <p>
+      O TecFlux é a ferramenta ideal para otimizar a organização e o
+      acompanhamento de chamados na sua empresa. Com uma interface intuitiva e
+      funcionalidades poderosas, nosso software permite que você abra, gerencie
+      e resolva chamados com eficiência, garantindo que cada etapa do processo
+      seja acompanhada em tempo real.
+    </p>
+    <p>
+      Descubra como o TecFlux pode transformar sua empresa, agilizando a
+      resolução de problemas e melhorando a comunicação interna. Experimente o
+      TecFlux e leve sua gestão de chamados para o próximo nível!
+    </p>
+    <button class="cta-button">Saiba Mais</button>
+  </div>
+</div>
+
+<div class="container">
+  <h2 style="text-align: center;">Recursos Principais</h2>
+
+  <div class="features">
+    <div class="content" style="background-color: #5eaef099">
+      <div class="feature" >
+        <i class="fas fa-cogs fa-3x"></i>
+        <h3 style="font-weight: bolder;">Gestão Eficiente</h3>
+        <p>Organize e acompanhe todos os chamados em um único lugar.</p>
+      </div>
+    </div>
+
+    <div class="content" style="background-color: #fc906f72;">
+      <div class="feature">
+        <i class="fas fa-clock fa-3x"></i>
+        <h3 style="font-weight: bolder;">Resolução Rápida</h3>
+        <p>
+          Agilize a resolução de problemas com nossas ferramentas intuitivas.
+        </p>
+      </div>
+    </div>
+
+    <div class="content" style="background-color: #b0e7726e;">
+      <div class="feature">
+        <i class="fas fa-sync-alt fa-3x"></i>
+        <h3 style="font-weight: bolder;">Atualizações em Tempo Real</h3>
+        <p>Receba atualizações em tempo real sobre o status dos chamados.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="content">
+    <h2>Planos</h2>
+    <p-carousel
+      [value]="planos"
+      [numVisible]="1"
+      [numScroll]="1"
+      orientation="horizontal"
+      verticalViewPortHeight="360px"
+      class="carousel-container"
+    >
+      <ng-template let-plano pTemplate="item">
+        <div class="border-1 surface-border border-round m-2 p-3">
+          <div class="mb-3">
+            <div class="relative mx-auto w-full">
+              <img
+                [src]="plano.imagem"
+                [alt]="plano.nome"
+                class="w-full border-round"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3 font-medium text-center">
+            {{ plano.nome }}
+          </div>
+
+          <div class="flex justify-content-between align-items-center">
+            <div class="mt-0 font-semibold text-xl">
+              {{ "R$ " + plano.preco }}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+</div>
+
+<div class="cta-container">
+  <h2>Pronto para Revolucionar a Gestão de Chamados?</h2>
+  <p>
+    Solicite uma demonstração gratuita do TecFlux e veja como podemos ajudar sua
+    empresa a alcançar novos patamares de eficiência.
+  </p>
+  <a href="/contato" class="cta-button">Solicite uma Demonstração</a>
+</div>
+
+<div class="container">
+  <div class="content">
+    <h2>O que Nossos Clientes Dizem</h2>
+    <div class="testimonials">
+      <div class="testimonial">
+        <p>
+          "O TecFlux revolucionou nossa forma de gerenciar chamados. A interface
+          é intuitiva e a resolução dos problemas nunca foi tão rápida!"
+        </p>
+        <span>- João Silva, Empresa XYZ</span>
+      </div>
+      <div class="testimonial">
+        <p>
+          "Com o TecFlux, conseguimos melhorar a comunicação interna e agilizar
+          o atendimento aos nossos clientes. Altamente recomendável!"
+        </p>
+        <span>- Maria Oliveira, Empresa ABC</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="content">
+    <h2>Perguntas Frequentes</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <h3>Como o TecFlux pode ajudar minha empresa?</h3>
+        <p>O TecFlux oferece uma solução completa para gerenciar chamados, desde a abertura até a resolução, com uma interface intuitiva e ferramentas eficientes para melhorar a comunicação e agilidade.</p>
+      </div>
+      <div class="faq-item">
+        <h3>É possível integrar o TecFlux com outros sistemas?</h3>
+        <p>Sim, o TecFlux oferece integração com vários sistemas para facilitar a gestão e melhorar a eficiência dos processos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="footer">
+  <p>&copy; 2024 TecFlux. Todos os direitos reservados.</p>
+</div>
