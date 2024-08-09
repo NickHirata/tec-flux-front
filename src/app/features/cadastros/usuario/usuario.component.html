@@ -1,31 +1,36 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Cadastro de Usuário</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-form-field appearance="fill">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="name">
-        <mat-error *ngIf="registrationForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>E-mail</mat-label>
-        <input matInput formControlName="email">
-        <mat-error *ngIf="registrationForm.get('email')?.hasError('required')">E-mail é obrigatório</mat-error>
-        <mat-error *ngIf="registrationForm.get('email')?.hasError('email')">E-mail inválido</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Senha</mat-label>
-        <input matInput type="password" formControlName="password">
-        <mat-error *ngIf="registrationForm.get('password')?.hasError('required')">Senha é obrigatória</mat-error>
-        <mat-error *ngIf="registrationForm.get('password')?.hasError('minlength')">Senha deve ter pelo menos 6 caracteres</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone">
-        <mat-error *ngIf="registrationForm.get('phone')?.hasError('required')">Telefone é obrigatório</mat-error>
-      </mat-form-field>
+<div class="grid">
+  <div class="col-12 md:col-6">
+    <div class="card p-fluid">
+      <h5>Formulário</h5>
+      <div class="field">
+        <label htmlFor="name">Nome</label>
+        <input pInputText id="name" type="text" />
+      </div>
+      <div class="field">
+        <label htmlFor="email">E-mail</label>
+        <input pInputText id="email" type="text" />
+      </div>
+      <div class="field">
+        <label htmlFor="password">Senha</label>
+        <input pInputText id="password" type="password" />
+      </div>
+      <div class="field">
+        <label htmlFor="phone">Telefone</label>
+        <input pInputText id="phone" type="text" />
+      </div>
+      <div class="field">
+        <label htmlFor="company">Empresa</label>
+        <input pInputText id="company" type="text" />
+      </div>
+      <div class="field">
+        <label htmlFor="department">Departamento</label>
+        <input pInputText id="department" type="text" />
+      </div>
+      <div class="field">
+        <label htmlFor="rule">Regra</label>
+        <input pInputText id="rule" type="text" />
+      </div>
+    </div>
+  </div>
+  <button pButton pRipple label="Cadastrar" icon="pi pi-user" class="w-full"></button>
+</div>

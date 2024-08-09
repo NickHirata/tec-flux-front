@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
 import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CheckboxModule,
-    FormsModule,
-    ReactiveFormsModule
+    ButtonModule,
+    InputTextModule
    ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+
 })
 export class LoginComponent {
 
