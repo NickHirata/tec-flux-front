@@ -1,0 +1,52 @@
+<div class="navbar">
+  <div class="logo">
+    <h1><a href="#">TecFlux</a></h1>
+  </div>
+  <div class="nav-links">
+    <a href="#">Início</a>
+    <a href="#">Recursos</a>
+    <a href="#">Planos</a>
+    <a href="#">Contato</a>
+  </div>
+</div>
+
+<header class="hero-section">
+  <div class="hero-content">
+    <h1>Cadastre Sua Empresa no TecFlux</h1>
+    <p>
+      Complete o formulário abaixo para cadastrar sua empresa e começar a
+      utilizar nossas soluções.
+    </p>
+    <div class="register-company-form">
+      <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Nome da Empresa</label>
+          <input type="text" id="name" formControlName="name" required />
+        </div>
+        <div class="form-group">
+          <label for="cnpj">CNPJ</label>
+          <input type="text" id="cnpj" formControlName="cnpj" required />
+        </div>
+        <div class="form-group">
+          <label for="address">Endereço</label>
+          <input type="text" id="address" formControlName="address" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Telefone</label>
+          <input type="text" id="phone" formControlName="phone" required />
+        </div>
+        <button type="submit" class="cta-button">Cadastrar Empresa</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<app-popup
+  [message]="popupMessage"
+  [isError]="isError"
+  [show]="showPopup"
+></app-popup>
+
+<footer class="footer">
+  <p>&copy; 2024 TecFlux. Todos os direitos reservados.</p>
+</footer>

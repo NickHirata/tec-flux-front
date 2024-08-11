@@ -1,145 +1,166 @@
-<div class="header">
-  <h1>Bem-vindo ao TecFlux</h1>
-</div>
-
-<div class="container">
-  <div class="content">
-    <h2>Transforme a Gestão de Chamados na Sua Empresa</h2>
-    <p>
-      O TecFlux é a ferramenta ideal para otimizar a organização e o
-      acompanhamento de chamados na sua empresa. Com uma interface intuitiva e
-      funcionalidades poderosas, nosso software permite que você abra, gerencie
-      e resolva chamados com eficiência, garantindo que cada etapa do processo
-      seja acompanhada em tempo real.
-    </p>
-    <p>
-      Descubra como o TecFlux pode transformar sua empresa, agilizando a
-      resolução de problemas e melhorando a comunicação interna. Experimente o
-      TecFlux e leve sua gestão de chamados para o próximo nível!
-    </p>
-    <button class="cta-button">Saiba Mais</button>
+<div class="navbar">
+  <div class="logo">
+    <h1><a href="#">TecFlux</a></h1>
+  </div>
+  <div class="nav-links">
+    <a routerLink="/home">Início</a>
+    <a href="#">Recursos</a>
+    <a href="#">Planos</a>
+    <a href="#">Contato</a>
+    <button class="cta-button" [routerLink]="['/cad_empresa']">
+      Cadastre Sua Empresa
+    </button>
   </div>
 </div>
 
-<div class="container">
-  <h2 style="text-align: center;">Recursos Principais</h2>
+<header class="hero-section">
+  <div class="hero-content">
+    <div class="text-content">
+      <h1>Organize Seus Chamados com Eficácia</h1>
+      <p>
+        Simplifique a gestão de chamados empresariais com a ferramenta mais
+        intuitiva e poderosa do mercado, focada exclusivamente em soluções
+        corporativas.
+      </p>
+      <button class="cta-button">Experimente Gratuitamente</button>
+    </div>
+    <div class="graphic-content">
+      <div class="graphic-circle"></div>
+      <div class="graphic-square"></div>
+      <div class="graphic-triangle"></div>
+    </div>
+  </div>
+</header>
 
+<section class="features-section">
+  <h2>Recursos Principais</h2>
   <div class="features">
-    <div class="content" style="background-color: #5eaef099">
-      <div class="feature" >
-        <i class="fas fa-cogs fa-3x"></i>
-        <h3 style="font-weight: bolder;">Gestão Eficiente</h3>
-        <p>Organize e acompanhe todos os chamados em um único lugar.</p>
-      </div>
+    <div class="feature">
+      <img src="../../../assets/Grafico.png" alt="Gestão Eficiente" />
+      <h3>Gestão Eficiente</h3>
+      <p>
+        Centralize e acompanhe todos os chamados da sua empresa em um só lugar.
+      </p>
     </div>
-
-    <div class="content" style="background-color: #fc906f72;">
-      <div class="feature">
-        <i class="fas fa-clock fa-3x"></i>
-        <h3 style="font-weight: bolder;">Resolução Rápida</h3>
-        <p>
-          Agilize a resolução de problemas com nossas ferramentas intuitivas.
-        </p>
-      </div>
+    <div class="feature">
+      <img src="../../../assets/Ampulheta.png" alt="Resolução Rápida" />
+      <h3>Resolução Rápida</h3>
+      <p>Resolva problemas empresariais rapidamente de forma intuitivas.</p>
     </div>
-
-    <div class="content" style="background-color: #b0e7726e;">
-      <div class="feature">
-        <i class="fas fa-sync-alt fa-3x"></i>
-        <h3 style="font-weight: bolder;">Atualizações em Tempo Real</h3>
-        <p>Receba atualizações em tempo real sobre o status dos chamados.</p>
-      </div>
+    <div class="feature">
+      <img src="../../../assets/Time.png" alt="Atualizações em Tempo Real" />
+      <h3>Atualizações em Tempo Real</h3>
+      <p>
+        Mantenha-se informado com atualizações instantâneas para sua empresa.
+      </p>
     </div>
   </div>
-</div>
+</section>
 
-<div class="container">
-  <div class="content">
-    <h2>Planos</h2>
-    <p-carousel
-      [value]="planos"
-      [numVisible]="1"
-      [numScroll]="1"
-      orientation="horizontal"
-      verticalViewPortHeight="360px"
-      class="carousel-container"
-    >
-      <ng-template let-plano pTemplate="item">
-        <div class="border-1 surface-border border-round m-2 p-3">
-          <div class="mb-3">
-            <div class="relative mx-auto w-full">
-              <img
-                [src]="plano.imagem"
-                [alt]="plano.nome"
-                class="w-full border-round"
-              />
-            </div>
-          </div>
+<section class="plans-section">
+  <h2>Escolha o Plano Certo para Sua Empresa</h2>
+  <div class="plans">
+    <div class="plan-card">
+      <h3>Plano Básico</h3>
+      <p class="plan-price">R$ 29,99/mês</p>
+      <ul>
+        <li>10 Chamados por mês</li>
+        <li>Suporte via E-mail</li>
+        <li>Atualizações em Tempo Real</li>
+      </ul>
+      <button class="cta-button">Assine Agora</button>
+    </div>
 
-          <div class="mb-3 font-medium text-center">
-            {{ plano.nome }}
-          </div>
+    <div class="plan-card plan-highlighted">
+      <h3>Plano Profissional</h3>
+      <p class="plan-price">R$ 59,99/mês</p>
+      <ul>
+        <li>Chamados Ilimitados</li>
+        <li>Suporte 24/7</li>
+        <li>Relatórios Detalhados</li>
+      </ul>
+      <button class="cta-button cta-button-highlighted">Assine Agora</button>
+    </div>
 
-          <div class="flex justify-content-between align-items-center">
-            <div class="mt-0 font-semibold text-xl">
-              {{ "R$ " + plano.preco }}
-            </div>
-          </div>
-        </div>
-      </ng-template>
-    </p-carousel>
-  </div>
-</div>
-
-<div class="cta-container">
-  <h2>Pronto para Revolucionar a Gestão de Chamados?</h2>
-  <p>
-    Solicite uma demonstração gratuita do TecFlux e veja como podemos ajudar sua
-    empresa a alcançar novos patamares de eficiência.
-  </p>
-  <a href="/contato" class="cta-button">Solicite uma Demonstração</a>
-</div>
-
-<div class="container">
-  <div class="content">
-    <h2>O que Nossos Clientes Dizem</h2>
-    <div class="testimonials">
-      <div class="testimonial">
-        <p>
-          "O TecFlux revolucionou nossa forma de gerenciar chamados. A interface
-          é intuitiva e a resolução dos problemas nunca foi tão rápida!"
-        </p>
-        <span>- João Silva, Empresa XYZ</span>
-      </div>
-      <div class="testimonial">
-        <p>
-          "Com o TecFlux, conseguimos melhorar a comunicação interna e agilizar
-          o atendimento aos nossos clientes. Altamente recomendável!"
-        </p>
-        <span>- Maria Oliveira, Empresa ABC</span>
-      </div>
+    <div class="plan-card">
+      <h3>Plano Empresarial</h3>
+      <p class="plan-price">R$ 99,99/mês</p>
+      <ul>
+        <li>Chamados Ilimitados</li>
+        <li>Suporte Dedicado</li>
+        <li>Integrações Personalizadas</li>
+      </ul>
+      <button class="cta-button">Assine Agora</button>
     </div>
   </div>
-</div>
+</section>
 
-
-<div class="container">
-  <div class="content">
-    <h2>Perguntas Frequentes</h2>
-    <div class="faq">
-      <div class="faq-item">
-        <h3>Como o TecFlux pode ajudar minha empresa?</h3>
-        <p>O TecFlux oferece uma solução completa para gerenciar chamados, desde a abertura até a resolução, com uma interface intuitiva e ferramentas eficientes para melhorar a comunicação e agilidade.</p>
-      </div>
-      <div class="faq-item">
-        <h3>É possível integrar o TecFlux com outros sistemas?</h3>
-        <p>Sim, o TecFlux oferece integração com vários sistemas para facilitar a gestão e melhorar a eficiência dos processos.</p>
-      </div>
+<section class="testimonials-section">
+  <h2>O que Nossos Clientes Empresariais Dizem</h2>
+  <div class="testimonials">
+    <div class="testimonial">
+      <p>
+        "O TecFlux revolucionou nossa gestão de chamados empresariais. A
+        interface é intuitiva e a resolução dos problemas nunca foi tão rápida!"
+      </p>
+      <span>- João Silva, Empresa XYZ</span>
+    </div>
+    <div class="testimonial">
+      <p>
+        "Com o TecFlux, melhoramos a comunicação interna e agilizamos o
+        atendimento aos nossos clientes corporativos. Altamente recomendável!"
+      </p>
+      <span>- Maria Oliveira, Empresa ABC</span>
     </div>
   </div>
-</div>
+</section>
 
+<section class="cta-section">
+  <h2>Pronto para Melhorar a Gestão de Chamados da Sua Empresa?</h2>
+  <button class="cta-button">Cadastre Sua Empresa</button>
+</section>
 
-<div class="footer">
+<section class="additional-section">
+  <div class="container">
+    <h2>Integrações com Ferramentas Populares</h2>
+    <p>
+      O TecFlux se integra perfeitamente com as principais ferramentas do
+      mercado, como Slack, Jira, e Google Workspace, proporcionando uma
+      experiência completa e conectada para sua empresa.
+    </p>
+    <div class="integrations">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Slack_Technologies_Logo.svg"
+        alt="Slack"
+      />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/8/82/Jira_%28Software%29_logo.svg"
+        alt="Jira"
+      />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Google_Workspace_Logo.svg/1280px-Google_Workspace_Logo.svg.png"
+        alt="Google Workspace"
+      />
+    </div>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="container">
+    <h2>Entre em Contato Conosco</h2>
+    <p>
+      Tem dúvidas ou precisa de ajuda? Nossa equipe está à disposição para
+      atender sua empresa.
+    </p>
+    <form>
+      <input type="text" placeholder="Nome da Empresa" required />
+      <input type="email" placeholder="Seu E-mail" required />
+      <textarea placeholder="Sua Mensagem" required></textarea>
+      <button type="submit" class="cta-button">Enviar Mensagem</button>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
   <p>&copy; 2024 TecFlux. Todos os direitos reservados.</p>
-</div>
+</footer>

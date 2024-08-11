@@ -1,0 +1,28 @@
+/* app-popup.component.scss */
+.popup-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #0079BF;
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  opacity: 0;
+  transform: translateY(-20px);
+  z-index: 1001;
+}
+
+.popup-container.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.popup-container.error {
+  background-color: #e74c3c;
+}
+
+.popup-container.success {
+  background-color: #2ecc71;
+}
