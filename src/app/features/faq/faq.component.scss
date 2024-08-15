@@ -1,0 +1,97 @@
+.faq {
+  font-family: Arial, sans-serif;
+}
+
+.faq-header {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.faq-content {
+  padding: 20px;
+  color: #333;
+}
+
+.faq-item {
+  margin-bottom: 10px;
+}
+
+.faq-question {
+  background-color: var(--button-color);
+  color: #fff;
+  border: none;
+  padding: 15px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+  background-color: #1e7e34; /* Cor mais escura no hover */
+}
+
+.faq-answer {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  background-color: #f9f9f9;
+}
+
+.faq-footer {
+  background-color: #f4f4f4;
+  padding: 10px;
+  text-align: center;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0079BF;
+  padding: 15px 30px;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1000;
+}
+
+.navbar .logo h1 {
+  padding-top: 10px;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.navbar .logo h1 a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar .nav-links a {
+  color: #fff;
+  margin-right: 20px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar .cta-button {
+  background-color: #61AFFF;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .cta-button:hover {
+  background-color: #5BA4CF;
+}
