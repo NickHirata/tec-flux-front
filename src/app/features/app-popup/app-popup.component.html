@@ -1,0 +1,10 @@
+<div
+  [ngClass]="{
+    'popup-container': true,
+    show: show,
+    error: isError,
+    success: !isError
+  }"
+>
+  {{ message }}
+</div>
