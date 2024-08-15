@@ -1,0 +1,92 @@
+.trabalhe-conosco {
+  font-family: Arial, sans-serif;
+}
+
+.trabalhe-conosco-header {
+  background-color: var(--primary-color); /* Use a variável da paleta de cores */
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.trabalhe-conosco-content {
+  padding: 20px;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+}
+
+input {
+  margin-top: 5px;
+  padding: 8px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: var(--button-color); /* Use a variável da paleta de cores */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.trabalhe-conosco-footer {
+  background-color: #f4f4f4;
+  padding: 10px;
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0079BF;
+  padding: 15px 30px;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1000;
+}
+
+.navbar .logo h1 {
+  padding-top: 10px;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.navbar .logo h1 a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar .nav-links a {
+  color: #fff;
+  margin-right: 20px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.navbar .cta-button {
+  background-color: #61AFFF;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .cta-button:hover {
+  background-color: #5BA4CF;
+}

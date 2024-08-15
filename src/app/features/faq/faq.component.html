@@ -1,0 +1,32 @@
+<div class="navbar">
+  <div class="logo">
+    <h1><a href="#">TecFlux</a></h1>
+  </div>
+  <div class="nav-links">
+    <a routerLink="/home">Início</a>
+    <a href="#">Recursos</a>
+    <a href="#">Planos</a>
+    <a href="#">Contato</a>
+    <a routerLink="/sobre-nos">Sobre Nós</a>
+    <a routerLink="/faq">FAQ</a>
+    <a routerLink="/trabalhe-conosco">Trabalhe Conosco</a>
+  </div>
+</div>
+
+<div class="faq">
+  <header class="faq-header">
+    <h1>Perguntas Frequentes</h1>
+  </header>
+  <main class="faq-content">
+    <div class="faq-item" *ngFor="let item of faqs">
+      <button class="faq-question" (click)="toggleAnswer(item)">
+        {{ item.question }}
+      </button>
+      <div class="faq-answer" *ngIf="item.showAnswer">
+        <p>{{ item.answer }}</p>
+      </div>
+    </div>
+  </main>
+  <footer class="faq-footer">
+  </footer>
+</div>
