@@ -1,0 +1,145 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0079BF;
+  color: #fff;
+  padding: 15px 30px;
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+
+}
+
+
+header .logo {
+  flex: 1;
+  margin-left: 40px;
+}
+header .logo h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin: 0;
+}
+
+header .nav-links {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+header .nav-links a {
+  background-color: #61AFFF;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+header .nav-links a:hover {
+  background-color: #5BA4CF;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 0;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #f4f4f4;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+  z-index: 999; // Garante que o sidebar está atrás do header
+  overflow-y: auto; // Garante que o conteúdo da sidebar pode rolar se for maior que a altura disponível
+}
+
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #0079BF;
+  color: #fff;
+  position: relative;
+  width: 100%;
+  z-index: 1000; // Garante que está acima dos outros elementos
+  box-sizing: border-box; // Inclui padding no cálculo da largura
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+  cursor: pointer;
+  margin-left: 10px; // Espaço ao redor do botão
+}
+
+
+
+.sidebar .nav-links a {
+  display: block;
+  padding: 15px;
+  color: #0079BF;
+  text-decoration: none;
+}
+
+.sidebar .nav-links a:hover {
+  background-color: #ddd;
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: #0079BF;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.footer {
+  background-color: #0079BF;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+
+.main-content {
+  flex: 1;
+  margin-left: 0; // Será ajustado pelo JS quando a sidebar estiver aberta
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  margin-top: 60px; // Ajusta o espaço no topo para o header
+}
+
+

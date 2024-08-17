@@ -1,0 +1,38 @@
+<body>
+  <div class="page-wrapper">
+    <header>
+      <div class="logo">
+        <h1>TecFlux</h1>
+      </div>
+      <div class="nav-links">
+        <a routerLink="/home">Sair</a>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <aside class="sidebar" [ngClass]="{ 'open': isSidebarOpen }">
+        <div class="sidebar-header">
+          <h2>Menu</h2>
+          <button class="close-btn" (click)="toggleSidebar()">×</button>
+        </div>
+        <nav class="nav-links">
+          <a routerLink="abrir-chamado">Abrir Chamado</a>
+          <a routerLink="reportar-problema">Reportar Problema</a>
+          <a routerLink="ajuda-codigo">Ajuda com Código</a>
+          <a routerLink="problemas-hardware">Problemas com Hardware</a>
+        </nav>
+      </aside>
+
+      <button class="sidebar-toggle" (click)="toggleSidebar()">☰</button>
+
+      <div class="content">
+        <!-- Conteúdo da página será inserido aqui -->
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2024 TecFlux. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+</body>
