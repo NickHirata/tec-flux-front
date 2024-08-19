@@ -3,6 +3,9 @@ import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './features/login/login.component';
 import { UsuarioComponent } from './features/cadastros/usuario/usuario.component';
 import { EmpresaComponent } from './features/cadastros/empresa/empresa.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { SidebarComponent } from './features/sidebar/sidebar.component';
+import { HeaderComponent } from './features/header/header.component';
 import { SobreNosComponent } from './features/sobre-nos/sobre-nos.component';
 import { FaqComponent } from './features/faq/faq.component';
 import { TrabalheConoscoComponent } from './features/trabalhe-conosco/trabalhe-conosco.component';
@@ -25,10 +28,12 @@ export const routes: Routes = [
       { path: '', redirectTo: 'menu-inicial', pathMatch: 'full' },
       { path: 'menu-inicial', component: MenuInicialComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent }
-
       // { path: 'reportar-problema', component: },
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
     ]
   },
-];
+  {path: 'dashboard', component: DashboardComponent},
+  {path: 'sidebar', component:SidebarComponent},
+  {path: 'header', component:HeaderComponent}
+]

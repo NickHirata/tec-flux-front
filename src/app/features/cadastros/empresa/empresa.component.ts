@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../app-popup/app-popup.component';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupComponent],
+  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe],
+  providers: [provideNgxMask()],
   templateUrl: './empresa.component.html',
   styleUrls: ['./empresa.component.scss'],
 })
@@ -38,6 +40,15 @@ export class EmpresaComponent {
         }
       );
     }
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.empresaForm.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  markAllFieldsAsTouched() {
+    this.empresaForm.markAllAsTouched();
   }
 
   showPopupMessage(message: string, isError: boolean) {
