@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 
 @Component({
@@ -10,7 +11,9 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [
     CheckboxModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    RouterLink,
+    RouterOutlet
    ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
