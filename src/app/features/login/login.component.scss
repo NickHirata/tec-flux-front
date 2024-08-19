@@ -1,0 +1,150 @@
+body {
+  font-family: 'Inter', sans-serif;
+  color: #293E40;
+  background-color: #F4F5F7;
+  margin: 0;
+  padding: 0;
+}
+
+.surface-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 5% auto;
+  padding: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+img {
+  height: 50px;
+  margin-bottom: 1rem;
+}
+
+.text-900 {
+  color: #293E40;
+}
+
+.text-3xl {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.text-600 {
+  color: #61AFFF;
+  font-weight: 500;
+}
+
+.font-medium {
+  font-weight: 600;
+}
+
+.line-height-3 {
+  line-height: 1.8;
+}
+
+.text-blue-500 {
+  color: #0079BF;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: #0079BF;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #5BA4CF;
+}
+
+label {
+  font-size: 1em;
+  font-weight: 600;
+  color: #293E40;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: #61AFFF;
+  outline: none;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0079BF;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #5BA4CF;
+}
+
+p-checkbox {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+p-checkbox .text-900 {
+  font-weight: 500;
+}
+
+.shadow-2 {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.border-round {
+  border-radius: 8px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.lg\:w-6 {
+  width: 50%;
+}
+
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
