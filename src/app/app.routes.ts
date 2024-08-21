@@ -12,6 +12,7 @@ import { TrabalheConoscoComponent } from './features/trabalhe-conosco/trabalhe-c
 import { MenuInicialComponent } from './features/menu-inicial/menu-inicial.component';
 import { AbrirChamadoComponent } from './features/cadastros/abrir-chamado/abrir-chamado.component';
 import { LayoutSistemaComponent } from './shared/layout-sistema/layout-sistema.component';
+import { ChatbotComponent } from './features/chatbot/chatbot.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -35,5 +36,6 @@ export const routes: Routes = [
   },
   {path: 'dashboard', component: DashboardComponent},
   {path: 'sidebar', component:SidebarComponent},
-  {path: 'header', component:HeaderComponent}
+  {path: 'header', component:HeaderComponent},
+  {path: 'chatbot', component:ChatbotComponent}
 ]

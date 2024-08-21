@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently \"npm run start-angular\" \"npm run start-python\"",
+    "start-angular": "ng serve",
+    "start-python": "python ./python/meu_chatbot.py",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

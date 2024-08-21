@@ -1,7 +1,7 @@
 body {
   font-family: 'Inter', sans-serif;
   color: #293E40;
-  background-color: #F4F5F7;
+  background: linear-gradient(45deg, #0079BF, #ffffff); /* Usar 'background' em vez de 'background-color' */
   margin: 0;
   padding: 0;
 }
@@ -63,6 +63,7 @@ a {
 }
 
 a:hover {
+  text-decoration: underline;
   color: #5BA4CF;
 }
 

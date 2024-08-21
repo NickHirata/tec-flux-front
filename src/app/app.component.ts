@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     MatCardModule,
     MatProgressSpinnerModule,
     ButtonModule,
-    NgxChartsModule
+    NgxChartsModule,
+    HttpClientModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
