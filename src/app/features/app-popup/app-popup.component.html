@@ -1,10 +1,6 @@
 <div
-  [ngClass]="{
-    'popup-container': true,
-    show: show,
-    error: isError,
-    success: !isError
-  }"
+  *ngIf="show"
+  [ngClass]="{ popup: true, error: isError, success: !isError }"
 >
   {{ message }}
 </div>

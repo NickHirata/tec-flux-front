@@ -19,21 +19,48 @@
     </p>
     <div class="register-company-form">
       <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
           <label for="name">Nome da Empresa</label>
           <input type="text" id="name" formControlName="name" required />
+          <div *ngIf="isFieldInvalid('name')" class="error-message">
+            Campo obrigatório.
+          </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('cnpj') }">
           <label for="cnpj">CNPJ</label>
-          <input type="text" id="cnpj" formControlName="cnpj" required />
+          <input
+            type="text"
+            id="cnpj"
+            formControlName="cnpj"
+            mask="00.000.000/0000-00"
+            required
+          />
+          <div *ngIf="isFieldInvalid('cnpj')" class="error-message">
+            CNPJ inválido.
+          </div>
         </div>
-        <div class="form-group">
+        <div
+          class="form-group"
+          [ngClass]="{ error: isFieldInvalid('address') }"
+        >
           <label for="address">Endereço</label>
           <input type="text" id="address" formControlName="address" required />
+          <div *ngIf="isFieldInvalid('address')" class="error-message">
+            Campo obrigatório.
+          </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('phone') }">
           <label for="phone">Telefone</label>
-          <input type="text" id="phone" formControlName="phone" required />
+          <input
+            type="text"
+            id="phone"
+            formControlName="phone"
+            mask="(00) 0000-00009"
+            required
+          />
+          <div *ngIf="isFieldInvalid('phone')" class="error-message">
+            Telefone inválido.
+          </div>
         </div>
         <button type="submit" class="cta-button">Cadastrar Empresa</button>
       </form>
