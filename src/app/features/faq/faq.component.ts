@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-faq',
+  standalone: true,
+  imports: [CarouselModule, ButtonModule, RouterModule],
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss']
 })
