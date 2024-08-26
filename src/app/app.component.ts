@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatProgressSpinnerModule,
     ButtonModule,
     NgxChartsModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
