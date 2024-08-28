@@ -7,6 +7,11 @@
     <span class="font-medium no-underline ml-2 text-blue-500">Entre em contato com sua empresa!</span>
   </div>
 
+  <!-- Pop-up de mensagem -->
+  <div *ngIf="showPopup" class="popup" [ngClass]="{'error': isError}">
+    {{ popupMessage }}
+  </div>
+
   <div class="login-form">
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
       <div class="form-group" [ngClass]="{ error: isFieldInvalid('email') }">

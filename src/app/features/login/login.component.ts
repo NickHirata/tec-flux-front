@@ -29,15 +29,20 @@ export class LoginComponent {
 
   onLogin() {
     if (this.loginForm.valid) {
-      this.http.post('http://localhost:8081/auth/login', this.loginForm.value).subscribe(
+      this.http.post('http://localhost:8081/auth/signin', this.loginForm.value).subscribe(
         (response) => {
           this.showPopupMessage('Login com sucesso!', false);
           this.loginForm.reset();
+          setTimeout(() => {
+            this.router.navigate(['/sistema/menu-inicial']);
+          }, 3000);
         },
         (error) => {
-          this.showPopupMessage('Usuário inválido!', true);
+          this.showPopupMessage('Usuário ou senha inválidos!', true);
         }
       );
+    } else {
+      this.markAllFieldsAsTouched();
     }
   }
 
@@ -55,6 +60,7 @@ export class LoginComponent {
     this.isError = isError;
     this.showPopup = true;
 
+    // Força a renderização do pop-up
     setTimeout(() => {
       this.showPopup = false;
     }, 3000);
