@@ -74,6 +74,6 @@ export class LoginComponent {
     // Força a renderização do pop-up
     setTimeout(() => {
       this.showPopup = false;
-    }, 3000);
+    },2000);
   }
 }
