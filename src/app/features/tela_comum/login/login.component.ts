@@ -29,7 +29,19 @@ export class LoginComponent {
   onLogin() {
     if (this.loginForm.valid) {
       this.http.post('http://localhost:8081/auth/signin', this.loginForm.value).subscribe(
-        (response) => {
+        (response: any) => {
+          // Salva cada campo separadamente no sessionStorage
+          sessionStorage.setItem('accessToken', response.accessToken);
+          sessionStorage.setItem('tokenType', response.tokenType);
+          sessionStorage.setItem('id', response.id.toString());
+          sessionStorage.setItem('username', response.username);
+          sessionStorage.setItem('email', response.email);
+          sessionStorage.setItem('phone', response.phone);
+          sessionStorage.setItem('createdAt', response.createdAt);
+          sessionStorage.setItem('lastLogin', response.lastLogin);
+          sessionStorage.setItem('departmentId', response.departmentId.toString());
+          sessionStorage.setItem('companyId', response.companyId.toString());
+
           this.showPopupMessage('Login com sucesso!', false);
           this.loginForm.reset();
           setTimeout(() => {
