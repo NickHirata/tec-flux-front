@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { PopupComponent } from '../app-popup/app-popup.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe],
+  imports: [ReactiveFormsModule, CommonModule, NgxMaskDirective, NgxMaskPipe],
   providers: [provideNgxMask()],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
