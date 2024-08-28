@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'cad_usuario', component: UsuarioComponent },
+  { path: 'cad_adm', component: UsuarioComponent },
   { path: 'cad_empresa', component: EmpresaComponent },
   { path: 'sobre-nos', component: SobreNosComponent },
   { path: 'faq', component: FaqComponent },
@@ -31,7 +31,6 @@ export const routes: Routes = [
       { path: 'menu-inicial', component: MenuInicialComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
       {path: 'chatbot', component:ChatbotComponent},
-      {path: 'cad_funcionarios', component:FuncionariosComponent},
       // { path: 'reportar-problema', component: },
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
@@ -44,7 +43,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
       {path: 'chatbot', component:ChatbotComponent},
-      {path: 'cad_funcionarios', component:FuncionariosComponent},
+      {path: 'cad_func', component:FuncionariosComponent},
       // { path: 'reportar-problema', component: },
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
