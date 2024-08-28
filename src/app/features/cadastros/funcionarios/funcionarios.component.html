@@ -1,0 +1,33 @@
+<div class="p-card">
+    <div class="p-card-header">
+      <h2>Cadastro de Usuário</h2>
+    </div>
+    <div class="p-card-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="p-field">
+          <label for="name">Nome</label>
+          <input id="name" pInputText formControlName="name" placeholder="Digite o nome" />
+        </div>
+        <div class="p-field">
+          <label for="email">Email</label>
+          <input id="email" pInputText formControlName="email" placeholder="Digite o email" />
+        </div>
+        <div class="p-field informativo">
+          <p>A senha será gerada automaticamente e enviada por email.</p>
+        </div>
+        <div class="p-field">
+          <label for="role">Tipo de Usuário</label>
+          <p-dropdown 
+            id="role" 
+            [options]="roles" 
+            formControlName="role" 
+            placeholder="Selecione o tipo de usuário">
+          </p-dropdown>
+        </div>
+        <div class="p-field">
+          <button pButton type="submit" label="Salvar" class="cta-button"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

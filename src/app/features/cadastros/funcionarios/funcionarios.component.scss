@@ -1,0 +1,56 @@
+.p-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.p-card-header {
+    background-color: #0079BF;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+.p-field {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: #293E40;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+input, p-dropdown {
+    width: 100%;
+}
+
+.informativo {
+    color: #293E40;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    background-color: #F4F5F7;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.cta-button {
+    background-color: #61AFFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.cta-button:hover {
+    background-color: #5BA4CF;
+}
