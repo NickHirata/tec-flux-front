@@ -58,6 +58,6 @@ export class EmpresaComponent {
 
     setTimeout(() => {
       this.showPopup = false;
-    }, 3000);
+    }, 2000);
   }
 }
