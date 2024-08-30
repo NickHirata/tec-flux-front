@@ -20,6 +20,11 @@
       Complete o formulário abaixo para cadastrar sua empresa e começar a
       utilizar nossas soluções.
     </p>
+
+    <div *ngIf="showPopup" class="popup" [ngClass]="{'error': isError}">
+      {{ popupMessage }}
+    </div>
+
     <div class="register-company-form">
       <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
         <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
@@ -70,12 +75,6 @@
     </div>
   </div>
 </header>
-
-<app-popup
-  [message]="popupMessage"
-  [isError]="isError"
-  [show]="showPopup"
-></app-popup>
 
 <footer class="footer">
   <p>&copy; 2024 TecFlux. Todos os direitos reservados.</p>

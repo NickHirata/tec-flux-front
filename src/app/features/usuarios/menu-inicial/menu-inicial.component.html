@@ -14,7 +14,7 @@
           class="menu-item"
         >
           <img src="assets/abrir-chamado-icon.png" alt="Abrir Chamado" />
-          <h3>Abrir Chamado</h3>
+          <h3>Chamados</h3>
         </a>
       </div>
       <div class="menu-item">
@@ -28,8 +28,14 @@
         </a>
       </div>
       <div class="menu-item">
-        <img src="assets/chatbot-icon.png" alt="Reportar Problema" />
-        <h3>Ajuda ChatBot</h3>
+        <a
+          [routerLink]="['/sistema/chatbot']"
+          routerLinkActive="router-link-active"
+          class="menu-item"
+        >
+          <img src="assets/chatbot-icon.png" alt="ChatBot" />
+          <h3>Ajuda ChatBot</h3>
+        </a>
       </div>
       <div class="menu-item">
         <img src="assets/ajuda-codigo-icon.png" alt="Ajuda com Código" />

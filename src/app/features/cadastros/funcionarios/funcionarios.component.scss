@@ -3,8 +3,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 600px;
-    margin: 30px auto;
+    max-width: 700px; /* Aumenta a largura do formulário */
+    margin: 20px auto; /* Reduz o espaço acima e abaixo do formulário */
 }
 
 .p-card-header {
@@ -15,8 +15,12 @@
     text-align: center;
 }
 
+.p-card-body {
+    padding: 20px;
+}
+
 .p-field {
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduz o espaço entre os campos */
 }
 
 label {
@@ -26,14 +30,23 @@ label {
     margin-bottom: 5px;
 }
 
-input, p-dropdown {
+input[pInputText], p-dropdown {
     width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+input[pInputText]:focus, p-dropdown:focus {
+    border-color: #61AFFF;
+    outline: none;
 }
 
 .informativo {
     color: #293E40;
     font-size: 0.9em;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduz o espaço abaixo da mensagem informativa */
     background-color: #F4F5F7;
     padding: 10px;
     border-radius: 5px;
@@ -47,10 +60,51 @@ input, p-dropdown {
     cursor: pointer;
     color: #fff;
     font-weight: 600;
+    font-size: 1.2em;
     transition: background-color 0.3s ease;
     width: 100%;
+    text-align: center;
+    margin-bottom: 10px; /* Reduz o espaço abaixo do botão */
 }
 
 .cta-button:hover {
     background-color: #5BA4CF;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 0.875em;
+    margin-top: 5px;
+}
+
+::ng-deep .p-dropdown {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    background-color: transparent; /* Remove a cor de fundo */
+}
+
+::ng-deep .p-dropdown .p-dropdown-trigger {
+    border: none; /* Remove a borda ao redor do botão */
+    padding: 0; /* Remove qualquer padding */
+    background-color: transparent; /* Torna o fundo do botão transparente */
+    box-shadow: none; /* Remove a sombra */
+}
+
+::ng-deep .p-dropdown .p-dropdown-label {
+    padding-left: 0;
+    padding-right: 0;
+    background-color: transparent; /* Remove qualquer fundo do rótulo */
+    border: none;
+    box-shadow: none;
+}
+
+::ng-deep .p-dropdown .p-dropdown-panel {
+    border: 1px solid #ccc; /* Mantém uma borda leve ao redor do painel quando aberto */
+}
+
+::ng-deep .p-inputtext {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
 }
