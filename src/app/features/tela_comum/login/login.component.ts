@@ -46,7 +46,7 @@ export class LoginComponent {
           this.loginForm.reset();
           setTimeout(() => {
             this.router.navigate(['/sistema/menu-inicial']);
-          }, 3000);
+          }, 2000);
         },
         (error) => {
           this.showPopupMessage('Usuário ou senha inválidos!', true);
