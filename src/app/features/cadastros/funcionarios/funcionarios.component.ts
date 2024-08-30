@@ -49,11 +49,17 @@ export class FuncionariosComponent implements OnInit {
         .subscribe(
           response => {
             this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
-            console.log('Funcionário cadastrado com sucesso', response);
             this.userForm.reset();
+            setTimeout(() => {
+              this.router.navigate(['/sistema/menu-inicial']);
+            }, 2000);
           },
           error => {
-            this.showPopupMessage('Erro ao cadastrar funcionário!', true);
+            if (error.status === 400) {
+              this.showPopupMessage('Erro de validação!', true);
+            } else {
+              this.showPopupMessage('Erro ao cadastrar funcionário!', true);
+            }
             console.error('Erro ao cadastrar funcionário', error);
           }
         );
@@ -61,6 +67,7 @@ export class FuncionariosComponent implements OnInit {
       this.markAllFieldsAsTouched();
     }
   }
+  
 
   isFieldInvalid(field: string): boolean {
     const control = this.userForm.get(field);

@@ -162,6 +162,7 @@ button:hover {
   opacity: 1; /* Opacidade definida para 1 */
   visibility: visible; /* Visibilidade definida para visível */
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 9999; /* Aumenta o z-index para garantir que o pop-up esteja no topo */
 }
 
 .popup.error {
