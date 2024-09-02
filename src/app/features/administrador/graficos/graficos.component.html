@@ -1,0 +1,74 @@
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <header class="header">
+      <div class="user-info">
+        <h2>Bem-vindo,Jhow Jhow da Confusão</h2>
+        <p>Aqui está o resumo do seu departamento .</p>
+      </div>
+      <div class="quick-actions">
+        <button class="cta-button" routerLink="/abrir-chamado">
+          Abrir Novo Chamado
+        </button>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="stat-card">
+        <h3>Total de Chamados</h3>
+        <p>{{ totalChamados }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Chamados Abertos</h3>
+        <p>{{ chamadosAbertos }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Chamados Fechados</h3>
+        <p>{{ chamadosFechados }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Chamados Urgentes</h3>
+        <p>{{ chamadosUrgentes }}</p>
+      </div>
+    </section>
+
+    <section class="charts">
+      <div class="chart">
+        <h3>Distribuição de Chamados</h3>
+        <ngx-charts-pie-chart
+          [view]="view"
+          [results]="chamadosData"
+          [legend]="true"
+          [explodeSlices]="false"
+          [labels]="true"
+          [doughnut]="true"
+          [gradient]="false"
+        >
+        </ngx-charts-pie-chart>
+      </div>
+      <div class="chart">
+        <h3>Chamados por Técnico</h3>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [results]="tecnicosData"
+          [legend]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          xAxisLabel="Técnico"
+          yAxisLabel="Chamados"
+          [gradient]="false"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
+    </section>
+
+    <section class="recent-tickets">
+      <h3>Últimos Chamados</h3>
+      <ul>
+        <li *ngFor="let chamado of ultimosChamados">
+          <a>{{ chamado.titulo }} - {{ chamado.status }}</a>
+        </li>
+      </ul>
+    </section>
+  </div>

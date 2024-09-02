@@ -7,26 +7,46 @@
     <a href="#">Recursos</a>
     <a href="#">Planos</a>
     <a href="#">Contato</a>
-    <a href="trabalhe-conosco">Trabalhe Conosco</a>
-    <a href="faq">FAQ</a>
-    <a href="sobre-nos">Quem Somos</a>    
+    <a routerLink="/trabalhe-conosco">Trabalhe Conosco</a>
+    <a routerLink="/faq">FAQ</a>
+    <a routerLink="/sobre-nos">Quem Somos</a>    
   </div>
 </div>
 
 <header class="hero-section">
   <div class="hero-content">
-    <h1>Cadastre Sua Empresa no TecFlux</h1>
-    <p>
+    <!-- Barra de Progresso e Passos -->
+    <div class="steps-container">
+      <div class="step" [ngClass]="{ active: !isAdminStep }">
+        <span class="step-number">1</span>
+        <span class="step-label">Cadastrar Empresa</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress" [ngStyle]="{ width: isAdminStep ? '100%' : '50%' }"></div>
+      </div>
+      <div class="step" [ngClass]="{ active: isAdminStep }">
+        <span class="step-number">2</span>
+        <span class="step-label">Cadastrar Administrador</span>
+      </div>
+    </div>
+
+    <h1 *ngIf="!isAdminStep">Cadastre Sua Empresa no TecFlux</h1>
+    <h1 *ngIf="isAdminStep">Cadastre o Administrador da Empresa</h1>
+    <p *ngIf="!isAdminStep">
       Complete o formulário abaixo para cadastrar sua empresa e começar a
       utilizar nossas soluções.
+    </p>
+    <p *ngIf="isAdminStep">
+      Agora, cadastre o administrador principal da sua empresa.
     </p>
 
     <div *ngIf="showPopup" class="popup" [ngClass]="{'error': isError}">
       {{ popupMessage }}
     </div>
 
-    <div class="register-company-form">
-      <form [formGroup]="empresaForm" (ngSubmit)="onSubmit()">
+    <!-- Formulário de cadastro da empresa -->
+    <div class="register-company-form" *ngIf="!isAdminStep">
+      <form [formGroup]="empresaForm" (ngSubmit)="onSubmitEmpresa()">
         <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
           <label for="name">Nome da Empresa</label>
           <input type="text" id="name" formControlName="name" required />
@@ -47,10 +67,7 @@
             CNPJ inválido.
           </div>
         </div>
-        <div
-          class="form-group"
-          [ngClass]="{ error: isFieldInvalid('address') }"
-        >
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('address') }">
           <label for="address">Endereço</label>
           <input type="text" id="address" formControlName="address" required />
           <div *ngIf="isFieldInvalid('address')" class="error-message">
@@ -71,6 +88,34 @@
           </div>
         </div>
         <button type="submit" class="cta-button">Cadastrar Empresa</button>
+      </form>
+    </div>
+
+    <!-- Formulário de cadastro do administrador -->
+    <div class="register-admin-form" *ngIf="isAdminStep">
+      <form [formGroup]="adminForm" (ngSubmit)="onSubmitAdmin()">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminName') }">
+          <label for="adminName">Nome do Administrador</label>
+          <input type="text" id="adminName" formControlName="adminName" required />
+          <div *ngIf="isFieldInvalid('adminName')" class="error-message">
+            Campo obrigatório.
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminEmail') }">
+          <label for="adminEmail">Email do Administrador</label>
+          <input type="email" id="adminEmail" formControlName="adminEmail" required />
+          <div *ngIf="isFieldInvalid('adminEmail')" class="error-message">
+            Email inválido.
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminPassword') }">
+          <label for="adminPassword">Senha</label>
+          <input type="password" id="adminPassword" formControlName="adminPassword" required />
+          <div *ngIf="isFieldInvalid('adminPassword')" class="error-message">
+            Campo obrigatório.
+          </div>
+        </div>
+        <button type="submit" class="cta-button">Cadastrar Administrador</button>
       </form>
     </div>
   </div>
