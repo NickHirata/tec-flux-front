@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CadastroService } from '../../../services/cadastro.service';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -37,64 +38,83 @@ import { InputMaskModule } from 'primeng/inputmask';
   templateUrl: './abrir-chamado.component.html',
   styleUrl: './abrir-chamado.component.scss'
 })
-export class AbrirChamadoComponent {
-// Lista de chamados
-chamados: any[] = [];
-// Objeto para armazenar o chamado atual
-chamado: any = {};
-// Controle do diálogo de chamado
-chamadoDialog: boolean = false;
-// Controle de submissão
-submitted: boolean = false;
 
-constructor() {
-  // Inicialização de exemplos de chamados
-  this.chamados = [
-    { nome: 'Chamado 1', prioridade: 'Alta' },
-    { nome: 'Chamado 2', prioridade: 'Média' }
-  ];
-}
+export class AbrirChamadoComponent implements OnInit {
+  
+  chamados: any[] = [];
+  chamado: any = {};
+  chamadoDialog: boolean = false;
+  submitted: boolean = false;
 
-// Função para abrir o diálogo de criar/editar chamado
-openChamadoDiolog() {
-  this.chamado = {}; // Limpar o chamado atual
-  this.submitted = false; // Resetar o estado de submissão
-  this.chamadoDialog = true; // Abrir o diálogo
-}
+  departamentos: any[] = [];
+  categorias: any[] = [];
 
-// Função para salvar o chamado
-salvarChamado() {
-  this.submitted = true;
+  constructor(private cadastroService: CadastroService) {}
 
-  // Validação básica dos campos obrigatórios
-  if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
-    if (this.chamado.id) {
-      // Atualizar chamado existente
-      const index = this.chamados.findIndex(c => c.id === this.chamado.id);
-      if (index !== -1) {
-        this.chamados[index] = this.chamado;
-      }
-    } else {
-      // Criar novo chamado
-      this.chamado.id = this.createId();
-      this.chamados.push(this.chamado);
-    }
-
-    // Atualizar lista de chamados e fechar o diálogo
-    this.chamados = [...this.chamados];
-    this.chamadoDialog = false;
-    this.chamado = {};
+  ngOnInit() {
+    this.loadDepartamentos();
+    this.loadCategorias();
+    this.loadChamados();
   }
-}
 
-// Função para fechar o diálogo de criar/editar chamado
-hideDialog() {
-  this.chamadoDialog = false;
-  this.submitted = false;
-}
+  loadDepartamentos() {
+    this.cadastroService.getDepartamentos().subscribe(
+      (data) => {
+        this.departamentos = data;
+      },
+      (error) => {
+        console.error('Erro ao carregar departamentos', error);
+      }
+    );
+  }
 
-// Função para criar um ID único (simulação)
-createId(): string {
-  return Math.random().toString(36).substr(2, 9);
-}
+  loadCategorias() {
+    this.cadastroService.getCategorias().subscribe(
+      (data) => {
+        this.categorias = data;
+      },
+      (error) => {
+        console.error('Erro ao carregar categorias', error);
+      }
+    );
+  }
+
+  loadChamados() {
+    this.cadastroService.getChamados().subscribe(
+      (data) => {
+        this.chamados = data;
+      },
+      (error) => {
+        console.error('Erro ao carregar chamados', error);
+      }
+    );
+  }
+
+  openChamadoDiolog() {
+    this.chamado = {};
+    this.submitted = false;
+    this.chamadoDialog = true;
+  }
+
+  salvarChamado() {
+    this.submitted = true;
+
+    if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
+      this.cadastroService.salvarChamado(this.chamado).subscribe(
+        (response) => {
+          this.chamados.push(response);
+          this.chamadoDialog = false;
+          this.chamado = {};
+        },
+        (error) => {
+          console.error('Erro ao salvar chamado', error);
+        }
+      );
+    }
+  }
+
+  hideDialog() {
+    this.chamadoDialog = false;
+    this.submitted = false;
+  }
 }

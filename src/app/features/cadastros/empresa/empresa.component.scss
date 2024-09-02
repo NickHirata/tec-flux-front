@@ -52,6 +52,7 @@ body {
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
+    padding-top: 80px; /* Adicionado para compensar a altura da navbar */
 }
 
 .hero-section .hero-content {
@@ -163,3 +164,8 @@ body {
     visibility: visible;
   }
   
+  .navbar .logo h1 {
+    padding-top: 0; /* Removendo o padding superior */
+    font-size: 1.8em;
+    font-weight: 700;
+}
