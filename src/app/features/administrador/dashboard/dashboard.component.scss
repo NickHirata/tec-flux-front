@@ -1,337 +1,172 @@
-body{
-  font-family: 'Inter', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #293E40;
+    line-height: 1.6;
+    background-color: #F4F5F7;
+    margin: 0;
+    padding: 0;
 }
 
-.dashboard-container {
-  display: flex;
-  height: 100vh;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0079BF;
+    padding: 15px 30px;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
 }
 
-
-.sidebar {
-  width: 239px;
-  background-color: #2c3e50;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  transition: width 0.5s ease;
-
-  &.collapsed {
-    width: 60px;
-  }
+.navbar .logo h1 {
+    padding-top: 10px;
+    font-size: 1.8em;
+    font-weight: 700;
 }
 
-
-.hamburger-menu {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-
-  .hamburger-icon {
-    width: 20px;
-    height: 3px;
-    background-color: #fff;
-    position: relative;
-    display: inline-block;
-  }
-
-  .hamburger-icon:before,
-  .hamburger-icon:after {
-    content: '';
-    width: 20px;
-    height: 3px;
-    background-color: #fff;
-    position: absolute;
-    left: 0;
-    transition: 0.5s ease;
-  }
-
-  .hamburger-icon:before {
-    top: -7px;
-  }
-
-  .hamburger-icon:after {
-    top: 7px;
-  }
+.navbar .logo h1 a {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-
-.nav-links {
-  list-style: none;
-  padding: 0;
-
-  li {
-    margin-bottom: 10px;
-
-    a {
-      height: 40px;
-      width: 208px;
-      color: #fff;
-      text-decoration: none;
-      font-size: 17px;
-      font-weight: 400;
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border-radius: 5px;
-
-      i {
-        margin-right: 10px;
-      }
-    }
-
-    a:hover,
-    a.active {
-      border: 1px solid #c5e0f0;
-      border-radius: 5px;
-      text-decoration: underline;
-      background-color: #c5e0f0;
-      color: #2c3e50;
-      text-decoration: none;
-      transition: 0.2s ease-in-out;
-    }
-  }
+.navbar .nav-links a {
+    color: #fff;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: 600;
 }
 
-
-.main-content {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto;
+.hero-section {
+    background-color: #0079BF;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    padding-top: 80px;
 }
 
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.hero-section .hero-content {
+    max-width: 800px;
+    width: 100%;
 }
 
-
-.stats {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-  gap: 20px;
+.hero-section h1 {
+    font-size: 2.5em;
+    margin-bottom: 1px;
+    font-weight: 700;
 }
 
-.stat-card {
-  background-color: #ebecf0;
-  padding: 20px;
-  border-radius: 8px;
-  width: 45%;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+.hero-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
 }
 
-.stat-card h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #333;
+.register-company-form, .register-admin-form {
+    background-color: #f4f5f7;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
-.stat-card p {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
+.register-company-form form, .register-admin-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-
-.stat-card.total {
-  background-color: #0079bf;
-  color: #fff;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.stat-card.open {
-  background-color: #ffab00;
-  color: #fff;
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #293e40;
 }
 
-.stat-card.closed {
-  background-color: #00c853;
-  color: #fff;
-}
-
-.stat-card.urgent {
-  background-color: #d32f2f;
-  color: #fff;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-
-.charts {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-  gap: 20px;
-}
-
-.chart {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 45%;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.chart:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.chart h3 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #333;
-  position: relative;
-  z-index: 10;
-}
-
-.recent-tickets {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.recent-tickets:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.recent-tickets h3 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #333;
-  font-weight: 600;
-  border-bottom: 2px solid #0079bf;
-  padding-bottom: 10px;
-  position: relative;
-  z-index: 10;
-}
-
-.recent-tickets ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.recent-tickets li {
-  background-color: #f7f8f9;
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-}
-
-.recent-tickets li:hover {
-  background-color: #e0e6ed;
-  transform: translateX(5px);
-}
-
-.recent-tickets li:last-child {
-  margin-bottom: 0;
-}
-
-.recent-tickets li a {
-  color: #0079bf;
-  text-decoration: none;
-  font-weight: 500;
-  flex-grow: 1;
-}
-
-.recent-tickets li span.status {
-  background-color: #0079bf;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin-left: 10px;
-}
-
-.recent-tickets li span.date {
-  font-size: 12px;
-  color: #888;
-  margin-left: 15px;
-  white-space: nowrap;
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+    color: #293e40;
 }
 
 .cta-button {
-  background-color: #0079bf;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+    background-color: #0079bf;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+}
 
-  &:hover {
+.cta-button:hover {
     background-color: #5ba4cf;
-  }
-}
-.dashboard-container {
-  display: flex;
-  height: 100vh;
 }
 
-.sidebar {
-  width: 239px;
-  background-color: #2c3e50;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  transition: width 0.5s ease;
-
-  &.collapsed {
-    width: 60px;
-  }
+.footer {
+    height: 45px;
+    text-align: center;
+    padding: 20px;
+    background-color: #293e40;
+    color: #fff;
 }
 
-.content {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column; // Adiciona flexbox na área de conteúdo
+.success-message {
+  color: green;
+  margin-bottom: 15px;
 }
 
-.main-content {
-  flex-grow: 1;  // Garante que a main-content ocupe todo o espaço disponível
-  display: flex;
-  flex-direction: column;
+.error-message {
+  color: red;
+  margin-bottom: 15px;
 }
 
-.grid {
-  flex-grow: 1;  // Garante que o grid ocupe todo o espaço disponível
-  display: flex;
-  flex-direction: column;
+.popup {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.card {
-  flex-grow: 1;  // Garante que o card ocupe todo o espaço disponível dentro do grid
+.popup.error {
+    background-color: #f44336;
 }
 
+.popup.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.navbar .logo h1 {
+    padding-top: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+}

@@ -24,7 +24,16 @@
           <span *ngIf="!isCollapsed">Configurações</span>
         </a>
       </li>
+
+      <li class="logout">
+        <button (click)="logout()" class="logout-button">
+          <i class="pi pi-sign-out"></i>
+          <span *ngIf="!isCollapsed">Logout</span>
+        </button>
+      </li>
     </ul>
+
+    
   </nav>
 
   <!-- Área onde as telas serão carregadas -->
