@@ -1,78 +1,70 @@
 <div class="grid">
   <div class="col-12">
-      <div class="card px-6 py-6">
-          <p-toast></p-toast>
-          <p-toolbar styleClass="mb-4">
-              <ng-template pTemplate="center">
-                  <div class="my-2">
-                      <button pButton pRipple label="Criar Chamado" icon="pi pi-plus" class="p-button-warning mr-2" (click)="openChamadoDiolog()"></button>
-                  </div>
-              </ng-template>
-          </p-toolbar>
-
-
-          <div>
-            <p-table
-              [value]="chamados"
-              responsiveLayout="scroll"
-              [rows]="10"
-              [paginator]="true"
-              [rowsPerPageOptions]="[10, 20, 30]"
-              [showCurrentPageReport]="true"
-              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <th pSortableColumn="nome">Nome do Chamado <p-sortIcon field="nome"></p-sortIcon></th>
-                  <th pSortableColumn="prioridade">Prioridade <p-sortIcon field="prioridade"></p-sortIcon></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-chamado>
-                <tr>
-                  <td>{{ chamado.nome }}</td>
-                  <td>{{ chamado.prioridade }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          
-            <ng-template #noChamados>
-              <p>Nenhum chamado encontrado.</p>
-            </ng-template>
+    <div class="card px-6 py-6">
+      <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="center">
+          <div class="my-2">
+            <button pButton pRipple label="Abrir Chamado" icon="pi pi-plus" class="p-button-warning mr-2" (click)="openChamadoDiolog()"></button>
           </div>
-          
+        </ng-template>
+      </p-toolbar>
 
-
-
-
-
-      <p-dialog [(visible)]="chamadoDialog" [style]="{width: '450px'}" header="Chamado" [modal]="true" class="p-fluid">
-          <ng-template pTemplate="content">
-              <div class="field">
-                  <label for="departamento">Departamento</label>
-                  <textarea id="departamento" pInputTextarea [(ngModel)]="chamado.departamento" required rows="3" cols="20"></textarea>
-              </div>
-              <div class="field">
-                <label for="categoria">Categoria</label>
-                <textarea id="categoria" pInputTextarea [(ngModel)]="chamado.categoria" required rows="3" cols="20"></textarea>
-              </div>
-
-              <div class="field">
-                <label for="assunto">Assunto</label>
-                <textarea id="assunto" pInputTextarea [(ngModel)]="chamado.assunto" required rows="3" cols="20"></textarea>
-              </div>
-
-
-              <div class="field">
-                <label for="descricao">descricao</label>
-                <textarea id="descricao" pInputTextarea [(ngModel)]="chamado.descricao" required rows="3" cols="20"></textarea>
-              </div>
+      <div>
+        <p-table
+          [value]="chamados"
+          responsiveLayout="scroll"
+          [rows]="10"
+          [paginator]="true"
+          [rowsPerPageOptions]="[10, 20, 30]"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="nome">Nome do Chamado <p-sortIcon field="nome"></p-sortIcon></th>
+              <th pSortableColumn="prioridade">Prioridade <p-sortIcon field="prioridade"></p-sortIcon></th>
+            </tr>
           </ng-template>
-
-          <ng-template pTemplate="footer">
-              <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-              <button pButton pRipple label="Enviar chamado" icon="pi pi-check" class="p-button-text" (click)="salvarChamado()"></button>
+          <ng-template pTemplate="body" let-chamado>
+            <tr>
+              <td>{{ chamado.nome }}</td>
+              <td>{{ chamado.prioridade }}</td>
+            </tr>
           </ng-template>
+        </p-table>
+
+        <ng-template #noChamados>
+          <p>Nenhum chamado encontrado.</p>
+        </ng-template>
+      </div>
+
+      <!-- Diálogo para abrir/criar chamado -->
+      <p-dialog [(visible)]="chamadoDialog" [style]="{width: '450px'}" header="Cadastrar Chamado" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+          <div class="field">
+            <label for="departamento">Departamento</label>
+            <p-dropdown id="departamento" [(ngModel)]="chamado.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
+          </div>
+          <div class="field">
+            <label for="categoria">Categoria</label>
+            <p-dropdown id="categoria" [(ngModel)]="chamado.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
+          </div>
+          <div class="field">
+            <label for="assunto">Assunto</label>
+            <input id="assunto" pInputText [(ngModel)]="chamado.assunto" required />
+          </div>
+          <div class="field">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" pInputTextarea [(ngModel)]="chamado.descricao" required></textarea>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarChamado()"></button>
+        </ng-template>
       </p-dialog>
-
-
+    </div>
+  </div>
 </div>
