@@ -1,46 +1,10 @@
-.trabalhe-conosco {
-  font-family: Arial, sans-serif;
-}
-
-.trabalhe-conosco-header {
-  background-color: var(--primary-color); /* Use a variável da paleta de cores */
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
-
-.trabalhe-conosco-content {
-  padding: 20px;
-  color: #333;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  margin-top: 10px;
-}
-
-input {
-  margin-top: 5px;
-  padding: 8px;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: var(--button-color); /* Use a variável da paleta de cores */
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.trabalhe-conosco-footer {
-  background-color: #f4f4f4;
-  padding: 10px;
-  text-align: center;
+body {
+  font-family: 'Inter', sans-serif;
+  color: #293E40;
+  line-height: 1.6;
+  background-color: #F4F5F7;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar {
@@ -69,11 +33,23 @@ button {
   cursor: pointer;
 }
 
+.navbar .nav-links {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .navbar .nav-links a {
   color: #fff;
   margin-right: 20px;
   text-decoration: none;
   font-weight: 600;
+}
+
+.navbar .nav-links a:hover {
+  transition: ease-in-out 0.2s;
+  text-decoration: underline;
 }
 
 .navbar .cta-button {
@@ -89,4 +65,47 @@ button {
 
 .navbar .cta-button:hover {
   background-color: #5BA4CF;
+}
+
+/* Formatação dos formulários */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #293E40;
+}
+
+input {
+  margin-top: 5px;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  color: #293E40;
+}
+
+button {
+  margin-top: 20px;
+  padding: 15px 30px;
+  background-color: #0079BF;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5BA4CF;
+}
+
+.trabalhe-conosco-footer {
+  background-color: #f4f4f4;
+  padding: 10px;
+  text-align: center;
 }

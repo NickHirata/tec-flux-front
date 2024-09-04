@@ -15,6 +15,8 @@ import { LayoutSistemaComponent } from './shared/layout-sistema/layout-sistema.c
 import { ChatbotComponent } from './features/chatbot/chatbot.component';
 import { FuncionariosComponent } from './features/cadastros/funcionarios/funcionarios.component';
 import { GraficosComponent } from './features/administrador/graficos/graficos.component';
+import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -49,6 +51,7 @@ export const routes: Routes = [
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
     ]
-  }
+  },
+  {path: 'kanban-board', component:KanbanBoardComponent}
 
 ]

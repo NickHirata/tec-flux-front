@@ -16,13 +16,11 @@ import { Router } from '@angular/router';
 })
 export class EmpresaComponent {
   empresaForm: FormGroup;
+  adminForm: FormGroup;
   popupMessage: string = '';
   isError: boolean = false;
   showPopup: boolean = false;
-  adminForm: FormGroup;
   isAdminStep = false;
-
-
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.empresaForm = this.fb.group({
@@ -31,21 +29,30 @@ export class EmpresaComponent {
       address: ['', Validators.required],
       phone: ['', Validators.required],
     });
+
     this.adminForm = this.fb.group({
-      adminName: ['', Validators.required],
-      adminEmail: ['', [Validators.required, Validators.email]],
-      adminPassword: ['', Validators.required]
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      phone: ['', Validators.required],
+      companyId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
+      departmentId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
+      roles: [['ROLE_ADMINISTRADOR'], Validators.required]  // Um array contendo o papel
     });
   }
 
-
   isFieldInvalid(field: string): boolean {
-    const control = this.empresaForm.get(field);
+    const control = this.isAdminStep ? this.adminForm.get(field) : this.empresaForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
-  }
+}
+
 
   markAllFieldsAsTouched() {
-    this.empresaForm.markAllAsTouched();
+    if (this.isAdminStep) {
+      this.adminForm.markAllAsTouched();
+    } else {
+      this.empresaForm.markAllAsTouched();
+    }
   }
 
   showPopupMessage(message: string, isError: boolean) {
@@ -60,30 +67,40 @@ export class EmpresaComponent {
 
   onSubmitEmpresa() {
     if (this.empresaForm.valid) {
-      if (this.empresaForm.valid) {
-        this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
-          (response) => {
-            this.showPopupMessage('Empresa cadastrada com sucesso!', false);
-            this.empresaForm.reset();
-          },
-          (error) => {
-            this.showPopupMessage('Erro ao cadastrar empresa', true);
-          }
-        );
-      }
-      this.isAdminStep = true;  // Muda para a etapa de cadastro do administrador
+      this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
+        (response) => {
+          this.showPopupMessage('Empresa cadastrada com sucesso!', false);
+          this.isAdminStep = true;  // Avança para o cadastro do administrador
+        },
+        (error) => {
+          this.showPopupMessage('Empresa já cadastrada!', true);
+        }
+      );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();
     }
   }
 
   onSubmitAdmin() {
     if (this.adminForm.valid) {
-      // Lógica de cadastro do administrador
-      this.router.navigate(['/dashboard']);  // Redireciona para o dashboard ou outra página após o cadastro
+      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
+        (response) => {
+          this.showPopupMessage('Administrador cadastrado com sucesso!', false);
+          
+          // Adicionando um delay de 2 segundos antes de redirecionar
+          setTimeout(() => {
+            this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
+          }, 2000);  // Delay de 2 segundos
+          
+        },
+        (error) => {
+          this.showPopupMessage('Email de administrador já cadastrado!', true);
+        }
+      );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
     }
   }
-
 }
