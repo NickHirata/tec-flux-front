@@ -73,7 +73,7 @@ export class EmpresaComponent {
           this.isAdminStep = true;  // Avança para o cadastro do administrador
         },
         (error) => {
-          this.showPopupMessage('Erro ao cadastrar empresa', true);
+          this.showPopupMessage('Empresa já cadastrada!', true);
         }
       );
     } else {
@@ -95,7 +95,7 @@ export class EmpresaComponent {
           
         },
         (error) => {
-          this.showPopupMessage('Erro ao cadastrar administrador', true);
+          this.showPopupMessage('Email de administrador já cadastrado!', true);
         }
       );
     } else {
