@@ -14,7 +14,6 @@ import { AbrirChamadoComponent } from './features/cadastros/abrir-chamado/abrir-
 import { LayoutSistemaComponent } from './shared/layout-sistema/layout-sistema.component';
 import { ChatbotComponent } from './features/chatbot/chatbot.component';
 import { FuncionariosComponent } from './features/cadastros/funcionarios/funcionarios.component';
-import { GraficosComponent } from './features/administrador/graficos/graficos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -49,6 +48,10 @@ export const routes: Routes = [
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
     ]
-  }
+  },
+  {path: 'dashboard', component: DashboardComponent},
+  {path: 'sidebar', component:SidebarComponent},
+  {path: 'header', component:HeaderComponent},
+  {path: 'chatbot', component:ChatbotComponent},
 
 ]
