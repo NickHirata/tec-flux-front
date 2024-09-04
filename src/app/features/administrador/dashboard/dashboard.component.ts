@@ -1,39 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgxChartsModule],
+  imports: [RouterLink,
+    CommonModule, 
+    RouterLinkActive,
+    RouterOutlet],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  totalChamados: number = 100;
-  chamadosAbertos: number = 25;
-  chamadosFechados: number = 70;
-  chamadosUrgentes: number = 5;
-  isCollapsed: boolean = false;
+  isCollapsed = false;
 
-  chamadosData = [
-    { name: 'Abertos', value: this.chamadosAbertos },
-    { name: 'Fechados', value: this.chamadosFechados },
-    { name: 'Urgentes', value: this.chamadosUrgentes }
-  ];
-
-  tecnicosData = [
-    { name: 'Técnico 1', value: 10 },
-    { name: 'Técnico 2', value: 20 },
-    { name: 'Técnico 3', value: 15 }
-  ];
-
-  view: [number, number] = [700, 400];
-
-  ultimosChamados: any[] = [];
-
-  constructor() {}
+  constructor(private router: Router) {}
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  logout() {
+    //limpar o token de autenticação
+    this.router.navigate(['/home']); 
   }
 }

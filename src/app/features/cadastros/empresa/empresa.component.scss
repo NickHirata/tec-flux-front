@@ -1,132 +1,183 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 body {
-    font-family: 'Inter', sans-serif;
-    color: #293E40;
-    line-height: 1.6;
-    background-color: #F4F5F7;
-    margin: 0;
-    padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: #293E40;
+  line-height: 1.6;
+  background-color: #F4F5F7;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #0079BF;
-    padding: 15px 30px;
-    color: #fff;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 60px;
-    z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0079BF;
+  padding: 15px 30px;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1000;
 }
 
 .navbar .logo h1 {
-    padding-top: 10px;
-    font-size: 1.8em;
-    font-weight: 700;
+  padding-top: 10px;
+  font-size: 1.8em;
+  font-weight: 700;
 }
 
 .navbar .logo h1 a {
-    color: #fff;
-    text-decoration: none;
-    cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .navbar .nav-links a {
-    color: #fff;
-    margin-right: 20px;
-    text-decoration: none;
-    font-weight: 600;
+  color: #fff;
+  margin-right: 20px;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .hero-section {
-    background-color: #0079BF;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
+  background-color: #0079BF;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  padding-top: 80px;
 }
 
 .hero-section .hero-content {
-    max-width: 800px;
-    width: 100%;
+  max-width: 800px;
+  width: 100%;
 }
-
-.hero-section h1 {
-    font-size: 2.5em;
-    margin-bottom: 1px;
-    font-weight: 700;
-}
-
-.hero-section p {
-    font-size: 1.2em;
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 30px;
-}
-
-.register-company-form {
-    background-color: #f4f5f7;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.register-company-form form {
+  }
+  
+  .step {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    flex: 1;
+    opacity: 0.5; /* Passo inativo com opacidade reduzida */
+    transition: opacity 0.3s ease;
+  }
+  
+  .step.active {
+    opacity: 1; /* Passo ativo com opacidade total */
+  }
+  
+  .step-number {
+    background-color: #f4f5f7;
+    color: #0079BF;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .step.active .step-number {
+    background-color: #0079BF;
+    color: #fff;
+  }
+  
+  .progress-bar {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background-color: #f4f5f7;
+    margin: 0 10px;
+  }
+  
+  .progress {
+    position: absolute;
+    height: 100%;
+    background-color: #cce7f3; /* Cor clara para passo inativo */
+    width: 50%; /* Largura inicial para o passo 1 */
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .progress.active {
+    width: 100%; /* Largura completa para o passo 2 */
+    background-color: #0079BF; /* Cor mais forte para passo ativo */
+  }
+  
+
+.register-company-form, .register-admin-form {
+  background-color: #f4f5f7;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.register-company-form form, .register-admin-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .form-group label {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: #293e40;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #293e40;
 }
 
 .form-group input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 1em;
-    color: #293e40;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  color: #293e40;
 }
 
 .cta-button {
-    background-color: #0079bf;
-    color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    text-transform: uppercase;
+  background-color: #0079bf;
+  color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
 }
 
 .cta-button:hover {
-    background-color: #5ba4cf;
+  background-color: #5ba4cf;
 }
 
 .footer {
-    height: 45px;
-    text-align: center;
-    padding: 20px;
-    background-color: #293e40;
-    color: #fff;
+  height: 45px;
+  text-align: center;
+  padding: 20px;
+  background-color: #293e40;
+  color: #fff;
 }
 
 .success-message {
@@ -140,26 +191,31 @@ body {
 }
 
 .popup {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #4caf50; /* Verde para sucesso */
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    opacity: 1; /* Opacidade definida para 1 */
-    visibility: visible; /* Visibilidade definida para visível */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
 
 .popup.error {
-    background-color: #f44336; /* Vermelho para erro */
-  }
-  
-  .popup.show {
-    opacity: 1;
-    visibility: visible;
-  }
-  
+  background-color: #f44336;
+}
+
+.popup.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.navbar .logo h1 {
+  padding-top: 0;
+  font-size: 1.8em;
+  font-weight: 700;
+}
