@@ -14,6 +14,9 @@ import { AbrirChamadoComponent } from './features/cadastros/abrir-chamado/abrir-
 import { LayoutSistemaComponent } from './shared/layout-sistema/layout-sistema.component';
 import { ChatbotComponent } from './features/chatbot/chatbot.component';
 import { FuncionariosComponent } from './features/cadastros/funcionarios/funcionarios.component';
+import { GraficosComponent } from './features/administrador/graficos/graficos.component';
+import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -53,5 +56,6 @@ export const routes: Routes = [
   {path: 'sidebar', component:SidebarComponent},
   {path: 'header', component:HeaderComponent},
   {path: 'chatbot', component:ChatbotComponent},
+  {path: 'kanban-board', component:KanbanBoardComponent}
 
 ]
