@@ -37,7 +37,7 @@
       utilizar nossas soluções.
     </p>
     <p *ngIf="isAdminStep">
-      Agora, cadastre o administrador principal da sua empresa.
+      Insira os dados abaixo para completar o cadastro do administrador principal.
     </p>
 
     <div *ngIf="showPopup" class="popup" [ngClass]="{'error': isError}">
@@ -94,24 +94,31 @@
     <!-- Formulário de cadastro do administrador -->
     <div class="register-admin-form" *ngIf="isAdminStep">
       <form [formGroup]="adminForm" (ngSubmit)="onSubmitAdmin()">
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminName') }">
-          <label for="adminName">Nome do Administrador</label>
-          <input type="text" id="adminName" formControlName="adminName" required />
-          <div *ngIf="isFieldInvalid('adminName')" class="error-message">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
+          <label for="name">Nome do Administrador</label>
+          <input type="text" id="name" formControlName="name" required />
+          <div *ngIf="isFieldInvalid('name')" class="error-message">
             Campo obrigatório.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminEmail') }">
-          <label for="adminEmail">Email do Administrador</label>
-          <input type="email" id="adminEmail" formControlName="adminEmail" required />
-          <div *ngIf="isFieldInvalid('adminEmail')" class="error-message">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('email') }">
+          <label for="email">Email do Administrador</label>
+          <input type="email" id="email" formControlName="email" required />
+          <div *ngIf="isFieldInvalid('email')" class="error-message">
             Email inválido.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('adminPassword') }">
-          <label for="adminPassword">Senha</label>
-          <input type="password" id="adminPassword" formControlName="adminPassword" required />
-          <div *ngIf="isFieldInvalid('adminPassword')" class="error-message">
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('phone') }">
+          <label for="phone">Telefone</label>
+          <input type="phone" id="phone" formControlName="phone" required />
+          <div *ngIf="isFieldInvalid('phone')" class="error-message">
+            Campo obrigatório.
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('password') }">
+          <label for="password">Senha</label>
+          <input type="password" id="password" formControlName="password" required />
+          <div *ngIf="isFieldInvalid('password')" class="error-message">
             Campo obrigatório.
           </div>
         </div>

@@ -33,7 +33,11 @@ export class EmpresaComponent {
     this.adminForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      phone: ['', Validators.required],
+      companyId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
+      departmentId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
+      roles: [['ROLE_ADMINISTRADOR'], Validators.required]  // Um array contendo o papel
     });
   }
 
@@ -80,10 +84,15 @@ export class EmpresaComponent {
 
   onSubmitAdmin() {
     if (this.adminForm.valid) {
-      this.http.post('http://localhost:8081/admin', this.adminForm.value).subscribe(
+      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
         (response) => {
           this.showPopupMessage('Administrador cadastrado com sucesso!', false);
-          this.router.navigate(['/dashboard']);  // Redireciona para o dashboard
+          
+          // Adicionando um delay de 2 segundos antes de redirecionar
+          setTimeout(() => {
+            this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
+          }, 2000);  // Delay de 2 segundos
+          
         },
         (error) => {
           this.showPopupMessage('Erro ao cadastrar administrador', true);
@@ -91,7 +100,7 @@ export class EmpresaComponent {
       );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-      this.markAllFieldsAsTouched();
+      this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
     }
-  } 
+  }
 }

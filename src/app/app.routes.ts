@@ -52,10 +52,6 @@ export const routes: Routes = [
       // { path: 'problemas-hardware', component:  }
     ]
   },
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'sidebar', component:SidebarComponent},
-  {path: 'header', component:HeaderComponent},
-  {path: 'chatbot', component:ChatbotComponent},
   {path: 'kanban-board', component:KanbanBoardComponent}
 
 ]
