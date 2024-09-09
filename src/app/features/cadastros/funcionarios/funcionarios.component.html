@@ -3,7 +3,8 @@
     <h2>Cadastro de Funcionário</h2>
   </div>
   <div class="p-card-body">
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="funcForm" (ngSubmit)="onSubmitFunc()">
+      
       <div class="p-field">
         <label for="name">Nome</label>
         <input id="name" pInputText formControlName="name" placeholder="Digite o nome" />
@@ -16,6 +17,12 @@
         <div *ngIf="isFieldInvalid('email')" class="error-message">Campo obrigatório.</div>
       </div>
 
+      <div class="p-field">
+        <label for="phone">Telefone</label>
+        <input id="phone" pInputText formControlName="phone" placeholder="Digite o telefone" />
+        <div *ngIf="isFieldInvalid('phone')" class="error-message">Campo obrigatório.</div>
+      </div>
+      
       <div class="p-field">
         <label for="role">Tipo de Usuário</label>
         <p-dropdown 

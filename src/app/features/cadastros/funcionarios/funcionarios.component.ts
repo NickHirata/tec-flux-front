@@ -21,8 +21,8 @@ import { DropdownModule } from 'primeng/dropdown';  // Importando o DropdownModu
   styleUrls: ['./funcionarios.component.scss'],
 })
 
-export class FuncionariosComponent implements OnInit {
-  userForm!: FormGroup;
+export class FuncionariosComponent {
+  funcForm!: FormGroup;
   popupMessage: string = '';
   isError: boolean = false;
   showPopup: boolean = false;
@@ -33,49 +33,49 @@ export class FuncionariosComponent implements OnInit {
     { label: 'Gestor', value: 'ROLE_ADMINISTRADOR' }
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {}
-
-  ngOnInit() {
-    this.userForm = this.fb.group({
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+    this.funcForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
+      departmentId: [1, Validators.required],
+      companyId: [1, Validators.required],
       role: ['', Validators.required]
     });
-  }
+}
 
-  onSubmit() {
-    if (this.userForm.valid) {
-      this.http.post('http://localhost:8081/auth/signup', this.userForm.value)
-        .subscribe(
-          response => {
-            this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
-            this.userForm.reset();
-            setTimeout(() => {
-              this.router.navigate(['/sistema/menu-inicial']);
-            }, 2000);
-          },
-          error => {
-            if (error.status === 400) {
-              this.showPopupMessage('Erro de validação!', true);
-            } else {
-              this.showPopupMessage('Erro ao cadastrar funcionário!', true);
-            }
-            console.error('Erro ao cadastrar funcionário', error);
+  onSubmitFunc() {
+    if (this.funcForm.valid) {
+      this.http.post('http://localhost:8081/user/register', this.funcForm.value).subscribe(
+        (response) => {
+          this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
+          
+          // Adicionando um delay de 2 segundos antes de redirecionar
+          setTimeout(() => {
+            this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
+          }, 2000);  // Delay de 2 segundos
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.showPopupMessage('Email de funcionário já cadastrado ou erro de validação!', true);
+          } else {
+            this.showPopupMessage('Erro ao cadastrar funcionário!', true);
           }
-        );
+        }
+      );
     } else {
-      this.markAllFieldsAsTouched();
+      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
     }
   }
-  
 
   isFieldInvalid(field: string): boolean {
-    const control = this.userForm.get(field);
+    const control = this.funcForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   markAllFieldsAsTouched() {
-    this.userForm.markAllAsTouched();
+    this.funcForm.markAllAsTouched();
   }
 
   showPopupMessage(message: string, isError: boolean) {
