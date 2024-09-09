@@ -28,9 +28,9 @@ export class FuncionariosComponent {
   showPopup: boolean = false;
 
   roles = [
-    { label: 'Funcionário', value: 'ROLE_USUARIO' },
-    { label: 'Técnico de T.I', value: 'ROLE_TECNICO' },
-    { label: 'Gestor', value: 'ROLE_ADMINISTRADOR' }
+    { label: 'Funcionário', value: ['ROLE_USUARIO'] },
+    { label: 'Técnico de T.I', value: ['ROLE_TECNICO'] },
+    { label: 'Gestor', value: ['ROLE_ADMINISTRADOR'] }
   ];
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
@@ -40,34 +40,43 @@ export class FuncionariosComponent {
       phone: ['', Validators.required],
       departmentId: [1, Validators.required],
       companyId: [1, Validators.required],
-      role: ['', Validators.required]
+      role: [[], Validators.required]
     });
 }
 
-  onSubmitFunc() {
-    if (this.funcForm.valid) {
-      this.http.post('http://localhost:8081/user/register', this.funcForm.value).subscribe(
-        (response) => {
-          this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
-          
-          // Adicionando um delay de 2 segundos antes de redirecionar
-          setTimeout(() => {
-            this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
-          }, 2000);  // Delay de 2 segundos
-        },
-        (error) => {
-          if (error.status === 400) {
-            this.showPopupMessage('Email de funcionário já cadastrado ou erro de validação!', true);
-          } else {
-            this.showPopupMessage('Erro ao cadastrar funcionário!', true);
-          }
+onSubmitFunc() {
+  if (this.funcForm.valid) {
+    
+    const token = sessionStorage.getItem('accessToken');  // Obtenha o token armazenado corretamente
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    const formValueWithRoles = {
+      ...this.funcForm.value,
+      roles: this.funcForm.value.role  // 'role' deve ser um array de strings
+    };
+
+    console.log(formValueWithRoles);  // Log para verificar a estrutura dos dados
+
+    this.http.post('http://localhost:8081/user/register', formValueWithRoles, { headers }).subscribe(
+      (response) => {
+        this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
+        setTimeout(() => {
+          this.router.navigate(['empresa/dashboard']);
+        }, 2000);
+      },
+      (error) => {
+        if (error.status === 400) {
+          this.showPopupMessage('Email de funcionário já cadastrado ou erro de validação!', true);
+        } else {
+          this.showPopupMessage('Erro ao cadastrar funcionário!', true);
         }
-      );
-    } else {
-      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-      this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
-    }
+      }
+    );
+  } else {
+    this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+    this.markAllFieldsAsTouched();
   }
+}
 
   isFieldInvalid(field: string): boolean {
     const control = this.funcForm.get(field);
