@@ -1,28 +1,26 @@
-<div class="add-task-form">
-  <input type="text" placeholder="Nova tarefa" [(ngModel)]="newTask" />
-  <select [(ngModel)]="selectedColumn">
-    <option *ngFor="let column of boardColumns; let i = index" [value]="i">
-      {{ column.name }}
-    </option>
-  </select>
-  <button (click)="addTask(newTask, selectedColumn)">Adicionar Tarefa</button>
-</div>
-<div class="kanban-board">
-  <div
-    class="kanban-column"
-    *ngFor="let column of boardColumns"
-    [ngStyle]="{ 'background-color': column.color }"
-  >
-    <h2>{{ column.name }}</h2>
-    <div
-      cdkDropList
-      [cdkDropListData]="column.tasks"
-      [cdkDropListConnectedTo]="getConnectedDropLists()"
-      class="task-list"
-      (cdkDropListDropped)="onTaskDrop($event)"
-    >
-      <div *ngFor="let task of column.tasks" cdkDrag class="task-card">
-        {{ task }}
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <h2>Board</h2>
+      <div class="add-task-form">
+        <input type="text" placeholder="Nova tarefa" [(ngModel)]="newTask" />
+        <select [(ngModel)]="selectedColumn">
+          <option *ngFor="let column of boardColumns; let i = index" [value]="i">
+            {{ column.name }}
+          </option>
+        </select>
+        <button (click)="addTask(newTask, selectedColumn)">Adicionar Tarefa</button>
+      </div>
+      <div class="kanban-board">
+        <div class="kanban-column" *ngFor="let column of boardColumns" [ngStyle]="{ 'background-color': column.color }">
+          <h2>{{ column.name }}</h2>
+          <div cdkDropList [cdkDropListData]="column.tasks" [cdkDropListConnectedTo]="getConnectedDropLists()"
+            class="task-list" (cdkDropListDropped)="onTaskDrop($event)">
+            <div *ngFor="let task of column.tasks" cdkDrag class="task-card">
+              {{ task }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
