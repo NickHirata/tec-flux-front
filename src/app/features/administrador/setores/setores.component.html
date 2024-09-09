@@ -1,0 +1,60 @@
+<div class="grid">
+    <div class="col-12">
+      <div class="card px-6 py-6">
+        <p-toast></p-toast>
+        
+        <!-- Barra de ferramentas com botão para abrir diálogo -->
+        <p-toolbar styleClass="mb-4">
+          <ng-template pTemplate="center">
+            <div class="my-2">
+              <button pButton pRipple label="Cadastrar Setor" icon="pi pi-plus" class="p-button-success mr-2" (click)="openSetorDialog()"></button>
+            </div>
+          </ng-template>
+        </p-toolbar>
+  
+        <!-- Tabela para listagem de setores -->
+        <div>
+          <p-table
+            [value]="setores"
+            responsiveLayout="scroll"
+            [rows]="10"
+            [paginator]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="nome">Nome do Setor <p-sortIcon field="nome"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-setor>
+              <tr>
+                <td>{{ setor.nome }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+  
+          <ng-template #noSetores>
+            <p>Nenhum setor encontrado.</p>
+          </ng-template>
+        </div>
+  
+        <!-- Diálogo para cadastrar setor -->
+        <p-dialog [(visible)]="setorDialog" [style]="{width: '400px'}" header="Cadastrar Setor" [modal]="true" class="p-fluid">
+          <ng-template pTemplate="content">
+            <div class="field">
+              <label for="nomeSetor">Nome do Setor</label>
+              <input id="nomeSetor" pInputText [(ngModel)]="setor.nome" required />
+            </div>
+          </ng-template>
+  
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarSetor()"></button>
+          </ng-template>
+        </p-dialog>
+      </div>
+    </div>
+  </div>
+  

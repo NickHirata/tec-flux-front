@@ -16,6 +16,7 @@ import { ChatbotComponent } from './features/chatbot/chatbot.component';
 import { FuncionariosComponent } from './features/cadastros/funcionarios/funcionarios.component';
 import { GraficosComponent } from './features/administrador/graficos/graficos.component';
 import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
+import { SetoresComponent } from './features/administrador/setores/setores.component';
 
 
 export const routes: Routes = [
@@ -33,7 +34,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'menu-inicial', pathMatch: 'full' },
       { path: 'menu-inicial', component: MenuInicialComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
-      {path: 'chatbot', component:ChatbotComponent},
+      { path: 'chatbot', component:ChatbotComponent},
+      { path: 'kanban-board', component:KanbanBoardComponent}
       // { path: 'reportar-problema', component: },
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
@@ -45,13 +47,15 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: GraficosComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
-      {path: 'chatbot', component:ChatbotComponent},
-      {path: 'cad_func', component:FuncionariosComponent},
+      { path: 'chatbot', component:ChatbotComponent},
+      { path: 'cad_func', component:FuncionariosComponent},
+      { path: 'board', component:KanbanBoardComponent},
+      { path: 'setores', component:SetoresComponent}
       // { path: 'reportar-problema', component: },
       // { path: 'ajuda-codigo', component:  },
       // { path: 'problemas-hardware', component:  }
     ]
   },
-  {path: 'kanban-board', component:KanbanBoardComponent}
+
 
 ]
