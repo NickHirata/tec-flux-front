@@ -17,6 +17,7 @@ import { FuncionariosComponent } from './features/cadastros/funcionarios/funcion
 import { GraficosComponent } from './features/administrador/graficos/graficos.component';
 import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
 import { SetoresComponent } from './features/administrador/setores/setores.component';
+import { ConfiguracaoComponent } from './features/administrador/configuracao/configuracao.component';
 
 
 export const routes: Routes = [
@@ -35,10 +36,7 @@ export const routes: Routes = [
       { path: 'menu-inicial', component: MenuInicialComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
       { path: 'chatbot', component:ChatbotComponent},
-      { path: 'kanban-board', component:KanbanBoardComponent}
-      // { path: 'reportar-problema', component: },
-      // { path: 'ajuda-codigo', component:  },
-      // { path: 'problemas-hardware', component:  }
+      { path: 'board', component:KanbanBoardComponent}
     ]
   },
   {
@@ -50,10 +48,8 @@ export const routes: Routes = [
       { path: 'chatbot', component:ChatbotComponent},
       { path: 'cad_func', component:FuncionariosComponent},
       { path: 'board', component:KanbanBoardComponent},
-      { path: 'setores', component:SetoresComponent}
-      // { path: 'reportar-problema', component: },
-      // { path: 'ajuda-codigo', component:  },
-      // { path: 'problemas-hardware', component:  }
+      { path: 'setores', component:SetoresComponent},
+      { path: 'config', component:ConfiguracaoComponent},
     ]
   },
 
