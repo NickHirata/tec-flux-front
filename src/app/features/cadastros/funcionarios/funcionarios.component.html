@@ -1,75 +1,40 @@
-<div class="grid">
-  <div class="col-12">
-    <div class="card px-6 py-6">
-      <h2>Cadastro de Funcionário</h2>
-      <p-toast></p-toast>
-
-      <!-- Barra de ferramentas com botão para abrir diálogo -->
-      <p-toolbar styleClass="mb-4">
-        <ng-template pTemplate="center">
-          <div class="my-2">
-            <button pButton pRipple label="Cadastrar Funcionário" icon="pi pi-plus" class="p-button-success mr-2"
-              (click)="openEmployeeDialog()"></button>
-          </div>
-        </ng-template>
-      </p-toolbar>
-
-      <!-- Tabela para listagem de funcionários -->
-      <div>
-        <p-table [value]="employees" responsiveLayout="scroll" [rows]="10" [paginator]="true"
-          [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
-          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas">
-          <ng-template pTemplate="header">
-            <tr>
-              <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
-              <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-              <th pSortableColumn="role">Tipo de Usuário <p-sortIcon field="role"></p-sortIcon></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-employee>
-            <tr>
-              <td>{{ employee.name }}</td>
-              <td>{{ employee.email }}</td>
-              <td>{{ employee.role.label }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-
-        <ng-template #noEmployees>
-          <p>Nenhum funcionário encontrado.</p>
-        </ng-template>
+<div class="p-card">
+  <div class="p-card-header">
+    <h2>Cadastro de Funcionário</h2>
+  </div>
+  <div class="p-card-body">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="p-field">
+        <label for="name">Nome</label>
+        <input id="name" pInputText formControlName="name" placeholder="Digite o nome" />
+        <div *ngIf="isFieldInvalid('name')" class="error-message">Campo obrigatório.</div>
       </div>
 
-      <!-- Diálogo para cadastrar funcionário -->
-      <p-dialog [(visible)]="employeeDialog" [style]="{width: '600px'}" header="Cadastrar Funcionário" class="p-fluid">
-        <ng-template pTemplate="content">
-          <div class="field">
-            <label for="name">Nome</label>
-            <input id="name" pInputText formControlName="name" placeholder="Digite o nome" class="input-large" />
-            <div *ngIf="isFieldInvalid('name')" class="error-message">Campo obrigatório.</div>
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" pInputText formControlName="email" placeholder="Digite o email" class="input-large" />
-            <div *ngIf="isFieldInvalid('email')" class="error-message">Campo obrigatório.</div>
-          </div>
-          <div class="field">
-            <label for="role">Tipo de Usuário</label>
-            <p-dropdown id="role" [options]="roles" formControlName="role" optionLabel="label" placeholder="Selecione o tipo de usuário" class="input-large">
-            </p-dropdown>
-            <div *ngIf="isFieldInvalid('role')" class="error-message">Campo obrigatório.</div>
-          </div>
-          <div class="field informativo">
-            <p>A senha será gerada automaticamente e enviada para o email do funcionário.</p>
-          </div>
-        </ng-template>
-      
-        <ng-template pTemplate="footer">
-          <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarFuncionario()"></button>
-        </ng-template>
-      </p-dialog>
-      
-    </div>
+      <div class="p-field">
+        <label for="email">Email</label>
+        <input id="email" pInputText formControlName="email" placeholder="Digite o email" />
+        <div *ngIf="isFieldInvalid('email')" class="error-message">Campo obrigatório.</div>
+      </div>
+
+      <div class="p-field">
+        <label for="role">Tipo de Usuário</label>
+        <p-dropdown 
+          id="role" 
+          [options]="roles" 
+          formControlName="role" 
+          optionLabel="label" 
+          placeholder="Selecione o tipo de usuário">
+        </p-dropdown>
+        <div *ngIf="isFieldInvalid('role')" class="error-message">Campo obrigatório.</div>
+      </div>
+
+      <div class="p-field informativo">
+        <p>A senha será gerada automaticamente e enviada para o email do funcionário.</p>
+      </div>
+
+      <div class="p-field">
+        <button pButton type="submit" label="Cadastrar" class="cta-button">Cadastrar</button>
+      </div>
+    </form>
   </div>
 </div>

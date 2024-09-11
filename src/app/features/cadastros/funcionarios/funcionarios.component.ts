@@ -35,21 +35,20 @@ import { ButtonModule } from 'primeng/button';
 })
 
 export class FuncionariosComponent implements OnInit {
-  employeeDialog: boolean = false;
-  employees: any[] = [];
-  userForm: FormGroup;
+  userForm!: FormGroup;
+  popupMessage: string = '';
+  isError: boolean = false;
+  showPopup: boolean = false;
+
   roles = [
-    { label: 'Funcionário', value: 'ROLE_USUARIO' },
-    { label: 'Técnico de T.I', value: 'ROLE_TECNICO' },
-    { label: 'Gestor', value: 'ROLE_ADMINISTRADOR' }
+    { label: 'Funcionário', value: ['ROLE_USUARIO'] },
+    { label: 'Técnico de T.I', value: ['ROLE_TECNICO'] },
+    { label: 'Gestor', value: ['ROLE_ADMINISTRADOR'] }
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient,
-    private router: Router,
-    private messageService: MessageService
-  ) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {}
+
+  ngOnInit() {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -57,48 +56,22 @@ export class FuncionariosComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.loadEmployees();
-  }
-
-  loadEmployees() {
-    // Chamada para carregar funcionários (simulada)
-    this.http.get<any[]>('http://localhost:8081/employees').subscribe(data => {
-      this.employees = data;
-    });
-  }
-
-  openEmployeeDialog() {
-    this.userForm.reset();
-    this.employeeDialog = true;
-  }
-
-  hideDialog() {
-    this.employeeDialog = false;
-  }
-
-  isFieldInvalid(field: string) {
-    return this.userForm.get(field)?.invalid && this.userForm.get(field)?.touched;
-  }
-
-  salvarFuncionario() {
+  onSubmit() {
     if (this.userForm.valid) {
       this.http.post('http://localhost:8081/auth/signup', this.userForm.value)
         .subscribe(
           response => {
-            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário cadastrado com sucesso!' });
+            this.showPopupMessage('Funcionário cadastrado com sucesso!', false);
             this.userForm.reset();
-            this.loadEmployees();  // Recarrega a lista de funcionários
-            this.employeeDialog = false;
             setTimeout(() => {
               this.router.navigate(['/sistema/menu-inicial']);
             }, 2000);
           },
           error => {
             if (error.status === 400) {
-              this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro de validação!' });
+              this.showPopupMessage('Erro de validação!', true);
             } else {
-              this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar funcionário!' });
+              this.showPopupMessage('Erro ao cadastrar funcionário!', true);
             }
             console.error('Erro ao cadastrar funcionário', error);
           }
@@ -107,11 +80,15 @@ export class FuncionariosComponent implements OnInit {
       this.markAllFieldsAsTouched();
     }
   }
+  
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.userForm.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
 
   markAllFieldsAsTouched() {
-    Object.values(this.userForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
+    this.userForm.markAllAsTouched();
   }
 
   showPopupMessage(message: string, isError: boolean) {

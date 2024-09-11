@@ -67,32 +67,32 @@ export class EmpresaComponent {
 
   onSubmitEmpresa() {
     if (this.empresaForm.valid) {
-      this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
-        (response) => {
-          this.showPopupMessage('Empresa cadastrada com sucesso!', false);
-          this.isAdminStep = true;  // Avança para o cadastro do administrador
-        },
-        (error) => {
-          this.showPopupMessage('Empresa já cadastrada!', true);
-        }
-      );
+      // Primeiro tenta cadastrar o administrador, caso tenha sucesso, cadastra a empresa
+      this.isAdminStep = true;  // Avança para o cadastro do administrador
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
       this.markAllFieldsAsTouched();
     }
   }
-
+  
   onSubmitAdmin() {
     if (this.adminForm.valid) {
       this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
         (response) => {
-          this.showPopupMessage('Administrador cadastrado com sucesso!', false);
-          
-          // Adicionando um delay de 2 segundos antes de redirecionar
-          setTimeout(() => {
-            this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
-          }, 2000);  // Delay de 2 segundos
-          
+          // Se o administrador for cadastrado com sucesso, cadastra a empresa
+          this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
+            (response) => {
+              this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
+  
+              // Adicionando um delay de 2 segundos antes de redirecionar
+              setTimeout(() => {
+                this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
+              }, 2000);  // Delay de 2 segundos
+            },
+            (error) => {
+              this.showPopupMessage('Erro ao cadastrar empresa!', true);
+            }
+          );
         },
         (error) => {
           this.showPopupMessage('Email de administrador já cadastrado!', true);
@@ -102,5 +102,5 @@ export class EmpresaComponent {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
       this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
     }
-  }
+  }  
 }
