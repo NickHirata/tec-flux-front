@@ -29,6 +29,7 @@ export const routes: Routes = [
   { path: 'sobre-nos', component: SobreNosComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'trabalhe-conosco', component: TrabalheConoscoComponent },
+  { path: 'board', component:KanbanBoardComponent},
   {
     path: 'sistema', component: LayoutSistemaComponent,
     children: [

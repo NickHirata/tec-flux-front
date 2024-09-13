@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+//import { TaskService } from '../../shared;
+
+
 
 @Component({
   selector: 'app-kanban-board',
@@ -11,7 +14,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.scss'
 })
-export class KanbanBoardComponent {
+export class KanbanBoardComponent //implements OnInit
+{
 
   selectedColumn: any;
   newTask: string = '';
@@ -21,20 +25,27 @@ export class KanbanBoardComponent {
     {
       name: 'A Fazer',
       tasks: ['Tarefa 1', 'Tarefa 2', 'Tarefa 3'],
-      color: '#FFCDD2' // Cor personalizada para essa coluna
+      color: '#B3E5FC' // Cor personalizada para essa coluna
     },
     {
       name: 'Em Progresso',
       tasks: ['Tarefa 4'],
-      color: '#BBDEFB'
+      color: '#64B5F6'
     },
     {
       name: 'Concluído',
       tasks: ['Tarefa 5'],
-      color: '#C8E6C9'
+      color: '#0288D1'
     },
   ];
 
+  //constructor(private taskService: TaskService) {}
+
+ /* ngOnInit() {
+    this.taskService.taskAdded$.subscribe(({ task, columnIndex }) => {
+      this.addTask(task, columnIndex);
+    });
+  }*/
 
   // Função para lidar com arrastar e soltar
   onTaskDrop(event: CdkDragDrop<string[]>) {
