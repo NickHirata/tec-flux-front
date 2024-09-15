@@ -1,0 +1,10 @@
+<div class="chamados-list">
+    <h2>Meus Chamados</h2>
+    <ul>
+      <li *ngFor="let chamado of chamados">
+        <span>{{ chamado.assunto }} - {{ chamado.status }}</span>
+        <button *ngIf="chamado.status === 'Concluído'" (click)="viewResolution(chamado)">Ver Resolução</button>
+      </li>
+    </ul>
+  </div>
+  
