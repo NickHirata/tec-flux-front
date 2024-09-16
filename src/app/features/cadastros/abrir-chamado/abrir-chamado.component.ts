@@ -15,6 +15,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { InputMaskModule } from 'primeng/inputmask';
+import { TaskService } from '../../../shared/task.service';
 
 @Component({
   selector: 'app-abrir-chamado',
@@ -49,7 +50,7 @@ export class AbrirChamadoComponent implements OnInit {
   departamentos: any[] = [];
   categorias: any[] = [];
 
-  constructor(private cadastroService: CadastroService) {}
+  constructor(private cadastroService: CadastroService, private taskService: TaskService) {}
 
   ngOnInit() {
     this.loadDepartamentos();
@@ -103,6 +104,7 @@ export class AbrirChamadoComponent implements OnInit {
       this.cadastroService.salvarChamado(this.chamado).subscribe(
         (response) => {
           this.chamados.push(response);
+          this.taskService.addTask(response); // Adiciona a tarefa ao Kanban Board
           this.chamadoDialog = false;
           this.chamado = {};
         },

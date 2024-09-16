@@ -1,3 +1,4 @@
+<!-- Formulário para adicionar nova tarefa -->
 <div class="add-task-form">
   <input type="text" placeholder="Nova tarefa" [(ngModel)]="newTask" />
   <select [(ngModel)]="selectedColumn">
@@ -7,6 +8,8 @@
   </select>
   <button (click)="addTask(newTask, selectedColumn)">Adicionar Tarefa</button>
 </div>
+
+<!-- Kanban Board -->
 <div class="kanban-board">
   <div
     class="kanban-column"

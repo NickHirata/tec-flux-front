@@ -26,4 +26,7 @@ export class CadastroService {
   salvarChamado(chamado: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/chamados`, chamado);
   }
+  getChamadosByUser(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/chamados?userId=${userId}`);
+  }
 }
