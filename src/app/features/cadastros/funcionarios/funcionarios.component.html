@@ -49,6 +49,11 @@
             <div *ngIf="isFieldInvalid('name')" class="error-message">Campo obrigatório.</div>
           </div>
           <div class="field">
+            <label for="phone">Telefone</label>
+            <input id="phone" pInputText formControlName="phone" placeholder="Digite o telefone" class="input-large" />
+            <div *ngIf="isFieldInvalid('phone')" class="error-message">Campo obrigatório.</div>
+          </div>
+          <div class="field">
             <label for="email">Email</label>
             <input id="email" pInputText formControlName="email" placeholder="Digite o email" class="input-large" />
             <div *ngIf="isFieldInvalid('email')" class="error-message">Campo obrigatório.</div>

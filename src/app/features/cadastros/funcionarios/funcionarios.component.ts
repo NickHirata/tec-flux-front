@@ -39,9 +39,9 @@ export class FuncionariosComponent implements OnInit {
   employees: any[] = [];
   userForm: FormGroup;
   roles = [
-    { label: 'Funcionário', value: 'ROLE_USUARIO' },
-    { label: 'Técnico de T.I', value: 'ROLE_TECNICO' },
-    { label: 'Gestor', value: 'ROLE_ADMINISTRADOR' }
+    { label: 'Funcionário', value: ['ROLE_USUARIO'] },
+    { label: 'Técnico de T.I', value: ['ROLE_TECNICO'] },
+    { label: 'Gestor', value: ['ROLE_ADMINISTRADOR'] }
   ];
 
   constructor(
@@ -53,7 +53,10 @@ export class FuncionariosComponent implements OnInit {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required]
+      phone: ['', Validators.required],
+      departmentId: [1,],
+      companyId: [1, ],
+      role: [[], Validators.required]
     });
   }
 
