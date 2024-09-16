@@ -41,21 +41,30 @@ export class LoginComponent {
           sessionStorage.setItem('lastLogin', response.lastLogin);
           sessionStorage.setItem('departmentId', response.departmentId.toString());
           sessionStorage.setItem('companyId', response.companyId.toString());
-
+          sessionStorage.setItem('roles', JSON.stringify(response.roles));
+  
           this.showPopupMessage('Login com sucesso!', false);
           this.loginForm.reset();
+  
+          // Determina a rota com base na role
           setTimeout(() => {
-            this.router.navigate(['/sistema/menu-inicial']);
+            const roles = JSON.parse(sessionStorage.getItem('roles') || '[]');
+            if (roles.includes('ROLE_ADMINISTRADOR') || roles.includes('ROLE_MASTER')) {
+              this.router.navigate(['/empresa/dashboard']);  // Redireciona administradores e master para o dashboard da empresa
+            } else {
+              this.router.navigate(['/sistema/menu-inicial']);  // Redireciona os demais usuários para o menu inicial do sistema
+            }
           }, 2000);
         },
         (error) => {
           this.showPopupMessage('Usuário ou senha inválidos!', true);
         }
       );
+  
     } else {
       this.markAllFieldsAsTouched();
     }
-  }
+  }  
 
   isFieldInvalid(field: string): boolean {
     const control = this.loginForm.get(field);

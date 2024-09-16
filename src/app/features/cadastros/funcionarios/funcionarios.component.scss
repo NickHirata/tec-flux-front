@@ -1,73 +1,72 @@
 p-dialog {
-    .field {
-      margin-bottom: 1.5rem;
-  
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        color: #333;
-      }
-  
-      input[pInputText],
-      p-dropdown {
-        width: 100%;
-        padding: 0.75rem;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        font-size: 1rem;
-      }
-  
-      .error-message {
-        color: red;
-        font-size: 0.85rem;
-        margin-top: 0.3rem;
-      }
-    }
-  
-    .informativo {
-      padding: 1rem;
-      background-color: #f4f5f7;
-      border-radius: 6px;
-      color: #555;
-      font-size: 0.9rem;
-    }
-  
-    .p-dialog-footer {
-      display: flex;
-      justify-content: flex-end;
-      padding-top: 1rem;
-    }
-  }
-  
-  .input-large {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  p-dropdown {
-    width: 100% !important; 
-    display: block; 
-    margin: 0; 
-    border: 1px solid #ccc; 
-    border-radius: 4px; 
-    box-sizing: border-box; 
-  }
-  
-  
-  p-dropdown, input[pInputText] {
-    border: 1px solid #ccc !important; 
-    border-radius: 4px; 
-    box-sizing: border-box; 
-  }
-  
   .field {
-    border: none;
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[pInputText],
+    p-dropdown {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
   }
-  
-  .p-dropdown-panel {
-    width: 100% !important; 
+
+  .informativo {
+    padding: 1rem;
+    background-color: #f4f5f7;
+    border-radius: 6px;
+    color: #555;
+    font-size: 0.9rem;
   }
-  
-  
+
+  .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+  }
+}
+
+.input-large {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+p-dropdown {
+  width: 100% !important; 
+  display: block; 
+  margin: 0; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+}
+
+
+p-dropdown, input[pInputText] {
+  border: 1px solid #ccc !important; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+}
+
+.field {
+  border: none;
+}
+
+.p-dropdown-panel {
+  width: 100% !important; 
+}
+
