@@ -16,11 +16,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { InputMaskModule } from 'primeng/inputmask';
 import { TaskService } from '../../../shared/task.service';
+import { CadastroService } from '../../../services/cadastro.service'; // Ajuste o caminho conforme necessário
+import { CommonModule } from '@angular/common'; // Adicionado
 
 @Component({
   selector: 'app-abrir-chamado',
   standalone: true,
   imports: [ 
+    CommonModule, // Adicionado
     TableModule,
     FileUploadModule,
     FormsModule,
@@ -50,7 +53,11 @@ export class AbrirChamadoComponent implements OnInit {
   departamentos: any[] = [];
   categorias: any[] = [];
 
-  constructor(private cadastroService: CadastroService, private taskService: TaskService) {}
+  constructor(
+    private http: HttpClient, // Injetado
+    private cadastroService: CadastroService, 
+    private taskService: TaskService
+  ) {}
 
   ngOnInit() {
     this.loadDepartamentos();
@@ -58,11 +65,17 @@ export class AbrirChamadoComponent implements OnInit {
     this.loadChamados();
   }
 
+  // Método loadCategorias sem parâmetros corrigido
   loadCategorias() {
     this.cadastroService.getCategorias().subscribe(
       (data) => {
         this.categorias = data;
       },
+      (error) => {
+        console.error('Erro ao carregar categorias', error);
+      }
+    );
+  }
 
   loadDepartamentos() {
     this.http.get<any[]>('http://localhost:8081/departments').subscribe(
@@ -75,7 +88,8 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
-  loadCategorias(departamentoId: number) {
+  // Renomeado para evitar duplicação
+  loadCategoriasByDepartamento(departamentoId: number) {
     this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`).subscribe(
       (data) => {
         this.categorias = data;
@@ -97,7 +111,8 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
-  openChamadoDiolog() {
+  // Corrigido o nome do método
+  openChamadoDialog() {
     this.chamado = {};
     this.submitted = false;
     this.chamadoDialog = true;
@@ -106,7 +121,7 @@ export class AbrirChamadoComponent implements OnInit {
   onDepartamentoChange(event: any) {
     const departamentoSelecionado = event.value;
     if (departamentoSelecionado && departamentoSelecionado.id) {
-      this.loadCategorias(departamentoSelecionado.id);
+      this.loadCategoriasByDepartamento(departamentoSelecionado.id);
     } else {
       this.categorias = [];
     }
