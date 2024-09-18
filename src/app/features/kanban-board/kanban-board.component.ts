@@ -9,7 +9,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-kanban-board',
-	@@ -11,7 +14,8 @@ import { CommonModule } from '@angular/common';
+  standalone: true,
+  imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.scss'
 })
@@ -18,7 +19,8 @@ export class KanbanBoardComponent //implements OnInit
 
   selectedColumn: any;
   newTask: string = '';
-	@@ -21,20 +25,27 @@ export class KanbanBoardComponent {
+  // Definimos as colunas e as tarefas internamente no componente
+  boardColumns = [
     {
       name: 'A Fazer',
       tasks: ['Tarefa 1', 'Tarefa 2', 'Tarefa 3'],
