@@ -11,7 +11,7 @@ describe('ResolvedDialogComponent', () => {
       imports: [ResolvedDialogComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ResolvedDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

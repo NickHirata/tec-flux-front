@@ -11,7 +11,7 @@ describe('ChamadosListComponent', () => {
       imports: [ChamadosListComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ChamadosListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
