@@ -20,17 +20,17 @@ export class KanbanBoardComponent {
     {
       name: 'A Fazer',
       tasks: ['Tarefa 1', 'Tarefa 2', 'Tarefa 3'],
-      color: '#B3E5FC', // Cor personalizada
+      color: '#FFCDD2', // Cor personalizada
     },
     {
       name: 'Em Progresso',
       tasks: ['Tarefa 4'],
-      color: '#B3E5FC',
+      color: '#BBDEFB',
     },
     {
       name: 'Concluído',
       tasks: ['Tarefa 5'],
-      color: '#0288D1',
+      color: '#C8E6C9',
     },
   ];
 

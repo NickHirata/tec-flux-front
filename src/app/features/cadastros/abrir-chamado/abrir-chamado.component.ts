@@ -15,6 +15,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { InputMaskModule } from 'primeng/inputmask';
+import { TaskService } from '../../../shared/task.service';
 
 @Component({
   selector: 'app-abrir-chamado',
@@ -49,12 +50,19 @@ export class AbrirChamadoComponent implements OnInit {
   departamentos: any[] = [];
   categorias: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private cadastroService: CadastroService, private taskService: TaskService) {}
 
   ngOnInit() {
     this.loadDepartamentos();
+    this.loadCategorias();
     this.loadChamados();
   }
+
+  loadCategorias() {
+    this.cadastroService.getCategorias().subscribe(
+      (data) => {
+        this.categorias = data;
+      },
 
   loadDepartamentos() {
     this.http.get<any[]>('http://localhost:8081/departments').subscribe(
@@ -89,7 +97,7 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
-  openChamadoDialog() {
+  openChamadoDiolog() {
     this.chamado = {};
     this.submitted = false;
     this.chamadoDialog = true;
@@ -104,7 +112,7 @@ export class AbrirChamadoComponent implements OnInit {
     }
   }
 
-  salvarChamado() {
+  salvarChamado() { 
     this.submitted = true;
 
     if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
