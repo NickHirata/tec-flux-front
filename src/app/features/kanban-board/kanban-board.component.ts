@@ -19,7 +19,6 @@ export class KanbanBoardComponent //implements OnInit
 
   selectedColumn: any;
   newTask: string = '';
-
   // Definimos as colunas e as tarefas internamente no componente
   boardColumns = [
     {
@@ -60,12 +59,9 @@ export class KanbanBoardComponent //implements OnInit
       );
     }
   }
-
   getConnectedDropLists(): string[] {
     return this.boardColumns.map((_, index) => `cdk-drop-list-${index}`);
   }
-
-
   // Função para adicionar uma nova tarefa em uma coluna específica
   addTask(task: string, columnIndex: number) {
     if (task.trim()) {

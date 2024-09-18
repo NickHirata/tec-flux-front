@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CadastroService } from '../../../services/cadastro.service';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -15,11 +15,15 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { InputMaskModule } from 'primeng/inputmask';
+import { TaskService } from '../../../shared/task.service';
+import { CadastroService } from '../../../services/cadastro.service'; // Ajuste o caminho conforme necessário
+import { CommonModule } from '@angular/common'; // Adicionado
 
 @Component({
   selector: 'app-abrir-chamado',
   standalone: true,
   imports: [ 
+    CommonModule, // Adicionado
     TableModule,
     FileUploadModule,
     FormsModule,
@@ -34,11 +38,11 @@ import { InputMaskModule } from 'primeng/inputmask';
     RadioButtonModule,
     InputNumberModule,
     DialogModule,
-    InputMaskModule],
+    InputMaskModule
+  ],
   templateUrl: './abrir-chamado.component.html',
-  styleUrl: './abrir-chamado.component.scss'
+  styleUrls: ['./abrir-chamado.component.scss']
 })
-
 export class AbrirChamadoComponent implements OnInit {
   
   chamados: any[] = [];
@@ -49,7 +53,11 @@ export class AbrirChamadoComponent implements OnInit {
   departamentos: any[] = [];
   categorias: any[] = [];
 
-  constructor(private cadastroService: CadastroService) {}
+  constructor(
+    private http: HttpClient, // Injetado
+    private cadastroService: CadastroService, 
+    private taskService: TaskService
+  ) {}
 
   ngOnInit() {
     this.loadDepartamentos();
@@ -57,17 +65,7 @@ export class AbrirChamadoComponent implements OnInit {
     this.loadChamados();
   }
 
-  loadDepartamentos() {
-    this.cadastroService.getDepartamentos().subscribe(
-      (data) => {
-        this.departamentos = data;
-      },
-      (error) => {
-        console.error('Erro ao carregar departamentos', error);
-      }
-    );
-  }
-
+  // Método loadCategorias sem parâmetros corrigido
   loadCategorias() {
     this.cadastroService.getCategorias().subscribe(
       (data) => {
@@ -79,8 +77,31 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
+  loadDepartamentos() {
+    this.http.get<any[]>('http://localhost:8081/departments').subscribe(
+      (data) => {
+        this.departamentos = data;
+      },
+      (error) => {
+        console.error('Erro ao carregar departamentos', error);
+      }
+    );
+  }
+
+  // Renomeado para evitar duplicação
+  loadCategoriasByDepartamento(departamentoId: number) {
+    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`).subscribe(
+      (data) => {
+        this.categorias = data;
+      },
+      (error) => {
+        console.error('Erro ao carregar categorias', error);
+      }
+    );
+  }
+
   loadChamados() {
-    this.cadastroService.getChamados().subscribe(
+    this.http.get<any[]>('http://localhost:8081/chamados').subscribe(
       (data) => {
         this.chamados = data;
       },
@@ -90,17 +111,33 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
-  openChamadoDiolog() {
+  // Corrigido o nome do método
+  openChamadoDialog() {
     this.chamado = {};
     this.submitted = false;
     this.chamadoDialog = true;
   }
 
-  salvarChamado() {
+  onDepartamentoChange(event: any) {
+    const departamentoSelecionado = event.value;
+    if (departamentoSelecionado && departamentoSelecionado.id) {
+      this.loadCategoriasByDepartamento(departamentoSelecionado.id);
+    } else {
+      this.categorias = [];
+    }
+  }
+
+  salvarChamado() { 
     this.submitted = true;
 
     if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
-      this.cadastroService.salvarChamado(this.chamado).subscribe(
+      const chamadoData = {
+        departamentoId: this.chamado.departamento.id,
+        categoriaId: this.chamado.categoria.id,
+        assunto: this.chamado.assunto,
+        descricao: this.chamado.descricao
+      };
+      this.http.post<any>('http://localhost:8081/chamados', chamadoData).subscribe(
         (response) => {
           this.chamados.push(response);
           this.chamadoDialog = false;
