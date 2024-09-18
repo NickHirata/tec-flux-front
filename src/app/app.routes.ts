@@ -18,8 +18,6 @@ import { GraficosComponent } from './features/administrador/graficos/graficos.co
 import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
 import { SetoresComponent } from './features/administrador/setores/setores.component';
 import { ConfiguracaoComponent } from './features/administrador/configuracao/configuracao.component';
-
-
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -53,6 +51,4 @@ export const routes: Routes = [
       { path: 'config', component:ConfiguracaoComponent},
     ]
   },
-
-
 ]
