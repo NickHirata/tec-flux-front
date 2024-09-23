@@ -42,4 +42,5 @@ def chat():
 
 
 if __name__ == '__main__':
+    print("ChatBot está rodando")
     app.run()
