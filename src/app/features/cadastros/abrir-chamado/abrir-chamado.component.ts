@@ -50,6 +50,10 @@ export class AbrirChamadoComponent implements OnInit {
   chamadoDialog: boolean = false;
   submitted: boolean = false;
 
+  detalheDialog: boolean = false; 
+  selectedChamado: any; 
+
+
   departamentos: any[] = [];
   categorias: any[] = [];
 
@@ -63,7 +67,66 @@ export class AbrirChamadoComponent implements OnInit {
     this.loadDepartamentos();
     this.loadCategorias();
     this.loadChamados();
+    this.loadChamadosTestData(); 
   }
+  
+  // Método para carregar chamados de teste
+  loadChamadosTestData() {
+    this.chamados = [
+      {
+        id: 1,
+        nome: 'Problema no servidor',
+        prioridade: 'Alta',
+        progresso: 50,
+        status: 'Em andamento',
+        departamento: { id: 1, nome: 'TI' },
+        categoria: { id: 1, nome: 'Hardware' },
+        assunto: 'Falha no servidor de produção',
+        descricao: 'O servidor está apresentando falhas intermitentes desde a última atualização.',
+        dataCriacao: '2024-09-01',
+        dataResolucao: null,
+        historico: [
+          { data: '2024-09-02', responsavel: 'João', descricao: 'Investigação inicial do problema.' },
+          { data: '2024-09-03', responsavel: 'Maria', descricao: 'Reinicialização do servidor e aplicação de patch.' }
+        ]
+      },
+      {
+        id: 2,
+        nome: 'Erro na aplicação web',
+        prioridade: 'Média',
+        progresso: 75,
+        status: 'Em andamento',
+        departamento: { id: 2, nome: 'Desenvolvimento' },
+        categoria: { id: 2, nome: 'Software' },
+        assunto: 'Aplicação web não carrega corretamente',
+        descricao: 'Usuários relatam que a aplicação não carrega em determinados navegadores.',
+        dataCriacao: '2024-09-05',
+        dataResolucao: null,
+        historico: [
+          { data: '2024-09-06', responsavel: 'Carlos', descricao: 'Análise de compatibilidade com navegadores.' },
+          { data: '2024-09-07', responsavel: 'Ana', descricao: 'Correção de bug na renderização.' }
+        ]
+      },
+      {
+        id: 3,
+        nome: 'Atualização de sistema',
+        prioridade: 'Baixa',
+        progresso: 100,
+        status: 'Resolvido',
+        departamento: { id: 3, nome: 'Suporte' },
+        categoria: { id: 3, nome: 'Infraestrutura' },
+        assunto: 'Atualização do sistema de backup',
+        descricao: 'Necessidade de atualizar o sistema de backup para a versão mais recente.',
+        dataCriacao: '2024-08-25',
+        dataResolucao: '2024-09-01',
+        historico: [
+          { data: '2024-08-26', responsavel: 'Pedro', descricao: 'Agendada atualização.' },
+          { data: '2024-09-01', responsavel: 'Lucas', descricao: 'Atualização realizada com sucesso.' }
+        ]
+      }
+    ];
+  }
+  
 
   // Método loadCategorias sem parâmetros corrigido
   loadCategorias() {
@@ -153,5 +216,11 @@ export class AbrirChamadoComponent implements OnInit {
   hideDialog() {
     this.chamadoDialog = false;
     this.submitted = false;
+  }
+
+
+  verDetalhes(chamado: any) {
+    this.selectedChamado = chamado; // Armazena o chamado selecionado
+    this.detalheDialog = true; // Abre o diálogo de detalhes
   }
 }

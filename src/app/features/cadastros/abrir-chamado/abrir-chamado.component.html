@@ -25,12 +25,20 @@
             <tr>
               <th pSortableColumn="nome">Nome do Chamado <p-sortIcon field="nome"></p-sortIcon></th>
               <th pSortableColumn="prioridade">Prioridade <p-sortIcon field="prioridade"></p-sortIcon></th>
+              <th>Progresso</th>
+              <th>Status</th>
+              <th>Ações</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-chamado>
             <tr>
               <td>{{ chamado.nome }}</td>
               <td>{{ chamado.prioridade }}</td>
+              <td>{{ chamado.progresso }}%</td>
+              <td>{{ chamado.status }}</td>
+              <td>
+                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="verDetalhes(chamado)"></button>
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -39,6 +47,7 @@
           <p>Nenhum chamado encontrado.</p>
         </ng-template>
       </div>
+
 
       <!-- Diálogo para abrir/criar chamado -->
       <p-dialog [(visible)]="chamadoDialog" [style]="{width: '450px'}" header="Cadastrar Chamado" [modal]="true" class="p-fluid">
@@ -64,6 +73,63 @@
         <ng-template pTemplate="footer">
           <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
           <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarChamado()"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Diálogo de detalhes do chamado -->
+      <p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes do Chamado" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+          <div *ngIf="selectedChamado">
+            <div class="field">
+              <label>Nome</label>
+              <p>{{ selectedChamado.nome }}</p>
+            </div>
+            <div class="field">
+              <label>Departamento</label>
+              <p>{{ selectedChamado.departamento }}</p>
+            </div>
+            <div class="field">
+              <label>Categoria</label>
+              <p>{{ selectedChamado.categoria }}</p>
+            </div>
+            <div class="field">
+              <label>Assunto</label>
+              <p>{{ selectedChamado.assunto }}</p>
+            </div>
+            <div class="field">
+              <label>Progresso</label>
+              <p>{{ selectedChamado.progresso }}%</p>
+            </div>
+            <div class="field">
+              <label>Data de Criação</label>
+              <p>{{ selectedChamado.dataCriacao }}</p>
+            </div>
+            <div class="field">
+              <label>Data de Resolução</label>
+              <p>{{ selectedChamado.dataResolucao ? selectedChamado.dataResolucao : '--' }}</p>
+            </div>
+
+            <h3>Histórico</h3>
+            <p-table [value]="selectedChamado.historico" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Data</th>
+                  <th>Responsável</th>
+                  <th>Descrição</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-hist>
+                <tr>
+                  <td>{{ hist.data }}</td>
+                  <td>{{ hist.responsavel }}</td>
+                  <td>{{ hist.descricao }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="Fechar" icon="pi pi-times" class="p-button-text" (click)="detalheDialog = false"></button>
         </ng-template>
       </p-dialog>
     </div>

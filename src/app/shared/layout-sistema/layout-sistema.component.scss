@@ -24,9 +24,7 @@ header {
   position: relative;
   z-index: 1000;
   width: 100%;
-
 }
-
 
 header .logo {
   flex: 1;
@@ -58,26 +56,26 @@ header .nav-links a:hover {
   background-color: #5BA4CF;
 }
 
+/* Ajustes principais */
 .main-content {
   flex: 1;
-  margin-left: 0;
   padding: 20px;
   transition: margin-left 0.3s ease;
 }
 
+/* Quando o sidebar está fechado */
 .sidebar {
   position: fixed;
   top: 50px;
   left: 0;
-  width: 250px;
+  width: 200px;
   height: 100%;
   background-color: #f4f4f4;
   transition: transform 0.3s ease;
   transform: translateX(-100%);
-  z-index: 999; // Garante que o sidebar está atrás do header
-  overflow-y: auto; // Garante que o conteúdo da sidebar pode rolar se for maior que a altura disponível
+  z-index: 999;
+  overflow-y: auto;
 }
-
 
 .sidebar.open {
   transform: translateX(0);
@@ -90,10 +88,6 @@ header .nav-links a:hover {
   padding: 15px;
   background-color: #0079BF;
   color: #fff;
-  position: relative;
-  width: 100%;
-  z-index: 1000; // Garante que está acima dos outros elementos
-  box-sizing: border-box; // Inclui padding no cálculo da largura
 }
 
 .close-btn {
@@ -102,10 +96,8 @@ header .nav-links a:hover {
   color: #fff;
   font-size: 1.5em;
   cursor: pointer;
-  margin-left: 10px; // Espaço ao redor do botão
+  margin-left: 10px;
 }
-
-
 
 .sidebar .nav-links a {
   display: block;
@@ -138,13 +130,7 @@ header .nav-links a:hover {
   margin-top: auto;
 }
 
-
-.main-content {
-  flex: 1;
-  margin-left: 0; // Será ajustado pelo JS quando a sidebar estiver aberta
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-  margin-top: 60px; // Ajusta o espaço no topo para o header
+/* Quando a sidebar está fechada, o main-content ocupa 100% */
+.main-content.full-width {
+  margin-left: 190px;
 }
-
-

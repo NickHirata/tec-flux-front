@@ -4,8 +4,6 @@ import { LoginComponent } from './features/tela_comum/login/login.component';
 import { UsuarioComponent } from './features/cadastros/usuario/usuario.component';
 import { EmpresaComponent } from './features/cadastros/empresa/empresa.component';
 import { DashboardComponent } from './features/administrador/dashboard/dashboard.component';
-import { SidebarComponent } from './features/administrador/sidebar/sidebar.component';
-import { HeaderComponent } from './features/administrador/header/header.component';
 import { SobreNosComponent } from './features/tela_comum/sobre-nos/sobre-nos.component';
 import { FaqComponent } from './features/tela_comum/faq/faq.component';
 import { TrabalheConoscoComponent } from './features/tela_comum/trabalhe-conosco/trabalhe-conosco.component';
@@ -18,6 +16,7 @@ import { GraficosComponent } from './features/administrador/graficos/graficos.co
 import { KanbanBoardComponent } from './features/kanban-board/kanban-board.component';
 import { SetoresComponent } from './features/administrador/setores/setores.component';
 import { ConfiguracaoComponent } from './features/administrador/configuracao/configuracao.component';
+import { ConfigComponent } from './features/usuarios/config/config.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -35,7 +34,8 @@ export const routes: Routes = [
       { path: 'menu-inicial', component: MenuInicialComponent },
       { path: 'abrir-chamado', component: AbrirChamadoComponent },
       { path: 'chatbot', component:ChatbotComponent},
-      { path: 'board', component:KanbanBoardComponent}
+      { path: 'board', component:KanbanBoardComponent},
+      { path: 'config', component:ConfigComponent}
     ]
   },
   {
