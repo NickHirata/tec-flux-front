@@ -1,48 +1,70 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
   selector: 'app-setores',
   standalone: true,
   imports: [
-    DropdownModule,
-    FormsModule,
-    ToastModule,    
-    ToolbarModule,   
-    TableModule,   
-    DialogModule,     
-    ButtonModule,     
+    ReactiveFormsModule, 
+    CommonModule, 
+    ToastModule, 
+    TableModule, 
+    DialogModule, 
+    ButtonModule,
+    ToolbarModule  
   ],
+  providers: [MessageService],
   templateUrl: './setores.component.html',
-  styleUrl: './setores.component.scss'
+  styleUrls: ['./setores.component.scss']
 })
 export class SetoresComponent {
-  setorDialog: boolean = false; // Controla a visibilidade do diálogo
-  setor: any = {}; // Armazena o setor que está sendo cadastrado
-  setores: any[] = []; // Lista de setores
+  setorForm: FormGroup;
+  setores: any[] = [];
+  setorDialog: boolean = false;
 
-  // Abre o diálogo para cadastrar um setor
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient, 
+    private messageService: MessageService
+  ) {
+    this.setorForm = this.fb.group({
+      companyId: [1, Validators.required],  // Company ID fixo ou dinâmico
+      name: ['', Validators.required],
+      description: ['', Validators.required]  // Valor padrão ou dinâmico
+    });
+  }
+
   openSetorDialog() {
-    this.setor = {}; // Limpa os dados do setor ao abrir o diálogo
+    this.setorForm.reset({ companyId: 1, description: '' });  // Reseta o formulário com valores padrões
     this.setorDialog = true;
   }
 
-  // Fecha o diálogo sem salvar
   hideDialog() {
     this.setorDialog = false;
   }
 
-  // Salva o setor (simulação)
-  salvarSetor() {
-    if (this.setor.nome) {
-      this.setores.push(this.setor); // Adiciona o setor à lista
-      this.setorDialog = false; // Fecha o diálogo
+  onSubmitSetor() {
+    if (this.setorForm.valid) {
+      this.http.post('http://localhost:8081/departments', this.setorForm.value).subscribe(
+        (response) => {
+          this.setores.push(response);  // Atualiza a lista de setores
+          this.setorDialog = false;     // Fecha o diálogo
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Setor cadastrado com sucesso!' });
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar setor!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor, preencha todos os campos corretamente.' });
     }
   }
 }
