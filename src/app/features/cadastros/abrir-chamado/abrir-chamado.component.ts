@@ -141,7 +141,7 @@ export class AbrirChamadoComponent implements OnInit {
   }
 
   loadDepartamentos() {
-    this.http.get<any[]>('http://localhost:8081/departments').subscribe(
+    this.http.get<any[]>('http://localhost:8081/departments/1').subscribe(
       (data) => {
         this.departamentos = data;
       },
