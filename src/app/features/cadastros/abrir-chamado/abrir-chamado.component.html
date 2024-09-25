@@ -6,7 +6,7 @@
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="center">
           <div class="my-2">
-            <button pButton pRipple label="Abrir Chamado" icon="pi pi-plus" class="p-button-warning mr-2" (click)="openChamadoDialog()"></button>
+            <button pButton pRipple label="Abrir Chamado" icon="pi pi-plus"  class="p-button" (click)="openChamadoDialog()"></button>
           </div>
         </ng-template>
       </p-toolbar>
@@ -128,6 +128,7 @@
             </p-table>
           </div>
         </ng-template>
+        
         <ng-template pTemplate="footer">
           <button pButton pRipple label="Fechar" icon="pi pi-times" class="p-button-text" (click)="detalheDialog = false"></button>
         </ng-template>
