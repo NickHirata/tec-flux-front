@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DropdownModule } from 'primeng/dropdown';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-funcionarios',
@@ -49,7 +50,7 @@ export class FuncionariosComponent implements OnInit {
       phone: ['', Validators.required],
       departmentId: [1, Validators.required],  // Padrão fixo ou pode ser dinâmico
       companyId: [1, Validators.required],     // Padrão fixo ou pode ser dinâmico
-      role: [null, Validators.required]
+      role: [null, Validators.required],
     });
   }
 
@@ -78,7 +79,11 @@ export class FuncionariosComponent implements OnInit {
     if (this.userForm.valid) {
       const newEmployee = this.userForm.value;
       
-      this.http.post('http://localhost:8081/user/register', newEmployee).subscribe(
+      // Define o token de forma correta, passando no cabeçalho 'Authorization'
+      const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI4eXhmNnBDK0pYeFAyQWk3NVRVWG5lVlpMTW9YK3NtQyIsImlhdCI6MTcyNzI4OTcyMSwiZXhwIjoxNzI3Mjk2OTIxfQ.ws6dOyTTAtzwyzA2wZkDe3a-KbkOuSLzHBrdGfDxfoMNthNIplJTfwuczLei9GuPdOMD8X_i96mMqDV5BNILfQ';  // Aqui, substitua pelo seu token real
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+      this.http.post('http://localhost:8081/user/register', newEmployee, { headers }).subscribe(
         (response) => {
           this.employees.push(response);  // Adiciona o novo funcionário à lista
           this.employeeDialog = false;    // Fecha o diálogo

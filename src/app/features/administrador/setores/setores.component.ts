@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
@@ -53,7 +53,7 @@ export class SetoresComponent {
 
   onSubmitSetor() {
     if (this.setorForm.valid) {
-      this.http.post('http://localhost:8081/departments', this.setorForm.value).subscribe(
+      this.http.post('http://localhost:8081/departments', this.setorForm.value,{headers: new HttpHeaders().set('Authorization', 'Bearer TokenEmSi')}).subscribe(
         (response) => {
           this.setores.push(response);  // Atualiza a lista de setores
           this.setorDialog = false;     // Fecha o diálogo
