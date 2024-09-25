@@ -17,8 +17,12 @@
       <p-table
         [value]="setores"
         responsiveLayout="scroll"
-        [rows]="10"
+        [rows]="pageSize"
         [paginator]="true"
+        [totalRecords]="totalRecords"
+        [lazy]="true"
+        (onLazyLoad)="fetchSetores($event)"
+        [loading]="loading"
         [rowsPerPageOptions]="[10, 20, 30]"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
