@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -11,49 +10,113 @@ import { ToastModule } from 'primeng/toast';
 import { RippleModule } from 'primeng/ripple';
 import { CardModule } from 'primeng/card';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
+import { TableModule } from 'primeng/table';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SliderModule } from 'primeng/slider';
 
+// Definir a interface para a tarefa
+interface Task {
+  nome: string;
+  departamento: string;
+  categoria: string;
+  assunto: string;
+  progresso: number;
+  dataCriacao: Date;
+  dataResolucao: Date | null;
+  historico: { data: Date, responsavel: string, descricao: string }[];
+}
 
+interface BoardColumn {
+  name: string;
+  tasks: Task[];
+  color: string;
+}
 
 @Component({
   selector: 'app-kanban-board',
   standalone: true,
-  imports: [CommonModule, 
-    FormsModule, 
-    DragDropModule, 
+  imports: [
+    CommonModule,
+    FormsModule,
     ToolbarModule,
-    DragDropModule,
     InputTextModule,
     DropdownModule,
     ButtonModule,
-    ToolbarModule,
     ToastModule,
     CardModule,
-    RippleModule
+    RippleModule,
+    DialogModule,
+    CalendarModule,
+    TableModule,
+    DragDropModule,
+    AutoCompleteModule,
+    ProgressBarModule, 
+    SliderModule 
   ],
   templateUrl: './kanban-board.component.html',
-  styleUrl: './kanban-board.component.scss'
+  styleUrls: ['./kanban-board.component.scss']
 })
-export class KanbanBoardComponent {
+export class KanbanBoardComponent implements OnInit {
   newTask: string = '';
   selectedColumn: number | null = null;
+  detalheDialog: boolean = false;
+  selectedTask: Task | null = null;
 
-  boardColumns = [
+  users = ['João', 'Maria', 'José', 'Ana', 'Carlos']; // Lista de usuários
+  filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
+
+  selectedUser: string | null = null; // Usuário selecionado para atribuição
+
+  // Função para filtrar usuários
+  filterUsers(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredUsers = this.users.filter(user => user.toLowerCase().includes(query));
+  }
+
+  // Função para adicionar o usuário ao histórico
+  assignUser() {
+    if (this.selectedUser && this.selectedTask) {
+      // Adicionar ao histórico
+      this.selectedTask.historico.push({
+        data: new Date(),
+        responsavel: this.selectedUser,
+        descricao: 'Usuário atribuído ao chamado'
+      });
+
+      // Limpar campo de usuário selecionado
+      this.selectedUser = null;
+    }
+  }
+
+
+  boardColumns: BoardColumn[] = [
     {
       name: 'A Fazer',
-      tasks: ['Tarefa 1', 'Tarefa 2', 'Tarefa 3'],
+      tasks: [
+        { nome: 'Tarefa 1', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] },
+        { nome: 'Tarefa 2', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] }
+      ],
       color: '#B3E5FC' 
     },
     {
       name: 'Em Progresso',
-      tasks: ['Tarefa 4'],
+      tasks: [
+        { nome: 'Tarefa 3', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] }
+      ],
       color: '#64B5F6'
     },
     {
       name: 'Concluído',
-      tasks: ['Tarefa 5'],
+      tasks: [
+        { nome: 'Tarefa 4', departamento: '', categoria: '', assunto: '', progresso: 100, dataCriacao: new Date(), dataResolucao: new Date(), historico: [] }
+      ],
       color: '#0288D1'
-    },
+    }
   ];
+
   dropdownOptions: { label: string, value: number }[] = [];
 
   constructor(private messageService: MessageService) {}
@@ -67,10 +130,20 @@ export class KanbanBoardComponent {
 
   addTask(task: string, columnIndex: number | null) {
     if (task.trim() && columnIndex !== null && this.boardColumns[columnIndex]) {
-      this.boardColumns[columnIndex].tasks.push(task.trim());
+      const newTask: Task = {
+        nome: task.trim(),
+        departamento: '',
+        categoria: '',
+        assunto: '',
+        progresso: 0,
+        dataCriacao: new Date(),
+        dataResolucao: null,
+        historico: []
+      };
+      this.boardColumns[columnIndex].tasks.push(newTask);
       this.newTask = '';
       this.selectedColumn = null;
-
+  
       // Exibir toast de sucesso
       this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tarefa adicionada!' });
     } else {
@@ -78,12 +151,12 @@ export class KanbanBoardComponent {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Selecione uma coluna válida!' });
     }
   }
-
+  
   getConnectedDropLists() {
     return this.boardColumns.map((_, index) => `cdk-drop-list-${index}`);
   }
 
-  onTaskDrop(event: CdkDragDrop<string[]>) {
+  onTaskDrop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -98,5 +171,15 @@ export class KanbanBoardComponent {
         event.currentIndex
       );
     }
+  }
+
+  openTaskDialog(task: Task) {
+    this.selectedTask = { ...task }; // Clonar o objeto para evitar alterações diretas
+    this.detalheDialog = true;
+  }
+
+  saveTaskDetails() {
+    // Implementar lógica para salvar ou atualizar a tarefa
+    this.detalheDialog = false;
   }
 }

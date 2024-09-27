@@ -53,8 +53,9 @@
               *ngFor="let task of column.tasks"
               cdkDrag
               class="task-card"
+              (click)="openTaskDialog(task)"
             >
-              {{ task }}
+              {{ task.nome }}
             </div>
           </div>
         </div>
@@ -62,3 +63,85 @@
     </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes da Tarefa" [modal]="true" class="p-fluid">
+  <ng-template pTemplate="content">
+    <div *ngIf="selectedTask">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
+      </div>
+      <div class="field">
+        <label>Departamento</label>
+        <p-dropdown id="departamento" [(ngModel)]="selectedTask.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
+      </div>
+      <div class="field">
+        <label>Categoria</label>
+        <p-dropdown id="categoria" [(ngModel)]="selectedTask.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
+      </div>
+      <div class="field">
+        <label>Assunto</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+      </div>
+      <div class="field">
+        <label>Comentários</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+      </div>
+      <div class="field">
+        <label>Progresso</label>
+        <p-progressBar [value]="selectedTask.progresso"></p-progressBar>
+        <p-slider [(ngModel)]="selectedTask.progresso" [min]="0" [max]="100"></p-slider>
+      </div>
+      <div class="field">
+        <label>Data de Criação</label>
+        <p-calendar [(ngModel)]="selectedTask.dataCriacao"></p-calendar>
+      </div>
+      <div class="field">
+        <label>Data de Resolução</label>
+        <p-calendar [(ngModel)]="selectedTask.dataResolucao"></p-calendar>
+      </div>
+
+      <div class="field">
+        <label>Atribuir a Usuário</label>
+        <p-autoComplete 
+          [(ngModel)]="selectedUser" 
+          [suggestions]="filteredUsers" 
+          (completeMethod)="filterUsers($event)" 
+          placeholder="Pesquisar usuário">
+        </p-autoComplete>
+        <button 
+          pButton 
+          label="Adicionar ao Histórico" 
+          icon="pi pi-user-plus" 
+          class="p-button-sm p-button-success"
+          (click)="assignUser()"
+          [disabled]="!selectedUser">
+        </button>
+      </div>
+
+      <h3>Histórico</h3>
+      <p-table [value]="selectedTask.historico" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Data</th>
+            <th>Responsável</th>
+            <th>Descrição</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-hist>
+          <tr>
+            <td>{{ hist.data }}</td>
+            <td>{{ hist.responsavel }}</td>
+            <td>{{ hist.descricao }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </ng-template>
+
+  <!-- Botões de Ação -->
+  <ng-template pTemplate="footer">
+    <button pButton label="Salvar" icon="pi pi-check" (click)="saveTaskDetails()"></button>
+    <button pButton label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="detalheDialog = false"></button>
+  </ng-template>
+</p-dialog>
