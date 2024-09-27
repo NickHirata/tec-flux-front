@@ -18,8 +18,12 @@
       <p-table
         [value]="employees"
         responsiveLayout="scroll"
-        [rows]="10"
+        [rows]="pageSize"
         [paginator]="true"
+        [totalRecords]="totalRecords"
+        [lazy]="true"
+        (onLazyLoad)="fetchEmployees($event)"
+        [loading]="loading"
         [rowsPerPageOptions]="[10, 20, 30]"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
@@ -41,28 +45,26 @@
       </p-table>
 
       <!-- Diálogo para cadastro de funcionário -->
-      <p-dialog [(visible)]="employeeDialog" [style]="{ width: '600px' }" header="Cadastrar Funcionário" [modal]="true" class="p-fluid">
+      <p-dialog [(visible)]="employeeDialog" [style]="{ width: '400px' }" header="Cadastrar Funcionário" [modal]="true" class="p-fluid">
         <ng-template pTemplate="content">
           <form [formGroup]="userForm">
             <div class="field">
               <label for="name">Nome</label>
-              <input id="name" pInputText formControlName="name" placeholder="Digite o nome" />
-              <div *ngIf="isFieldInvalid('name')" class="error">Nome é obrigatório.</div>
-            </div>
+              <input id="name" pInputText formControlName="name"/>
+              <div *ngIf="userForm.controls['name'].invalid && userForm.controls['name'].touched" class="error"></div>
+                Nome é obrigatório.
+              </div>
             <div class="field">
               <label for="phone">Telefone</label>
-              <input id="phone" pInputText formControlName="phone" placeholder="Digite o telefone" />
-              <div *ngIf="isFieldInvalid('phone')" class="error">Telefone é obrigatório.</div>
+              <input id="phone" pInputText formControlName="phone"/>
             </div>
             <div class="field">
               <label for="email">Email</label>
-              <input id="email" pInputText formControlName="email" placeholder="Digite o email" />
-              <div *ngIf="isFieldInvalid('email')" class="error">Email é obrigatório.</div>
+              <input id="email" pInputText formControlName="email"/>
             </div>
             <div class="field">
               <label for="role">Tipo de Usuário</label>
-              <p-dropdown id="role" [options]="roles" formControlName="role" optionLabel="label" placeholder="Selecione o tipo de usuário"></p-dropdown>
-              <div *ngIf="isFieldInvalid('role')" class="error">Tipo de Usuário é obrigatório.</div>
+              <p-dropdown id="role" [options]="roles" formControlName="role" optionLabel="label"></p-dropdown>
             </div>
             <div class="field">
               <p>A senha será gerada automaticamente e enviada para o email do funcionário.</p>
