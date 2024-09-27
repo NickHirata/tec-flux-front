@@ -8,7 +8,7 @@
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="center">
           <div class="my-2">
-            <button pButton pRipple label="Cadastrar Setor" icon="pi pi-plus" class="p-button-success mr-2" (click)="openSetorDialog()"></button>
+            <button pButton pRipple label="Cadastrar Setor" icon="pi pi-plus" class="p-button mr-2" (click)="openSetorDialog()"></button>
           </div>
         </ng-template>
       </p-toolbar>
@@ -54,7 +54,10 @@
             </div>
             <div class="field">
               <label for="description">Descrição</label>
-              <textarea id="description" pInputTextarea formControlName="description"></textarea>
+              <input id="description" pInputTextarea formControlName="description"/>
+              <div *ngIf="setorForm.controls['descricao'].invalid && setorForm.controls['descricao'].touched" class="error">
+                Descrição é obrigatório.
+              </div>
             </div>
           </form>
         </ng-template>
