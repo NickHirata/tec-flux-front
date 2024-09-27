@@ -19,27 +19,21 @@
       margin-bottom: 0.5rem;
     }
 
-    input,
-    p-dropdown {
-      width: 100%; // Garantir que os inputs e dropdowns ocupem 100% do espaço
+    input[pInputText],
+    p-dropdown,
+    textarea[pInputTextarea] {
+      width: 100%; /* Garantir que os inputs e dropdowns ocupem 100% do espaço */
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
     }
-  }
 
-  .p-button {
-    margin-top: 1rem;
-  }
-}
-
-input[pInputText] {
-  width: 300px;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-
-  &:focus {
-    border-color: #007ad9;
-    outline: none;
+    input[pInputText]:focus,
+    textarea[pInputTextarea]:focus {
+      border-color: #007ad9;
+      outline: none;
+    }
   }
 }
