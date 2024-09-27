@@ -74,7 +74,6 @@ export class SetoresComponent implements OnInit {
     if (token && tokenType) {
       return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Token de autenticação não encontrado. Por favor, faça login novamente.' });
       return new HttpHeaders();
     }
   }
