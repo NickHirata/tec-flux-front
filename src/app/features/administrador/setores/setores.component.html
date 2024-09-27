@@ -54,10 +54,7 @@
             </div>
             <div class="field">
               <label for="description">Descrição</label>
-              <input id="description" pInputTextarea formControlName="description"/>
-              <div *ngIf="setorForm.controls['descricao'].invalid && setorForm.controls['descricao'].touched" class="error">
-                Descrição é obrigatório.
-              </div>
+              <textarea id="description" pInputTextarea formControlName="description"></textarea>
             </div>
           </form>
         </ng-template>
