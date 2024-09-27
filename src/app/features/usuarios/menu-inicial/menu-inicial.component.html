@@ -9,12 +9,12 @@
     <div class="menu-grid">
       <div class="menu-item">
         <a
-          [routerLink]="['/sistema/abrir-chamado']"
+          [routerLink]="['/sistema/chatbot']"
           routerLinkActive="router-link-active"
           class="menu-item"
         >
           <img src="assets/abrir-chamado-icon.png" alt="Abrir Chamado" />
-          <h3>Chamados</h3>
+          <h3>ChatBot</h3>
         </a>
       </div>
       <div class="menu-item">
@@ -38,8 +38,14 @@
         </a>
       </div>
       <div class="menu-item">
+        <a
+        [routerLink]="['/sistema/config']"
+        routerLinkActive="router-link-active"
+        class="menu-item"
+      >
         <img src="assets/ajuda-codigo-icon.png" alt="Ajuda com Código" />
         <h3>Configurações</h3>
+      </a>
       </div>
     </div>
   </section>

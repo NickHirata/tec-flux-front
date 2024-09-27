@@ -1,0 +1,36 @@
+<div class="grid">
+    <div class="col-12">
+      <div class="card px-6 py-6">
+        <h2>Configurações</h2>
+  
+        <!-- Botões de ações -->
+        <p-panel header="Ações">
+          <div class="my-3">
+            <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="showChangePassword()"></button>
+            <button pButton pRipple label="Alterar E-mail" icon="pi pi-envelope" class="p-button-primary mr-2" (click)="showChangeEmail()"></button>
+          </div>
+        </p-panel>
+
+  
+        <!-- Formulário de Alteração de Senha -->
+        <p-panel *ngIf="changePasswordVisible" header="Alterar Senha">
+          <div class="field">
+            <label for="novaSenha">Nova Senha</label>
+            <input id="novaSenha" type="password" pInputText [(ngModel)]="newPassword" placeholder="Digite a nova senha" style="width: 300px;" />
+          </div>
+          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changePassword()"></button>
+        </p-panel>
+  
+        <!-- Formulário de Alteração de E-mail -->
+        <p-panel *ngIf="changeEmailVisible" header="Alterar E-mail">
+          <div class="field">
+            <label for="novoEmail">Novo E-mail</label>
+            <input id="novoEmail" type="email" pInputText [(ngModel)]="newEmail" placeholder="Digite o novo e-mail" style="width: 300px;" />
+          </div>
+          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changeEmail()"></button>
+        </p-panel>
+  
+      </div>
+    </div>
+  </div>
+  

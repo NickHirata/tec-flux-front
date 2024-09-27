@@ -1,29 +1,147 @@
-<div class="add-task-form">
-  <input type="text" placeholder="Nova tarefa" [(ngModel)]="newTask" />
-  <select [(ngModel)]="selectedColumn">
-    <option *ngFor="let column of boardColumns; let i = index" [value]="i">
-      {{ column.name }}
-    </option>
-  </select>
-  <button (click)="addTask(newTask, selectedColumn)">Adicionar Tarefa</button>
-</div>
-<div class="kanban-board">
-  <div
-    class="kanban-column"
-    *ngFor="let column of boardColumns"
-    [ngStyle]="{ 'background-color': column.color }"
-  >
-    <h2>{{ column.name }}</h2>
-    <div
-      cdkDropList
-      [cdkDropListData]="column.tasks"
-      [cdkDropListConnectedTo]="getConnectedDropLists()"
-      class="task-list"
-      (cdkDropListDropped)="onTaskDrop($event)"
-    >
-      <div *ngFor="let task of column.tasks" cdkDrag class="task-card">
-        {{ task }}
+<div class="grid">
+  <div class="col-12">
+    <div class="card kanban-card">
+      <h2>Kanban Board</h2>
+      <p-toast></p-toast>
+
+      <!-- Barra de ferramentas com formulário para adicionar tarefa -->
+      <p-toolbar class="mb-4">
+        <ng-template pTemplate="start">
+          <div class="add-task-form">
+            <input
+              pInputText
+              type="text"
+              placeholder="Nova tarefa"
+              [(ngModel)]="newTask"
+              class="task-input"
+            />
+            <p-dropdown
+              [options]="dropdownOptions"
+              [(ngModel)]="selectedColumn"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecionar Coluna"
+              class="task-dropdown"
+            ></p-dropdown>
+            <button
+              pButton
+              label="Adicionar Tarefa"
+              icon="pi pi-plus"
+              class="p-button-success add-task-button"
+              (click)="addTask(newTask, selectedColumn)"
+            ></button>
+          </div>
+        </ng-template>
+      </p-toolbar>
+
+      <!-- Tabuleiro Kanban -->
+      <div class="kanban-board">
+        <div
+          class="kanban-column"
+          *ngFor="let column of boardColumns; let i = index"
+          [ngStyle]="{ 'background-color': column.color }"
+        >
+          <h2>{{ column.name }}</h2>
+          <div
+            cdkDropList
+            [cdkDropListData]="column.tasks"
+            [cdkDropListConnectedTo]="getConnectedDropLists()"
+            class="task-list"
+            (cdkDropListDropped)="onTaskDrop($event)"
+          >
+            <div
+              *ngFor="let task of column.tasks"
+              cdkDrag
+              class="task-card"
+              (click)="openTaskDialog(task)"
+            >
+              {{ task.nome }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes da Tarefa" [modal]="true" class="p-fluid">
+  <ng-template pTemplate="content">
+    <div *ngIf="selectedTask">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
+      </div>
+      <div class="field">
+        <label>Departamento</label>
+        <p-dropdown id="departamento" [(ngModel)]="selectedTask.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
+      </div>
+      <div class="field">
+        <label>Categoria</label>
+        <p-dropdown id="categoria" [(ngModel)]="selectedTask.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
+      </div>
+      <div class="field">
+        <label>Assunto</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+      </div>
+      <div class="field">
+        <label>Comentários</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+      </div>
+      <div class="field">
+        <label>Progresso</label>
+        <p-progressBar [value]="selectedTask.progresso"></p-progressBar>
+        <p-slider [(ngModel)]="selectedTask.progresso" [min]="0" [max]="100"></p-slider>
+      </div>
+      <div class="field">
+        <label>Data de Criação</label>
+        <p-calendar [(ngModel)]="selectedTask.dataCriacao"></p-calendar>
+      </div>
+      <div class="field">
+        <label>Data de Resolução</label>
+        <p-calendar [(ngModel)]="selectedTask.dataResolucao"></p-calendar>
+      </div>
+
+      <div class="field">
+        <label>Atribuir a Usuário</label>
+        <p-autoComplete 
+          [(ngModel)]="selectedUser" 
+          [suggestions]="filteredUsers" 
+          (completeMethod)="filterUsers($event)" 
+          placeholder="Pesquisar usuário">
+        </p-autoComplete>
+        <button 
+          pButton 
+          label="Adicionar ao Histórico" 
+          icon="pi pi-user-plus" 
+          class="p-button-sm p-button-success"
+          (click)="assignUser()"
+          [disabled]="!selectedUser">
+        </button>
+      </div>
+
+      <h3>Histórico</h3>
+      <p-table [value]="selectedTask.historico" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Data</th>
+            <th>Responsável</th>
+            <th>Descrição</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-hist>
+          <tr>
+            <td>{{ hist.data }}</td>
+            <td>{{ hist.responsavel }}</td>
+            <td>{{ hist.descricao }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </ng-template>
+
+  <!-- Botões de Ação -->
+  <ng-template pTemplate="footer">
+    <button pButton label="Salvar" icon="pi pi-check" (click)="saveTaskDetails()"></button>
+    <button pButton label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="detalheDialog = false"></button>
+  </ng-template>
+</p-dialog>

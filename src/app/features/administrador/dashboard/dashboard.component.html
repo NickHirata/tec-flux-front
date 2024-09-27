@@ -13,6 +13,12 @@
         </a>
       </li>
       <li>
+        <a routerLink="/empresa/chatbot">
+          <i class="icon-dashboard"></i>
+          <span *ngIf="!isCollapsed">ChatBot</span>
+        </a>
+      </li>
+      <li>
         <a routerLink="/empresa/abrir-chamado" >
           <i class="icon-open-ticket"></i>
           <span *ngIf="!isCollapsed">Chamados</span>
@@ -27,7 +33,7 @@
       <li>
         <a routerLink="/empresa/board" >
           <i class="icon-open-ticket"></i>
-          <span *ngIf="!isCollapsed">Board</span>
+          <span *ngIf="!isCollapsed">Kanban</span>
         </a>
       </li>
       <li>

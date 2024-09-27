@@ -17,18 +17,17 @@
         </div>
         <nav class="nav-links">
           <a routerLink="abrir-chamado">Abrir Chamado</a>
-          <a routerLink="reportar-problema">Reportar Problema</a>
-          <a routerLink="ajuda-codigo">Ajuda com Código</a>
-          <a routerLink="problemas-hardware">Problemas com Hardware</a>
+          <a routerLink="board">Kanban</a>
+          <a routerLink="chatbot">ChatBot</a>
+          <a routerLink="config">Configurações</a>
         </nav>
       </aside>
 
       <button class="sidebar-toggle" (click)="toggleSidebar()">☰</button>
 
-      <div class="content">
-        <!-- Conteúdo da página será inserido aqui -->
+      <main #mainContent class="main-content full-width">
         <router-outlet></router-outlet>
-      </div>
+      </main>
     </main>
 
     <footer class="footer">

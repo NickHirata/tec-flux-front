@@ -88,3 +88,16 @@
 .task-card:hover {
   background-color: #64b5f6; /* Azul para o hover dos cartões */
 }
+.field {
+  margin-bottom: 1rem;
+
+  p-autoComplete {
+    margin-right: 0.5rem;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+
