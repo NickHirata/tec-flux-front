@@ -71,7 +71,7 @@ export class FuncionariosComponent implements OnInit {
       // Atualiza o campo companyId no formulário
       this.userForm.patchValue({ companyId: this.companyId });
 
-      // Busca os funcionários ao carregar o componente
+      // Busca os setores ao carregar o componente
       this.fetchEmployees();
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
@@ -86,7 +86,6 @@ export class FuncionariosComponent implements OnInit {
     if (token && tokenType) {
       return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Token de autenticação não encontrado. Por favor, faça login novamente.' });
       return new HttpHeaders();
     }
   }
@@ -150,10 +149,5 @@ export class FuncionariosComponent implements OnInit {
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor, preencha todos os campos corretamente.' });
     }
-  }
-
-  isFieldInvalid(field: string): boolean {
-    const control = this.userForm.get(field);
-    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 }
