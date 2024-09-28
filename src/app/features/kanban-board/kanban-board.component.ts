@@ -69,6 +69,8 @@ export class KanbanBoardComponent implements OnInit {
   filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
 
   selectedUser: string | null = null; // Usuário selecionado para atribuição
+  departamentos: any[]|undefined;
+  categorias: any[]|undefined;
 
   // Função para filtrar usuários
   filterUsers(event: any) {
