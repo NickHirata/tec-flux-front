@@ -63,7 +63,6 @@
     </div>
   </div>
 </div>
-
 <p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes da Tarefa" [modal]="true" class="p-fluid">
   <ng-template pTemplate="content">
     <div *ngIf="selectedTask">
@@ -85,7 +84,7 @@
       </div>
       <div class="field">
         <label>Comentários</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+        <textarea pInputTextarea [(ngModel)]="selectedTask.comentarios"></textarea>
       </div>
       <div class="field">
         <label>Progresso</label>
@@ -102,6 +101,18 @@
       </div>
 
       <div class="field">
+        <label>Adicione arquivos se necessário</label>
+        <p-fileUpload name="file" url="http://seu-endpoint-api/upload" 
+          accept=".pdf,.docx,.png,.jpg" 
+          maxFileSize="1000000"
+          [auto]="true"
+          chooseLabel="Selecionar Arquivo"
+          uploadLabel="Enviar"
+          cancelLabel="Cancelar">
+        </p-fileUpload>
+      </div>
+
+      <div class="field">
         <label>Atribuir a Usuário</label>
         <p-autoComplete 
           [(ngModel)]="selectedUser" 
@@ -109,11 +120,13 @@
           (completeMethod)="filterUsers($event)" 
           placeholder="Pesquisar usuário">
         </p-autoComplete>
+        <label>Descrição da Atividade</label>
+        <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
         <button 
           pButton 
           label="Adicionar ao Histórico" 
           icon="pi pi-user-plus" 
-          class="p-button-sm p-button-success"
+          class="p-button-sm p-button"
           (click)="assignUser()"
           [disabled]="!selectedUser">
         </button>
@@ -138,6 +151,8 @@
       </p-table>
     </div>
   </ng-template>
+</p-dialog>
+
 
   <!-- Botões de Ação -->
   <ng-template pTemplate="footer">

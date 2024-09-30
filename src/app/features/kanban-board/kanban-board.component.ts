@@ -16,6 +16,7 @@ import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SliderModule } from 'primeng/slider';
+import { FileUploadModule } from 'primeng/fileupload';
 
 // Definir a interface para a tarefa
 interface Task {
@@ -23,11 +24,14 @@ interface Task {
   departamento: string;
   categoria: string;
   assunto: string;
+  comentarios: string;
+  descricao: string;
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
   historico: { data: Date, responsavel: string, descricao: string }[];
 }
+
 
 interface BoardColumn {
   name: string;
@@ -54,7 +58,8 @@ interface BoardColumn {
     DragDropModule,
     AutoCompleteModule,
     ProgressBarModule, 
-    SliderModule 
+    SliderModule,
+    FileUploadModule
   ],
   templateUrl: './kanban-board.component.html',
   styleUrls: ['./kanban-board.component.scss']
@@ -93,31 +98,75 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-
   boardColumns: BoardColumn[] = [
     {
       name: 'A Fazer',
       tasks: [
-        { nome: 'Tarefa 1', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] },
-        { nome: 'Tarefa 2', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] }
+        {
+          nome: 'Tarefa 1',
+          departamento: '',
+          categoria: '',
+          assunto: '',
+          comentarios: '',
+          descricao: '',
+          progresso: 0,
+          dataCriacao: new Date(),
+          dataResolucao: null,
+          historico: []
+        },
+        {
+          nome: 'Tarefa 2',
+          departamento: '',
+          categoria: '',
+          assunto: '',
+          comentarios: '',
+          descricao: '',
+          progresso: 0,
+          dataCriacao: new Date(),
+          dataResolucao: null,
+          historico: []
+        }
       ],
-      color: '#B3E5FC' 
+      color: '#B3E5FC'
     },
     {
       name: 'Em Progresso',
       tasks: [
-        { nome: 'Tarefa 3', departamento: '', categoria: '', assunto: '', progresso: 0, dataCriacao: new Date(), dataResolucao: null, historico: [] }
+        {
+          nome: 'Tarefa 3',
+          departamento: '',
+          categoria: '',
+          assunto: '',
+          comentarios: '',
+          descricao: '',
+          progresso: 50, // Ajustando progresso para indicar andamento
+          dataCriacao: new Date(),
+          dataResolucao: null,
+          historico: []
+        }
       ],
       color: '#64B5F6'
     },
     {
       name: 'Concluído',
       tasks: [
-        { nome: 'Tarefa 4', departamento: '', categoria: '', assunto: '', progresso: 100, dataCriacao: new Date(), dataResolucao: new Date(), historico: [] }
+        {
+          nome: 'Tarefa 4',
+          departamento: '',
+          categoria: '',
+          assunto: '',
+          comentarios: '',
+          descricao: '',
+          progresso: 100, // Progresso completo
+          dataCriacao: new Date(),
+          dataResolucao: new Date(), // Data de resolução preenchida para indicar conclusão
+          historico: []
+        }
       ],
       color: '#0288D1'
     }
   ];
+  
 
   dropdownOptions: { label: string, value: number }[] = [];
 
@@ -137,6 +186,8 @@ export class KanbanBoardComponent implements OnInit {
         departamento: '',
         categoria: '',
         assunto: '',
+        comentarios: '', // Novo campo
+        descricao: '',   // Novo campo
         progresso: 0,
         dataCriacao: new Date(),
         dataResolucao: null,
@@ -153,6 +204,7 @@ export class KanbanBoardComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Selecione uma coluna válida!' });
     }
   }
+  
   
   getConnectedDropLists() {
     return this.boardColumns.map((_, index) => `cdk-drop-list-${index}`);
