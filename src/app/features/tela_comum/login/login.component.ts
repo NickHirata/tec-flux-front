@@ -49,10 +49,23 @@ export class LoginComponent {
           // Determina a rota com base na role
           setTimeout(() => {
             const roles = JSON.parse(sessionStorage.getItem('roles') || '[]');
+            const primeiroAcesso = JSON.parse(sessionStorage.getItem('lastLogin') || '[]');
             if (roles.includes('ROLE_ADMINISTRADOR') || roles.includes('ROLE_MASTER')) {
-              this.router.navigate(['/empresa/dashboard']);  // Redireciona administradores e master para o dashboard da empresa
+              if(primeiroAcesso == null){
+                //primeiro acesso
+                this.router.navigate(['/empresa/config']);  
+              }else{
+                this.router.navigate(['/empresa/dashboard']);  
+              }
+              
             } else {
-              this.router.navigate(['/sistema/menu-inicial']);  // Redireciona os demais usuários para o menu inicial do sistema
+              if(primeiroAcesso == null){
+                //primeiro acesso
+                this.router.navigate(['/sistema/config']);  
+              }else{
+                this.router.navigate(['/sistema/menu-inicial']); 
+              }
+ 
             }
           }, 2000);
         },
