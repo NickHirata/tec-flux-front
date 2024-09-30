@@ -71,15 +71,34 @@
               </div>
             </div>
             <div class="field">
-              <label for="role">Cargo do Funcionário</label>
+              <label for="departmentId">Departamento do Funcionário</label>
               <p-dropdown
-                id="role"
-                [options]="roles"
-                formControlName="role"
+                id="departmentId"
+                [options]="departamentos"
+                formControlName="departmentId"
                 optionLabel="label"
-                placeholder="Selecione o cargo do funcionário"
+                optionValue="value"
+                placeholder="Selecione o departamento do funcionário"
               ></p-dropdown>
-              <div *ngIf="userForm.controls['role'].invalid && userForm.controls['role'].touched" class="error">
+              <div *ngIf="userForm.controls['departmentId'].invalid && userForm.controls['departmentId'].touched" class="error">
+                Departamento é obrigatório.
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="roles">Cargo do Funcionário</label>
+              <p-multiSelect
+                id="roles"
+                [options]="cargos"
+                formControlName="roles"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecione os cargos do funcionário"
+                defaultLabel="Selecione..."
+                [showHeader]="true"
+                appendTo="body"
+              ></p-multiSelect>
+              <div *ngIf="userForm.controls['roles'].invalid && userForm.controls['roles'].touched" class="error">
                 Cargo é obrigatório.
               </div>
             </div>
