@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-funcionarios',
@@ -21,7 +22,8 @@ import { DropdownModule } from 'primeng/dropdown';
     DialogModule,
     ButtonModule,
     ToolbarModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule
   ],
   providers: [MessageService],
   templateUrl: './funcionarios.component.html',
@@ -40,11 +42,13 @@ export class FuncionariosComponent implements OnInit {
   pageIndex: number = 0; // Índice da página atual
 
   // Lista de papéis
-  roles: any[] = [
+  cargos: any[] = [
     { label: 'Funcionário', value: 'ROLE_USUARIO' },
     { label: 'Técnico de T.I', value: 'ROLE_TECNICO' },
     { label: 'Gestor', value: 'ROLE_ADMINISTRADOR' }
   ];
+
+  departamentos:  any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -57,8 +61,8 @@ export class FuncionariosComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
       departmentId: ['', Validators.required],
-      companyId: ['', Validators.required],
-      role: [null, Validators.required],
+      companyId: [''],
+      roles: [[''], Validators.required],
     });
   }
 
@@ -73,15 +77,39 @@ export class FuncionariosComponent implements OnInit {
 
       // Busca os setores ao carregar o componente
       this.fetchEmployees();
+      this.fetchSetores();
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
+    }
+  }
+
+   // Método para buscar os setores com base no companyId e na paginação
+   fetchSetores(event?: any) {
+    if (this.companyId !== null) {
+      this.loading = true;
+
+      const headers = this.getAuthHeaders();
+
+      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+        (response) => {
+          this.departamentos = response.content.map((department: any) => ({
+            label: department.name, 
+            value: department.id 
+          }));
+        },
+        (error) => {
+          console.error('Erro ao buscar departamentos', error);
+        }
+      );      
     }
   }
 
   // Método para obter os headers com o token de autenticação
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('accessToken');
-    const tokenType = sessionStorage.getItem('tokentype');
+    const tokenType = sessionStorage.getItem('tokenType'); // Verifique a capitalização aqui
+    console.log('Token Type:', tokenType);
+    console.log('Access Token:', token);
 
     if (token && tokenType) {
       return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
@@ -134,15 +162,17 @@ export class FuncionariosComponent implements OnInit {
   onSubmitEmployee() {
     if (this.userForm.valid) {
       const headers = this.getAuthHeaders();
-
+      console.log(this.userForm.value);
       this.http.post('http://localhost:8081/user/register', this.userForm.value, { headers }).subscribe(
         (response) => {
           // Após cadastrar, atualiza a lista de funcionários
+          console.log(response);
           this.fetchEmployees();
           this.employeeDialog = false; // Fecha o diálogo
           this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário cadastrado com sucesso!' });
         },
         (error) => {
+          console.log(error);
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar funcionário!' });
         }
       );
