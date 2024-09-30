@@ -35,17 +35,16 @@ export class EmpresaComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       phone: ['', Validators.required],
-      companyId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
-      departmentId: [1, Validators.required],  // Aqui você pode definir o valor fixo ou obter dinamicamente
-      roles: [['ROLE_ADMINISTRADOR'], Validators.required]  // Um array contendo o papel
+      companyId: [1, Validators.required],
+      departmentId: [1, Validators.required],
+      roles: [['ROLE_ADMINISTRADOR'], Validators.required]
     });
   }
 
   isFieldInvalid(field: string): boolean {
     const control = this.isAdminStep ? this.adminForm.get(field) : this.empresaForm.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
-}
-
+  }
 
   markAllFieldsAsTouched() {
     if (this.isAdminStep) {
@@ -65,10 +64,28 @@ export class EmpresaComponent {
     }, 2000);
   }
 
+  // Método para verificar se o CNPJ já está cadastrado
+  checkCnpjExists(cnpj: string) {
+    return this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`);
+  }
+
   onSubmitEmpresa() {
     if (this.empresaForm.valid) {
-      // Primeiro tenta cadastrar o administrador, caso tenha sucesso, cadastra a empresa
-      this.isAdminStep = true;  // Avança para o cadastro do administrador
+      // Faz a verificação do CNPJ antes de prosseguir
+      const cnpj = this.empresaForm.get('cnpj')?.value;
+      this.checkCnpjExists(cnpj).subscribe(
+        (exists: any) => {
+          if (exists) {
+            this.showPopupMessage('CNPJ já cadastrado!', true);
+          } else {
+            // Se o CNPJ não estiver cadastrado, avança para o cadastro do administrador
+            this.isAdminStep = true;
+          }
+        },
+        (error) => {
+          this.showPopupMessage('Erro ao verificar CNPJ!', true);
+        }
+      );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
       this.markAllFieldsAsTouched();
@@ -86,8 +103,8 @@ export class EmpresaComponent {
   
               // Adicionando um delay de 2 segundos antes de redirecionar
               setTimeout(() => {
-                this.router.navigate(['empresa/dashboard']);  // Redireciona para o dashboard
-              }, 2000);  // Delay de 2 segundos
+                this.router.navigate(['empresa/dashboard']);
+              }, 2000);
             },
             (error) => {
               this.showPopupMessage('Erro ao cadastrar empresa!', true);
@@ -100,7 +117,7 @@ export class EmpresaComponent {
       );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-      this.markAllFieldsAsTouched();  // Marcar todos os campos como "touched" para mostrar os erros de validação
+      this.markAllFieldsAsTouched();
     }
   }  
 }
