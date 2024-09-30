@@ -78,6 +78,7 @@ export class FuncionariosComponent implements OnInit {
       // Busca os setores ao carregar o componente
       this.fetchEmployees();
       this.fetchSetores();
+      this.getDepartmentName(1);
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
     }
@@ -104,6 +105,11 @@ export class FuncionariosComponent implements OnInit {
     }
   }
 
+  getDepartmentName(departmentId: number): string {
+    const department = this.departamentos.find(d => d.value === departmentId);
+    return department ? department.label : 'Não Encontrado';
+  }
+  
   // Método para obter os headers com o token de autenticação
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('accessToken');
