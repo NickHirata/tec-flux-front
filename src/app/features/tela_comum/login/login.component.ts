@@ -57,13 +57,13 @@ export class LoginComponent {
               this.router.navigate(['/empresa/dashboard']);  
             } else if (roles.includes('ROLE_ADMINISTRADOR')) {
               if (lastLoginString === null || lastLoginString === 'null') { 
-                this.router.navigate(['/empresa/config']);  
+                this.router.navigate(['/reset']);  
             } else {
                 this.router.navigate(['/empresa/dashboard']); 
             }
           } else {
               if (lastLoginString === null || lastLoginString === 'null') { 
-                this.router.navigate(['/sistema/config']);  
+                this.router.navigate(['/reset']);  
             } else {
                 this.router.navigate(['/sistema/menu-inicial']); 
             }

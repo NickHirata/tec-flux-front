@@ -17,6 +17,7 @@ import { KanbanBoardComponent } from './features/kanban-board/kanban-board.compo
 import { SetoresComponent } from './features/administrador/setores/setores.component';
 import { ConfiguracaoComponent } from './features/administrador/configuracao/configuracao.component';
 import { ConfigComponent } from './features/usuarios/config/config.component';
+import { ResetPasswordComponent } from './features/tela_comum/reset-password/reset-password.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'faq', component: FaqComponent },
   { path: 'trabalhe-conosco', component: TrabalheConoscoComponent },
   { path: 'board', component:KanbanBoardComponent},
+  { path: 'reset', component:ResetPasswordComponent},
   {
     path: 'sistema', component: LayoutSistemaComponent,
     children: [
