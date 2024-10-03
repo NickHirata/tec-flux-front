@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-config',
@@ -22,26 +23,13 @@ export class ConfigComponent {
   changePasswordVisible: boolean = false;
   changeEmailVisible: boolean = false;
 
-  newPassword: string = '';
   newEmail: string = '';
 
-
-  showChangeDepartment() {
-    this.resetVisibility();
-  }
-
-  showChangePassword() {
-    this.resetVisibility();
-    this.changePasswordVisible = true;
-  }
+  constructor(private router: Router) {}
 
   showChangeEmail() {
     this.resetVisibility();
     this.changeEmailVisible = true;
-  }
-
-  showDeleteUser() {
-    this.resetVisibility();
   }
 
   resetVisibility() {
@@ -49,16 +37,12 @@ export class ConfigComponent {
     this.changeEmailVisible = false;
   }
 
-
-
-  changePassword() {
-    // Lógica para alterar a senha
-    console.log(`Nova senha: ${this.newPassword}`);
-  }
-
   changeEmail() {
     // Lógica para alterar o e-mail
     console.log(`Novo e-mail: ${this.newEmail}`);
   }
 
+  redirectToReset() {
+    this.router.navigate(['/reset']);
+  }
 }
