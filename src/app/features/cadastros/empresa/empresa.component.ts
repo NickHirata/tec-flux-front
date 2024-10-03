@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../shared/app-popup/app-popup.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-empresa',
@@ -64,33 +65,36 @@ export class EmpresaComponent {
     }, 2000);
   }
 
-  // Método para verificar se o CNPJ já está cadastrado
-  checkCnpjExists(cnpj: string) {
-    return this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`);
-  }
+// Método para verificar se o CNPJ já está cadastrado
+checkCnpjExists(cnpj: string) {
+  // Ajuste da URL conforme seu endpoint
+  return this.http.get(`http://localhost:8081/company/cnpj/?cnpj=${cnpj}`);
+}
 
-  onSubmitEmpresa() {
-    if (this.empresaForm.valid) {
-      // Faz a verificação do CNPJ antes de prosseguir
-      const cnpj = this.empresaForm.get('cnpj')?.value;
-      this.checkCnpjExists(cnpj).subscribe(
-        (exists: any) => {
-          if (exists) {
-            this.showPopupMessage('CNPJ já cadastrado!', true);
-          } else {
-            // Se o CNPJ não estiver cadastrado, avança para o cadastro do administrador
-            this.isAdminStep = true;
-          }
-        },
-        (error) => {
-          this.showPopupMessage('Erro ao verificar CNPJ!', true);
+onSubmitEmpresa() {
+  if (this.empresaForm.valid) {
+    // Faz a verificação do CNPJ antes de prosseguir
+    const cnpj = this.empresaForm.get('cnpj')?.value;
+    this.checkCnpjExists(cnpj).subscribe(
+      // Ajuste conforme a estrutura da resposta do seu endpoint
+      (response: any) => {
+        // Supondo que a resposta do endpoint retorna um booleano em `exists`
+        if (response.exists) {
+          this.showPopupMessage('CNPJ já cadastrado!', true);
+        } else {
+          // Se o CNPJ não estiver cadastrado, avança para o cadastro do administrador
+          this.isAdminStep = true;
         }
-      );
-    } else {
-      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-      this.markAllFieldsAsTouched();
-    }
+      },
+      (error) => {
+        this.showPopupMessage('Erro ao verificar CNPJ!', true);
+      }
+    );
+  } else {
+    this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+    this.markAllFieldsAsTouched();
   }
+}
   
   onSubmitAdmin() {
     if (this.adminForm.valid) {
