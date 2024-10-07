@@ -4,6 +4,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-configuracao',
@@ -35,6 +36,8 @@ export class ConfiguracaoComponent {
     { nome: 'Maria Oliveira', id: 2 }
   ];
 
+  constructor(private router: Router) {}
+  
   selectedEmployee: any;
   newDepartment: any;
   newPassword: string = '';
@@ -86,5 +89,9 @@ export class ConfiguracaoComponent {
   deleteUser() {
     // Lógica para excluir o usuário
     console.log(`Usuário excluído: ${this.selectedUserToDelete.nome}`);
+  }
+
+  redirectToReset() {
+    this.router.navigate(['/reset']);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
 export class ResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
   message: string | null = null;
+  userId: number | null = null;
 
   constructor(private fb: FormBuilder, private router: Router, private http: HttpClient) {
     this.resetForm = this.fb.group({
@@ -33,6 +34,14 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Obtém o id do sessionStorage
+    const storedId = sessionStorage.getItem('id');
+    if (storedId) {
+      this.userId = Number(storedId);
+    } else {
+      this.message = 'ID do usuário não encontrado. Por favor, faça login novamente.';
+    }
+
     // Adiciona verificação de senhas correspondentes após a inicialização
     this.resetForm.get('confirmPassword')?.valueChanges.subscribe(() => {
       this.checkPasswords();
@@ -54,15 +63,38 @@ export class ResetPasswordComponent implements OnInit {
     }
   }
 
+  // Método para obter os headers com o token de autenticação
+  private getAuthHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('accessToken');
+    const tokenType = sessionStorage.getItem('tokenType');
+    console.log('Token Type:', tokenType);
+    console.log('Access Token:', token);
+
+    if (token && tokenType) {
+      return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
+    } else {
+      return new HttpHeaders();
+    }
+  }
+
   onSubmit() {
-    if (this.resetForm.valid) {
+    if (this.resetForm.valid && this.userId !== null) {
+      const oldPassword = this.resetForm.get('oldPassword')?.value;
+      const newPassword = this.resetForm.get('newPassword')?.value;
+
+      console.log('Old Password:', oldPassword);
+      console.log('New Password:', newPassword);
+
       const payload = {
-        temporaryPassword: this.resetForm.get('temporaryPassword')?.value,
-        newPassword: this.resetForm.get('newPassword')?.value,
+        oldPassword: oldPassword,
+        newPassword: newPassword,
       };
 
-      // Realiza a requisição POST para o endpoint fornecido
-      this.http.post('http://localhost:8081/user/63/update-password', payload).subscribe(
+      // Obtém os headers de autenticação
+      const headers = this.getAuthHeaders();
+
+      // Realiza a requisição POST para o endpoint fornecido com o userId dinâmico
+      this.http.post(`http://localhost:8081/user/${this.userId}/update-password`, payload, { headers }).subscribe(
         (response) => {
           // Exibe a mensagem de sucesso e redireciona para o login após um tempo
           this.message = 'Senha redefinida com sucesso!';
