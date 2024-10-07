@@ -7,7 +7,7 @@
       <p-panel header="Ações">
         <div class="my-3">
           <button pButton pRipple label="Alterar Departamento" icon="pi pi-pencil" class="p-button-info mr-2" (click)="showChangeDepartment()"></button>
-          <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="showChangePassword()"></button>
+          <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="redirectToReset()"></button>
           <button pButton pRipple label="Excluir Usuário" icon="pi pi-trash" class="p-button-danger" (click)="showDeleteUser()"></button>
         </div>
       </p-panel>
@@ -23,15 +23,6 @@
           <p-dropdown id="departamento" [(ngModel)]="newDepartment" [options]="departments" optionLabel="nome" placeholder="Selecione o Departamento"></p-dropdown>
         </div>
         <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changeDepartment()"></button>
-      </p-panel>
-
-      <!-- Formulário de Alteração de Senha -->
-      <p-panel *ngIf="changePasswordVisible" header="Alterar Senha">
-        <div class="field">
-          <label for="novaSenha">Nova Senha</label>
-          <input id="novaSenha" type="password" pInputText [(ngModel)]="newPassword" placeholder="Digite a nova senha" style="width: 300px;" />
-        </div>
-        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changePassword()"></button>
       </p-panel>
 
       <!-- Confirmação de Exclusão de Usuário -->

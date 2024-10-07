@@ -19,7 +19,6 @@ import { Router } from '@angular/router';
 })
 export class ConfiguracaoComponent {
   changeDepartmentVisible: boolean = false;
-  changePasswordVisible: boolean = false;
   deleteUserVisible: boolean = false;
 
   employees: any[] = [
@@ -39,17 +38,11 @@ export class ConfiguracaoComponent {
   
   selectedEmployee: any;
   newDepartment: any;
-  newPassword: string = '';
   selectedUserToDelete: any;
 
   showChangeDepartment() {
     this.resetVisibility();
     this.changeDepartmentVisible = true;
-  }
-
-  showChangePassword() {
-    this.resetVisibility();
-    this.changePasswordVisible = true;
   }
 
   showDeleteUser() {
@@ -59,7 +52,6 @@ export class ConfiguracaoComponent {
 
   resetVisibility() {
     this.changeDepartmentVisible = false;
-    this.changePasswordVisible = false;
     this.deleteUserVisible = false;
   }
 
@@ -68,17 +60,12 @@ export class ConfiguracaoComponent {
     console.log(`Funcionário: ${this.selectedEmployee.nome}, Novo Departamento: ${this.newDepartment.nome}`);
   }
 
-  changePassword() {
-    // Lógica para alterar a senha
-    console.log(`Nova senha: ${this.newPassword}`);
+  redirectToReset() {
+    this.router.navigate(['/reset']);
   }
 
   deleteUser() {
     // Lógica para excluir o usuário
     console.log(`Usuário excluído: ${this.selectedUserToDelete.nome}`);
-  }
-
-  redirectToReset() {
-    this.router.navigate(['/reset']);
   }
 }
