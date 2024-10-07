@@ -128,7 +128,27 @@ export class ConfiguracaoComponent implements OnInit {
   }
   
   updateUserDepartment() {
-    
+    if (this.selectedEmployee && this.newDepartment) {
+      const headers = this.getAuthHeaders();
+      const url = `http://localhost:8081/user/${this.companyId}`;
+      const payload = {
+        departmentId: this.newDepartment.value // ou o campo que corresponde ao ID do departamento
+      };
+  
+      this.http.patch(url, payload, { headers }).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Departamento atualizado com sucesso!' });
+          // Atualiza a lista de funcionários para refletir a mudança
+          this.fetchEmployees();
+        },
+        (error) => {
+          console.error('Erro ao atualizar departamento do usuário', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao atualizar departamento do usuário!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário e um departamento.' });
+    }
   }
   
   redirectToReset() {
