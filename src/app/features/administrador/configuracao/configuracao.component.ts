@@ -20,7 +20,6 @@ import { Router } from '@angular/router';
 export class ConfiguracaoComponent {
   changeDepartmentVisible: boolean = false;
   changePasswordVisible: boolean = false;
-  changeEmailVisible: boolean = false;
   deleteUserVisible: boolean = false;
 
   employees: any[] = [
@@ -41,7 +40,6 @@ export class ConfiguracaoComponent {
   selectedEmployee: any;
   newDepartment: any;
   newPassword: string = '';
-  newEmail: string = '';
   selectedUserToDelete: any;
 
   showChangeDepartment() {
@@ -54,11 +52,6 @@ export class ConfiguracaoComponent {
     this.changePasswordVisible = true;
   }
 
-  showChangeEmail() {
-    this.resetVisibility();
-    this.changeEmailVisible = true;
-  }
-
   showDeleteUser() {
     this.resetVisibility();
     this.deleteUserVisible = true;
@@ -67,7 +60,6 @@ export class ConfiguracaoComponent {
   resetVisibility() {
     this.changeDepartmentVisible = false;
     this.changePasswordVisible = false;
-    this.changeEmailVisible = false;
     this.deleteUserVisible = false;
   }
 
@@ -79,11 +71,6 @@ export class ConfiguracaoComponent {
   changePassword() {
     // Lógica para alterar a senha
     console.log(`Nova senha: ${this.newPassword}`);
-  }
-
-  changeEmail() {
-    // Lógica para alterar o e-mail
-    console.log(`Novo e-mail: ${this.newEmail}`);
   }
 
   deleteUser() {

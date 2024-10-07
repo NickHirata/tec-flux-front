@@ -8,7 +8,6 @@
         <div class="my-3">
           <button pButton pRipple label="Alterar Departamento" icon="pi pi-pencil" class="p-button-info mr-2" (click)="showChangeDepartment()"></button>
           <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="showChangePassword()"></button>
-          <button pButton pRipple label="Alterar E-mail" icon="pi pi-envelope" class="p-button-primary mr-2" (click)="showChangeEmail()"></button>
           <button pButton pRipple label="Excluir Usuário" icon="pi pi-trash" class="p-button-danger" (click)="showDeleteUser()"></button>
         </div>
       </p-panel>
@@ -33,15 +32,6 @@
           <input id="novaSenha" type="password" pInputText [(ngModel)]="newPassword" placeholder="Digite a nova senha" style="width: 300px;" />
         </div>
         <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changePassword()"></button>
-      </p-panel>
-
-      <!-- Formulário de Alteração de E-mail -->
-      <p-panel *ngIf="changeEmailVisible" header="Alterar E-mail">
-        <div class="field">
-          <label for="novoEmail">Novo E-mail</label>
-          <input id="novoEmail" type="email" pInputText [(ngModel)]="newEmail" placeholder="Digite o novo e-mail" style="width: 300px;" />
-        </div>
-        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changeEmail()"></button>
       </p-panel>
 
       <!-- Confirmação de Exclusão de Usuário -->
