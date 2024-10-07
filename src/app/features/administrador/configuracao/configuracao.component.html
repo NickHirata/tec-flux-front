@@ -16,11 +16,11 @@
       <p-panel *ngIf="changeDepartmentVisible" header="Alterar Departamento">
         <div class="field">
           <label for="funcionario">Funcionário</label>
-          <p-dropdown id="funcionario" [(ngModel)]="selectedEmployee" [options]="employees" optionLabel="nome" placeholder="Selecione um Funcionário"></p-dropdown>
+          <p-dropdown id="funcionario" [(ngModel)]="selectedEmployee" [options]="employees" optionLabel="label" placeholder="Selecione um Funcionário"></p-dropdown>
         </div>
         <div class="field">
           <label for="departamento">Novo Departamento</label>
-          <p-dropdown id="departamento" [(ngModel)]="newDepartment" [options]="departments" optionLabel="nome" placeholder="Selecione o Departamento"></p-dropdown>
+          <p-dropdown id="departamento" [(ngModel)]="newDepartment" [options]="departamentos" optionLabel="label" placeholder="Selecione o Departamento"></p-dropdown>
         </div>
         <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changeDepartment()"></button>
       </p-panel>
@@ -29,7 +29,7 @@
       <p-panel *ngIf="deleteUserVisible" header="Excluir Usuário">
         <div class="field">
           <label for="usuarioExcluir">Usuário</label>
-          <p-dropdown id="usuarioExcluir" [(ngModel)]="selectedUserToDelete" [options]="users" optionLabel="nome" placeholder="Selecione um Usuário"></p-dropdown>
+          <p-dropdown id="usuarioExcluir" [(ngModel)]="selectedUserToDelete" [options]="employees" optionLabel="label" placeholder="Selecione um Usuário"></p-dropdown>
         </div>
         <button pButton pRipple label="Excluir" icon="pi pi-trash" class="p-button-danger mt-2" (click)="deleteUser()"></button>
       </p-panel>
