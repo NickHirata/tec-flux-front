@@ -156,7 +156,23 @@ export class ConfiguracaoComponent implements OnInit {
   }
 
   deleteUser() {
-    // Lógica para excluir o usuário
-    console.log(`Usuário excluído: ${this.selectedUserToDelete.nome}`);
+    if (this.selectedUserToDelete) {
+      const headers = this.getAuthHeaders();
+      const url = `http://localhost:8081/user/${this.selectedUserToDelete.value}`; // Assumindo que `value` é o ID do funcionário
+  
+      this.http.delete(url, { headers }).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário excluído com sucesso!' });
+          // Atualiza a lista de funcionários após exclusão
+          this.fetchEmployees();
+        },
+        (error) => {
+          console.error('Erro ao excluir funcionário', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o funcionário!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário para excluir.' });
+    }
   }
 }
