@@ -125,11 +125,6 @@ export class SetoresComponent implements OnInit {
     this.setorDialog = true;
   }
 
-  openDeleteDialog() {
-    this.deleteForm.reset({ companyId: this.companyId, name: '', description: '' });
-    this.deleteDialog = true;
-  }
-
   hideDialog() {
     this.setorDialog = false;
     this.deleteDialog = false;
@@ -152,27 +147,6 @@ export class SetoresComponent implements OnInit {
       );
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor, preencha todos os campos corretamente.' });
-    }
-  }
-
-  showDeleteSetor() {
-    if (this.selectedSetorToDelete) {
-      const headers = this.getAuthHeaders();
-      const url = `http://localhost:8081/user/${this.selectedSetorToDelete.value}`; // Assumindo que `value` é o ID do funcionário
-  
-      this.http.delete(url, { headers }).subscribe(
-        (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário excluído com sucesso!' });
-          // Atualiza a lista de funcionários após exclusão
-          this.fetchSetores();
-        },
-        (error) => {
-          console.error('Erro ao excluir funcionário', error);
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o funcionário!' });
-        }
-      );
-    } else {
-      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário para excluir.' });
     }
   }
 }
