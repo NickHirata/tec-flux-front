@@ -23,23 +23,10 @@ export class ConfigComponent {
   changePasswordVisible: boolean = false;
   changeEmailVisible: boolean = false;
 
-  newEmail: string = '';
-
   constructor(private router: Router) {}
-
-  showChangeEmail() {
-    this.resetVisibility();
-    this.changeEmailVisible = true;
-  }
 
   resetVisibility() {
     this.changePasswordVisible = false;
-    this.changeEmailVisible = false;
-  }
-
-  changeEmail() {
-    // Lógica para alterar o e-mail
-    console.log(`Novo e-mail: ${this.newEmail}`);
   }
 
   redirectToReset() {
