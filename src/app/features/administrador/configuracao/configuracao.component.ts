@@ -135,10 +135,11 @@ export class ConfiguracaoComponent implements OnInit {
         console.log('Department ID:', this.newDepartment.value); // Verificar o valor do ID
 
         const headers = this.getAuthHeaders();
-        const url = `http://localhost:8081/user/${this.companyId}`;
+        const url = `http://localhost:8081/user/${this.selectedEmployee.value}`;
         const payload = {
-            departmentId: this.newDepartment.value // ou o campo que corresponde ao ID do departamento
-        };
+          id: this.selectedEmployee.value,
+          departmentId: this.newDepartment.value
+       };       
 
         this.http.patch(url, payload, { headers }).subscribe(
             (response) => {
