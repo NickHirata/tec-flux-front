@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../shared/app-popup/app-popup.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router';
-import { Console } from 'console';
 
 @Component({
   selector: 'app-empresa',
