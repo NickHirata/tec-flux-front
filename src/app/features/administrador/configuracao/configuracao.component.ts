@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ToastModule } from 'primeng/toast';
+
 
 @Component({
   selector: 'app-configuracao',
@@ -16,7 +18,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     DropdownModule, 
     PanelModule, 
     ButtonModule,
-    CommonModule
+    CommonModule,
+    ToastModule
   ],
   providers: [MessageService],
   templateUrl: './configuracao.component.html',
@@ -128,15 +131,53 @@ export class ConfiguracaoComponent implements OnInit {
   }
   
   updateUserDepartment() {
-    
-  }
+    if (this.selectedEmployee && this.newDepartment) {
+        console.log('Department ID:', this.newDepartment.value); // Verificar o valor do ID
+
+        const headers = this.getAuthHeaders();
+        const url = `http://localhost:8081/user/${this.companyId}`;
+        const payload = {
+            departmentId: this.newDepartment.value // ou o campo que corresponde ao ID do departamento
+        };
+
+        this.http.patch(url, payload, { headers }).subscribe(
+            (response) => {
+                this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Departamento atualizado com sucesso!' });
+                // Atualiza a lista de funcionários para refletir a mudança
+                this.fetchEmployees();
+            },
+            (error) => {
+                console.error('Erro ao atualizar departamento do usuário', error);
+                this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao atualizar departamento do usuário!' });
+            }
+        );
+    } else {
+        this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário e um departamento.' });
+    }
+}
   
   redirectToReset() {
     this.router.navigate(['/reset']);
   }
 
   deleteUser() {
-    // Lógica para excluir o usuário
-    console.log(`Usuário excluído: ${this.selectedUserToDelete.nome}`);
+    if (this.selectedUserToDelete) {
+      const headers = this.getAuthHeaders();
+      const url = `http://localhost:8081/user/${this.selectedUserToDelete.value}`; // Assumindo que `value` é o ID do funcionário
+  
+      this.http.delete(url, { headers }).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário excluído com sucesso!' });
+          // Atualiza a lista de funcionários após exclusão
+          this.fetchEmployees();
+        },
+        (error) => {
+          console.error('Erro ao excluir funcionário', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o funcionário!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário para excluir.' });
+    }
   }
 }
