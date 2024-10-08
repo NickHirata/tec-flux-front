@@ -73,20 +73,29 @@ checkCnpjExists(cnpj: string) {
 
 onSubmitEmpresa() {
   if (this.empresaForm.valid) {
-    // Faz a verificação do CNPJ antes de prosseguir
-    const cnpj = this.empresaForm.get('cnpj')?.value;
-    this.checkCnpjExists(cnpj).subscribe(
-      // Ajuste conforme a estrutura da resposta do seu endpoint
+    // Captura o valor do CNPJ do formulário
+    let cnpj = this.empresaForm.get('cnpj')?.value;
+
+    // Remove caracteres especiais do CNPJ
+    cnpj = cnpj.replace(/[^\d]+/g, '');
+
+    // Faz a requisição para verificar se o CNPJ existe
+    this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`).subscribe(
       (response: any) => {
-        // Supondo que a resposta do endpoint retorna um booleano em `exists`
-        if (response.exists) {
+        // Log da resposta para garantir que estamos vendo o retorno correto
+        console.log(response);
+
+        // Verifica se a mensagem indica que a empresa já está cadastrada
+        if (response && response.message && response.message === 'Empresa já cadastrada') {
+          // Mostra a mensagem de erro se o CNPJ já estiver cadastrado
           this.showPopupMessage('CNPJ já cadastrado!', true);
         } else {
-          // Se o CNPJ não estiver cadastrado, avança para o cadastro do administrador
+          // Se a mensagem não indicar isso, avança para a próxima etapa
           this.isAdminStep = true;
         }
       },
       (error) => {
+        // Mostra uma mensagem de erro se houver um problema com a requisição
         this.showPopupMessage('Erro ao verificar CNPJ!', true);
       }
     );
@@ -95,6 +104,7 @@ onSubmitEmpresa() {
     this.markAllFieldsAsTouched();
   }
 }
+
   
   onSubmitAdmin() {
     if (this.adminForm.valid) {
