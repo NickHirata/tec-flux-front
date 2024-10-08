@@ -1,14 +1,14 @@
 <div class="grid">
   <div class="col-12">
     <div class="card px-6 py-6">
-      <h2>Cadastro de Usuários</h2>
+      <h2>Cadastro de Funcionários</h2>
       <p-toast></p-toast>
 
       <!-- Botão para abrir o diálogo de cadastro -->
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="center">
           <div class="my-2">
-            <button pButton pRipple label="Cadastrar Usuário" icon="pi pi-plus" class="p-button mr-2" (click)="openEmployeeDialog()"></button>
+            <button pButton pRipple label="Cadastrar Funcionário" icon="pi pi-plus" class="p-button mr-2" (click)="openEmployeeDialog()"></button>
           </div>
         </ng-template>
       </p-toolbar>
@@ -48,7 +48,7 @@
       </p-table>
 
       <!-- Diálogo para cadastro de Usuário -->
-      <p-dialog [(visible)]="employeeDialog" [style]="{ width: '400px' }" header="Cadastrar Usuário" [modal]="true" class="p-fluid">
+      <p-dialog [(visible)]="employeeDialog" [style]="{ width: '400px' }" header="Cadastrar Funcionário" [modal]="true" class="p-fluid">
         <ng-template pTemplate="content">
           <form [formGroup]="userForm">
             <div class="field">
