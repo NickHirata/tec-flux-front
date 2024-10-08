@@ -32,7 +32,7 @@
             <th>Nome</th>
             <th>Email</th>
             <th>Telefone</th>
-            <th>Departamento</th>
+            <th>Setor</th>
             <th>Cargo</th>
           </tr>
         </ng-template>
@@ -73,14 +73,14 @@
               </div>
             </div>
             <div class="field">
-              <label for="departmentId">Departamento do Funcionário</label>
+              <label for="departmentId">Setor do Funcionário</label>
               <p-dropdown
                 id="departmentId"
                 [options]="departamentos"
                 formControlName="departmentId"
                 optionLabel="label"
                 optionValue="value"
-                placeholder="Selecione o departamento do funcionário"
+                placeholder="Selecione o setor do funcionário"
               ></p-dropdown>
               <div *ngIf="userForm.controls['departmentId'].invalid && userForm.controls['departmentId'].touched" class="error">
                 Departamento é obrigatório.

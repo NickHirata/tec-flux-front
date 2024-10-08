@@ -27,9 +27,12 @@ import { ToolbarModule } from 'primeng/toolbar';
 })
 export class SetoresComponent implements OnInit {
   setorForm: FormGroup;
+  deleteForm: FormGroup;
   setores: any[] = [];
   setorDialog: boolean = false;
+  deleteDialog: boolean = false;
   companyId: number | null = null;
+  selectedSetorToDelete: any;
 
   // Variáveis para paginação
   totalRecords: number = 0;
@@ -48,6 +51,12 @@ export class SetoresComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
+
+    this.deleteForm = this.fb.group({
+      companyId: ['', Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required]
+    });
   }
 
   ngOnInit() {
@@ -58,6 +67,7 @@ export class SetoresComponent implements OnInit {
 
       // Atualiza o campo companyId no formulário
       this.setorForm.patchValue({ companyId: this.companyId });
+      this.deleteForm.patchValue({ companyId: this.companyId });
 
       // Busca os setores ao carregar o componente
       this.fetchSetores();
@@ -115,8 +125,14 @@ export class SetoresComponent implements OnInit {
     this.setorDialog = true;
   }
 
+  openDeleteDialog() {
+    this.deleteForm.reset({ companyId: this.companyId, name: '', description: '' });
+    this.deleteDialog = true;
+  }
+
   hideDialog() {
     this.setorDialog = false;
+    this.deleteDialog = false;
   }
 
   onSubmitSetor() {
@@ -136,6 +152,27 @@ export class SetoresComponent implements OnInit {
       );
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor, preencha todos os campos corretamente.' });
+    }
+  }
+
+  showDeleteSetor() {
+    if (this.selectedSetorToDelete) {
+      const headers = this.getAuthHeaders();
+      const url = `http://localhost:8081/user/${this.selectedSetorToDelete.value}`; // Assumindo que `value` é o ID do funcionário
+  
+      this.http.delete(url, { headers }).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Funcionário excluído com sucesso!' });
+          // Atualiza a lista de funcionários após exclusão
+          this.fetchSetores();
+        },
+        (error) => {
+          console.error('Erro ao excluir funcionário', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o funcionário!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário para excluir.' });
     }
   }
 }

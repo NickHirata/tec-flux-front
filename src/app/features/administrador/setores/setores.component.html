@@ -9,6 +9,7 @@
         <ng-template pTemplate="center">
           <div class="my-2">
             <button pButton pRipple label="Cadastrar Setor" icon="pi pi-plus" class="p-button mr-2" (click)="openSetorDialog()"></button>
+            <button pButton pRipple label="Excluir Setor" icon="pi pi-trash" class="p-button-danger" (click)="openDeleteDialog()"></button>
           </div>
         </ng-template>
       </p-toolbar>
@@ -43,6 +44,30 @@
 
       <!-- Diálogo para cadastro de setor -->
       <p-dialog [(visible)]="setorDialog" [style]="{ width: '400px' }" header="Cadastrar Setor" [modal]="true" class="p-fluid">
+        <ng-template pTemplate="content">
+          <form [formGroup]="setorForm">
+            <div class="field">
+              <label for="name">Nome do Setor</label>
+              <input id="name" pInputText formControlName="name" />
+              <div *ngIf="setorForm.controls['name'].invalid && setorForm.controls['name'].touched" class="error">
+                Preencha o nome do setor!
+              </div>
+            </div>
+            <div class="field">
+              <label for="description">Descrição</label>
+              <textarea id="description" pInputTextarea formControlName="description"></textarea>
+            </div>
+          </form>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="onSubmitSetor()"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Diálogo para cadastro de setor -->
+      <p-dialog [(visible)]="deleteDialog" [style]="{ width: '400px' }" header="Excluir Setor" [modal]="true" class="p-fluid">
         <ng-template pTemplate="content">
           <form [formGroup]="setorForm">
             <div class="field">
