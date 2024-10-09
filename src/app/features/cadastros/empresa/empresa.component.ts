@@ -99,7 +99,7 @@ export class EmpresaComponent {
     }
   }
 
-  // Método para cadastrar empresa e administrador
+  // Método para cadastrar empresa, criar departamento e, em seguida, cadastrar administrador
   onSubmitEmpresa() {
     if (this.empresaForm.valid) {
       // Remove caracteres especiais do CNPJ
@@ -114,14 +114,30 @@ export class EmpresaComponent {
             // Cadastrar a empresa se o CNPJ não estiver cadastrado
             this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
               (empresaResponse: any) => {
-                // Certifique-se de que 'id' está presente na resposta
                 const companyId = empresaResponse.id;
-                if (companyId) {
-                  // Passa o companyId para o formulário do administrador
-                  this.adminForm.patchValue({ companyId });
 
-                  this.isAdminStep = true; // Avança para o cadastro do administrador
-                  this.showPopupMessage('Empresa cadastrada com sucesso. Agora cadastre o administrador.', false);
+                if (companyId) {
+                  // Cria o departamento "GERAL" após a criação da empresa
+                  const departmentData = {
+                    companyId: companyId,
+                    name: 'GERAL'
+                  };
+
+                  this.http.post('http://localhost:8081/departments', departmentData).subscribe(
+                    (departmentResponse: any) => {
+                      console.log('Departamento criado com sucesso:', departmentResponse);
+
+                      // Passa o companyId para o formulário do administrador
+                      this.adminForm.patchValue({ companyId });
+
+                      // Avança para o cadastro do administrador
+                      this.isAdminStep = true;
+                      this.showPopupMessage('Empresa e departamento criados com sucesso. Agora cadastre o administrador.', false);
+                    },
+                    (error) => {
+                      this.showPopupMessage('Erro ao criar departamento!', true);
+                    }
+                  );
                 } else {
                   this.showPopupMessage('Erro: ID da empresa não retornado!', true);
                 }
@@ -141,7 +157,6 @@ export class EmpresaComponent {
       this.markAllFieldsAsTouched();
     }
   }
-
 
   // Método para cadastrar o administrador
   onSubmitAdmin() {
