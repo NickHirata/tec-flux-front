@@ -27,9 +27,12 @@ import { ToolbarModule } from 'primeng/toolbar';
 })
 export class SetoresComponent implements OnInit {
   setorForm: FormGroup;
+  deleteForm: FormGroup;
   setores: any[] = [];
   setorDialog: boolean = false;
+  deleteDialog: boolean = false;
   companyId: number | null = null;
+  selectedSetorToDelete: any;
 
   // Variáveis para paginação
   totalRecords: number = 0;
@@ -48,6 +51,12 @@ export class SetoresComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
+
+    this.deleteForm = this.fb.group({
+      companyId: ['', Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required]
+    });
   }
 
   ngOnInit() {
@@ -58,6 +67,7 @@ export class SetoresComponent implements OnInit {
 
       // Atualiza o campo companyId no formulário
       this.setorForm.patchValue({ companyId: this.companyId });
+      this.deleteForm.patchValue({ companyId: this.companyId });
 
       // Busca os setores ao carregar o componente
       this.fetchSetores();
@@ -117,6 +127,7 @@ export class SetoresComponent implements OnInit {
 
   hideDialog() {
     this.setorDialog = false;
+    this.deleteDialog = false;
   }
 
   onSubmitSetor() {
