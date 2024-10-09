@@ -21,6 +21,7 @@ export class EmpresaComponent {
   isError: boolean = false;
   showPopup: boolean = false;
   isAdminStep = false;
+  isCompanyDataFilled: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.empresaForm = this.fb.group({
@@ -64,73 +65,104 @@ export class EmpresaComponent {
     }, 2000);
   }
 
-// Método para verificar se o CNPJ já está cadastrado
-checkCnpjExists(cnpj: string) {
-  // Ajuste da URL conforme seu endpoint
-  return this.http.get(`http://localhost:8081/company/cnpj/?cnpj=${cnpj}`);
-}
+  // Método para buscar os dados da empresa ao perder o foco no campo CNPJ
+  onCnpjBlur() {
+    const cnpj = this.empresaForm.get('cnpj')?.value;
 
-onSubmitEmpresa() {
-  if (this.empresaForm.valid) {
-    // Captura o valor do CNPJ do formulário
-    let cnpj = this.empresaForm.get('cnpj')?.value;
+    if (cnpj) {
+      // Remove caracteres especiais do CNPJ
+      const cleanedCnpj = cnpj.replace(/[^\d]+/g, '');
 
-    // Remove caracteres especiais do CNPJ
-    cnpj = cnpj.replace(/[^\d]+/g, '');
+      // Faz a requisição para buscar os dados da empresa pelo CNPJ
+      this.http.get(`http://localhost:8081/company/cnpj/${cleanedCnpj}`).subscribe(
+        (response: any) => {
+          // Se a empresa existir, preenche os outros campos do formulário
+          if (response) {
+            this.empresaForm.patchValue({
+              name: response.name || '',
+              address: response.address || '',
+              phone: response.phone || ''
+            });
 
-    // Faz a requisição para verificar se o CNPJ existe
-    this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`).subscribe(
-      (response: any) => {
-        // Log da resposta para garantir que estamos vendo o retorno correto
-        console.log(response);
-
-        // Verifica se a mensagem indica que a empresa já está cadastrada
-        if (response && response.message && response.message === 'Empresa já cadastrada') {
-          // Mostra a mensagem de erro se o CNPJ já estiver cadastrado
-          this.showPopupMessage('CNPJ já cadastrado!', true);
-        } else {
-          // Se a mensagem não indicar isso, avança para a próxima etapa
-          this.isAdminStep = true;
-        }
-      },
-      (error) => {
-        // Mostra uma mensagem de erro se houver um problema com a requisição
-        this.showPopupMessage('Erro ao verificar CNPJ!', true);
-      }
-    );
-  } else {
-    this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-    this.markAllFieldsAsTouched();
-  }
-}
-
-  
-  onSubmitAdmin() {
-    if (this.adminForm.valid) {
-      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
-        (response) => {
-          // Se o administrador for cadastrado com sucesso, cadastra a empresa
-          this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
-            (response) => {
-              this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
-  
-              // Adicionando um delay de 2 segundos antes de redirecionar
-              setTimeout(() => {
-                this.router.navigate(['empresa/dashboard']);
-              }, 2000);
-            },
-            (error) => {
-              this.showPopupMessage('Erro ao cadastrar empresa!', true);
-            }
-          );
+            this.isCompanyDataFilled = true; // Marca que os dados foram preenchidos
+            this.showPopupMessage('Dados da empresa preenchidos com sucesso!', false);
+          } else {
+            this.isCompanyDataFilled = false; // Marca que os dados não foram encontrados
+            this.showPopupMessage('CNPJ não encontrado!', true);
+          }
         },
         (error) => {
-          this.showPopupMessage('Email de administrador já cadastrado!', true);
+          this.isCompanyDataFilled = false; // Marca que houve um erro na busca dos dados
+          this.showPopupMessage('Erro ao buscar os dados da empresa!', true);
+        }
+      );
+    }
+  }
+
+  // Método para cadastrar empresa e administrador
+  onSubmitEmpresa() {
+    if (this.empresaForm.valid) {
+      // Remove caracteres especiais do CNPJ
+      const cnpj = this.empresaForm.get('cnpj')?.value.replace(/[^\d]+/g, '');
+
+      // Verifica se o CNPJ já está cadastrado
+      this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`).subscribe(
+        (response: any) => {
+          if (response && response.message === 'Empresa já cadastrada') {
+            this.showPopupMessage('CNPJ já cadastrado!', true);
+          } else {
+            // Cadastrar a empresa se o CNPJ não estiver cadastrado
+            this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
+              (empresaResponse: any) => {
+                // Certifique-se de que 'id' está presente na resposta
+                const companyId = empresaResponse.id;
+                if (companyId) {
+                  // Passa o companyId para o formulário do administrador
+                  this.adminForm.patchValue({ companyId });
+
+                  this.isAdminStep = true; // Avança para o cadastro do administrador
+                  this.showPopupMessage('Empresa cadastrada com sucesso. Agora cadastre o administrador.', false);
+                } else {
+                  this.showPopupMessage('Erro: ID da empresa não retornado!', true);
+                }
+              },
+              (error) => {
+                this.showPopupMessage('Erro ao cadastrar empresa!', true);
+              }
+            );
+          }
+        },
+        (error) => {
+          this.showPopupMessage('Erro ao verificar CNPJ!', true);
         }
       );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
       this.markAllFieldsAsTouched();
     }
-  }  
+  }
+
+
+  // Método para cadastrar o administrador
+  onSubmitAdmin() {
+    if (this.adminForm.valid) {
+      // Faz o cadastro do administrador
+      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
+        (response) => {
+          this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
+
+          // Redireciona após sucesso
+          setTimeout(() => {
+            this.router.navigate(['empresa/dashboard']);
+          }, 2000);
+        },
+        (error) => {
+          this.showPopupMessage('Erro ao cadastrar administrador!', true);
+        }
+      );
+    } else {
+      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();
+    }
+  }
 }
