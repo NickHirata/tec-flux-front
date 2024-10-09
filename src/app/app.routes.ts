@@ -18,6 +18,9 @@ import { SetoresComponent } from './features/administrador/setores/setores.compo
 import { ConfiguracaoComponent } from './features/administrador/configuracao/configuracao.component';
 import { ConfigComponent } from './features/usuarios/config/config.component';
 import { ResetPasswordComponent } from './features/tela_comum/reset-password/reset-password.component';
+import { ResetPasswordEmailComponent } from './features/tela_comum/reset-password-email/reset-password-email.component';
+import { ResetNewPasswordComponent } from './features/tela_comum/reset-new-password/reset-new-password.component';
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
@@ -28,7 +31,9 @@ export const routes: Routes = [
   { path: 'faq', component: FaqComponent },
   { path: 'trabalhe-conosco', component: TrabalheConoscoComponent },
   { path: 'board', component:KanbanBoardComponent},
-  { path: 'reset', component:ResetPasswordComponent},
+  { path: 'reset', component: ResetPasswordComponent },
+  { path: 'redefinir', component: ResetPasswordEmailComponent },
+  { path: 'newpassword', component: ResetNewPasswordComponent },
   {
     path: 'sistema', component: LayoutSistemaComponent,
     children: [
