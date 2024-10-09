@@ -35,8 +35,8 @@ export class EmpresaComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       phone: ['', Validators.required],
-      companyId: ['', Validators.required],
-      departmentId: ['', Validators.required],
+      companyId: [''],
+      departmentId: [''],
       roles: [['ROLE_ADMINISTRADOR'], Validators.required]
     });
   }
