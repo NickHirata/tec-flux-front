@@ -29,6 +29,7 @@ export class ConfiguracaoComponent implements OnInit {
 
   changeDepartmentVisible: boolean = false;
   deleteUserVisible: boolean = false;
+  deleteDepartamentVisible: boolean = false;
   companyId: number | null = null;
 
   departamentos:  any[] = [];
@@ -37,6 +38,8 @@ export class ConfiguracaoComponent implements OnInit {
   selectedEmployee: any;
   newDepartment: any;
   selectedUserToDelete: any;
+  selectedDepartamentToDelete: any;
+
 
   constructor(
     private router: Router,
@@ -121,9 +124,15 @@ export class ConfiguracaoComponent implements OnInit {
     this.deleteUserVisible = true;
   }
 
+  showDeleteDepartament() {
+    this.resetVisibility();
+    this.deleteDepartamentVisible = true;
+  }
+
   resetVisibility() {
     this.changeDepartmentVisible = false;
     this.deleteUserVisible = false;
+    this.deleteDepartamentVisible = false;
   }
 
   changeDepartment() {
@@ -135,10 +144,11 @@ export class ConfiguracaoComponent implements OnInit {
         console.log('Department ID:', this.newDepartment.value); // Verificar o valor do ID
 
         const headers = this.getAuthHeaders();
-        const url = `http://localhost:8081/user/${this.companyId}`;
+        const url = `http://localhost:8081/user/${this.selectedEmployee.value}`;
         const payload = {
-            departmentId: this.newDepartment.value // ou o campo que corresponde ao ID do departamento
-        };
+          id: this.selectedEmployee.value,
+          departmentId: this.newDepartment.value
+       };       
 
         this.http.patch(url, payload, { headers }).subscribe(
             (response) => {
@@ -178,6 +188,27 @@ export class ConfiguracaoComponent implements OnInit {
       );
     } else {
       this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um funcionário para excluir.' });
+    }
+  }
+
+  deleteDepartament() {
+    if (this.selectedDepartamentToDelete) {
+      const headers = this.getAuthHeaders();
+      const url = `http://localhost:8081/departments/${this.selectedDepartamentToDelete.value}`; // Assumindo que `value` é o ID do funcionário
+  
+      this.http.delete(url, { headers }).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Setor excluído com sucesso!' });
+          // Atualiza a lista de funcionários após exclusão
+          this.fetchSetores();
+        },
+        (error) => {
+          console.error('Erro ao excluir funcionário', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Há um funcionário cadastrado nesse setor!' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Por favor, selecione um setor para excluir.' });
     }
   }
 }
