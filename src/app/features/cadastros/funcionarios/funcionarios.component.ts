@@ -63,6 +63,7 @@ export class FuncionariosComponent implements OnInit {
       departmentId: ['', Validators.required],
       companyId: [''],
       roles: [[''], Validators.required],
+      position: ['', Validators.required],
     });
   }
 
@@ -82,6 +83,10 @@ export class FuncionariosComponent implements OnInit {
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
     }
+  }
+
+  formatRoles(roles: string[]): string {
+    return roles.map(role => role.replace('ROLE_', '')).join(', ');
   }
 
    // Método para buscar os setores com base no companyId e na paginação
