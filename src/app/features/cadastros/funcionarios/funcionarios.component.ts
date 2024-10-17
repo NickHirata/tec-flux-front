@@ -84,6 +84,10 @@ export class FuncionariosComponent implements OnInit {
     }
   }
 
+  formatRoles(roles: string[]): string {
+    return roles.map(role => role.replace('ROLE_', '')).join(', ');
+  }
+
    // Método para buscar os setores com base no companyId e na paginação
    fetchSetores(event?: any) {
     if (this.companyId !== null) {
