@@ -63,6 +63,7 @@ export class FuncionariosComponent implements OnInit {
       departmentId: ['', Validators.required],
       companyId: [''],
       roles: [[''], Validators.required],
+      position: ['', Validators.required],
     });
   }
 
