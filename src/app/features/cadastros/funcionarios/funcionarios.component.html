@@ -34,6 +34,7 @@
             <th>Telefone</th>
             <th>Setor</th>
             <th>Cargo</th>
+            <th>Posição</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>
@@ -42,7 +43,8 @@
             <td>{{ user.email }}</td>
             <td>{{ user.phone }}</td>
             <td>{{ getDepartmentName(user.departmentId) }}</td>
-            <td>{{ user.roles }}</td>
+            <td>{{ user.position }}</td>
+            <td>{{ formatRoles(user.roles) }}</td>
           </tr>
         </ng-template>
       </p-table>
@@ -73,6 +75,14 @@
               </div>
             </div>
             <div class="field">
+              <label for="position">Cargo do Funcionário</label>
+              <input id="position" pInputText formControlName="position" />
+              <div *ngIf="userForm.controls['position'].invalid && userForm.controls['position'].touched" class="error">
+                Nome é obrigatório.
+              </div>
+            </div>
+
+            <div class="field">
               <label for="departmentId">Setor do Funcionário</label>
               <p-dropdown
                 id="departmentId"
@@ -88,7 +98,7 @@
             </div>
 
             <div class="field">
-              <label for="roles">Cargo do Funcionário</label>
+              <label for="roles">Posição do Funcionário</label>
               <p-multiSelect
                 id="roles"
                 [options]="cargos"
