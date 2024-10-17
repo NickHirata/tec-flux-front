@@ -33,6 +33,7 @@
             <th>Email</th>
             <th>Telefone</th>
             <th>Setor</th>
+            <th>Posição</th>
             <th>Cargo</th>
           </tr>
         </ng-template>
@@ -42,6 +43,7 @@
             <td>{{ user.email }}</td>
             <td>{{ user.phone }}</td>
             <td>{{ getDepartmentName(user.departmentId) }}</td>
+            <td>{{ user.position }}</td>
             <td>{{ user.roles }}</td>
           </tr>
         </ng-template>
