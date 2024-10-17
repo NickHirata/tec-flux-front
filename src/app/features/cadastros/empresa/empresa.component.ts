@@ -21,24 +21,23 @@ export class EmpresaComponent {
   isError: boolean = false;
   showPopup: boolean = false;
   isAdminStep = false;
-  isCompanyDataFilled: boolean = false;
+  isCompanyDataFilled: boolean = true; // Inicialmente true para permitir o preenchimento
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.empresaForm = this.fb.group({
-      name: ['', Validators.required],
+      companyName: ['', Validators.required],
       cnpj: ['', Validators.required],
       address: ['', Validators.required],
       phone: ['', Validators.required],
     });
 
     this.adminForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      phone: ['', Validators.required],
-      companyId: [''],
-      departmentId: [''],
-      roles: [['ROLE_ADMINISTRADOR'], Validators.required]
+      userName: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+      userPassword: ['', Validators.required],
+      userPhone: ['', Validators.required],
+      userPosition: ['', Validators.required],
+      roles: [['ROLE_MASTER'], Validators.required],
     });
   }
 
@@ -65,105 +64,71 @@ export class EmpresaComponent {
     }, 2000);
   }
 
-  // Método para buscar os dados da empresa ao perder o foco no campo CNPJ
   onCnpjBlur() {
     const cnpj = this.empresaForm.get('cnpj')?.value;
 
     if (cnpj) {
-      // Remove caracteres especiais do CNPJ
       const cleanedCnpj = cnpj.replace(/[^\d]+/g, '');
 
-      // Faz a requisição para buscar os dados da empresa pelo CNPJ
+      console.log('CNPJ Limpo:', cleanedCnpj); // Log do CNPJ limpo
+
       this.http.get(`http://localhost:8081/company/cnpj/${cleanedCnpj}`).subscribe(
         (response: any) => {
-          // Se a empresa existir, preenche os outros campos do formulário
-          if (response) {
-            this.empresaForm.patchValue({
-              name: response.name || '',
-              address: response.address || '',
-              phone: response.phone || ''
-            });
+          console.log('Resposta do servidor:', response); // Adicione este log
 
-            this.isCompanyDataFilled = true; // Marca que os dados foram preenchidos
-            this.showPopupMessage('Dados da empresa preenchidos com sucesso!', false);
+          if (response && (response.companyName || response.name)) {
+            // CNPJ já cadastrado
+            this.showPopupMessage('CNPJ já cadastrado!', true);
+            this.isCompanyDataFilled = false;
+
+            // Opcional: Limpar os campos do formulário
+            this.empresaForm.patchValue({
+              companyName: '',
+              address: '',
+              phone: ''
+            });
           } else {
-            this.isCompanyDataFilled = false; // Marca que os dados não foram encontrados
-            this.showPopupMessage('CNPJ não encontrado!', true);
+            // CNPJ não encontrado, podemos prosseguir com o cadastro
+            this.isCompanyDataFilled = true;
+            this.showPopupMessage('CNPJ não encontrado na base, prossiga com o cadastro.', false);
           }
         },
         (error) => {
-          this.isCompanyDataFilled = false; // Marca que houve um erro na busca dos dados
+          console.error('Erro ao buscar dados da empresa:', error); // Log do erro
+          this.isCompanyDataFilled = false;
           this.showPopupMessage('Erro ao buscar os dados da empresa!', true);
         }
       );
     }
   }
 
-  // Método para cadastrar empresa, criar departamento e, em seguida, cadastrar administrador
   onSubmitEmpresa() {
-    if (this.empresaForm.valid) {
-      // Remove caracteres especiais do CNPJ
-      const cnpj = this.empresaForm.get('cnpj')?.value.replace(/[^\d]+/g, '');
-
-      // Verifica se o CNPJ já está cadastrado
-      this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`).subscribe(
-        (response: any) => {
-          if (response && response.message === 'Empresa já cadastrada') {
-            this.showPopupMessage('CNPJ já cadastrado!', true);
-          } else {
-            // Cadastrar a empresa se o CNPJ não estiver cadastrado
-            this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
-              (empresaResponse: any) => {
-                const companyId = empresaResponse.id;
-
-                if (companyId) {
-                  // Cria o departamento "GERAL" após a criação da empresa
-                  const departmentData = {
-                    companyId: companyId,
-                    name: 'GERAL'
-                  };
-
-                  this.http.post('http://localhost:8081/departments', departmentData).subscribe(
-                    (departmentResponse: any) => {
-                      console.log('Departamento criado com sucesso:', departmentResponse);
-
-                      // Passa o companyId para o formulário do administrador
-                      this.adminForm.patchValue({ companyId });
-
-                      // Avança para o cadastro do administrador
-                      this.isAdminStep = true;
-                      this.showPopupMessage('Empresa e departamento criados com sucesso. Agora cadastre o administrador.', false);
-                    },
-                    (error) => {
-                      this.showPopupMessage('Erro ao criar departamento!', true);
-                    }
-                  );
-                } else {
-                  this.showPopupMessage('Erro: ID da empresa não retornado!', true);
-                }
-              },
-              (error) => {
-                this.showPopupMessage('Erro ao cadastrar empresa!', true);
-              }
-            );
-          }
-        },
-        (error) => {
-          this.showPopupMessage('Erro ao verificar CNPJ!', true);
-        }
-      );
+    if (this.empresaForm.valid && this.isCompanyDataFilled) {
+      this.isAdminStep = true;
     } else {
-      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-      this.markAllFieldsAsTouched();
+      if (!this.isCompanyDataFilled) {
+        this.showPopupMessage('CNPJ já cadastrado!', true);
+      } else {
+        this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+        this.markAllFieldsAsTouched();
+      }
     }
   }
 
-  // Método para cadastrar o administrador
   onSubmitAdmin() {
-    if (this.adminForm.valid) {
-      // Faz o cadastro do administrador
-      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
-        (response) => {
+    if (this.adminForm.valid && this.empresaForm.valid) {
+      const companyData = { ...this.empresaForm.value };
+      const adminData = { ...this.adminForm.value };
+
+      companyData.cnpj = companyData.cnpj.replace(/[^\d]+/g, '');
+
+      const requestData = {
+        ...companyData,
+        ...adminData,
+      };
+
+      this.http.post('http://localhost:8081/company/create-with-department-user', requestData).subscribe(
+        (response: any) => {
           this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
 
           // Redireciona após sucesso
@@ -172,7 +137,7 @@ export class EmpresaComponent {
           }, 2000);
         },
         (error) => {
-          this.showPopupMessage('Erro ao cadastrar administrador!', true);
+          this.showPopupMessage('Erro ao cadastrar empresa e administrador!', true);
         }
       );
     } else {
