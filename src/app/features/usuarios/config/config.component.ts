@@ -10,9 +10,9 @@ import { Router } from '@angular/router';
   selector: 'app-config',
   standalone: true,
   imports: [
-    FormsModule, 
-    DropdownModule, 
-    PanelModule, 
+    FormsModule,
+    DropdownModule,
+    PanelModule,
     ButtonModule,
     CommonModule
   ],
@@ -20,16 +20,22 @@ import { Router } from '@angular/router';
   styleUrl: './config.component.scss'
 })
 export class ConfigComponent {
-  changePasswordVisible: boolean = false;
-  changeEmailVisible: boolean = false;
+  changePasswordVisible = false;
+  newPassword: string = '';
+  confirmPassword: string = '';
 
-  constructor(private router: Router) {}
-
-  resetVisibility() {
-    this.changePasswordVisible = false;
+  togglePasswordForm() {
+    this.changePasswordVisible = !this.changePasswordVisible;
   }
 
-  redirectToReset() {
-    this.router.navigate(['/reset']);
+  changePassword() {
+    if (this.newPassword === this.confirmPassword) {
+      // Implementar a lógica para salvar a nova senha
+      console.log('Senha alterada com sucesso:', this.newPassword);
+      this.changePasswordVisible = false; // Oculta o formulário após salvar
+    } else {
+      // Implementar a lógica para lidar com a senha incorreta
+      console.error('As senhas não coincidem!');
+    }
   }
 }
