@@ -17,12 +17,13 @@ import { DialogModule } from 'primeng/dialog';
 import { InputMaskModule } from 'primeng/inputmask';
 import { TaskService } from '../../../shared/task.service';
 import { CadastroService } from '../../../services/cadastro.service'; // Ajuste o caminho conforme necessário
-import { CommonModule } from '@angular/common'; // Adicionado
+import { CommonModule } from '@angular/common';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-abrir-chamado',
   standalone: true,
-  imports: [ 
+  imports: [
     CommonModule, // Adicionado
     TableModule,
     FileUploadModule,
@@ -38,20 +39,21 @@ import { CommonModule } from '@angular/common'; // Adicionado
     RadioButtonModule,
     InputNumberModule,
     DialogModule,
-    InputMaskModule
+    InputMaskModule,
+    PanelModule
   ],
   templateUrl: './abrir-chamado.component.html',
   styleUrls: ['./abrir-chamado.component.scss']
 })
 export class AbrirChamadoComponent implements OnInit {
-  
+
   chamados: any[] = [];
   chamado: any = {};
   chamadoDialog: boolean = false;
   submitted: boolean = false;
 
-  detalheDialog: boolean = false; 
-  selectedChamado: any; 
+  detalheDialog: boolean = false;
+  selectedChamado: any;
 
 
   departamentos: any[] = [];
@@ -59,7 +61,7 @@ export class AbrirChamadoComponent implements OnInit {
 
   constructor(
     private http: HttpClient, // Injetado
-    private cadastroService: CadastroService, 
+    private cadastroService: CadastroService,
     private taskService: TaskService
   ) {}
 
@@ -67,9 +69,16 @@ export class AbrirChamadoComponent implements OnInit {
     this.loadDepartamentos();
     this.loadCategorias();
     this.loadChamados();
-    this.loadChamadosTestData(); 
+    this.loadChamadosTestData();
   }
-  
+  attachedItems: any[] = []; // Inicializa a lista de itens anexados
+
+  onFileUpload(event: any) {
+    for (let file of event.files) {
+      this.attachedItems.push(file);
+    }
+  }
+
   // Método para carregar chamados de teste
   loadChamadosTestData() {
     this.chamados = [
@@ -126,7 +135,7 @@ export class AbrirChamadoComponent implements OnInit {
       }
     ];
   }
-  
+
 
   // Método loadCategorias sem parâmetros corrigido
   loadCategorias() {
@@ -190,7 +199,7 @@ export class AbrirChamadoComponent implements OnInit {
     }
   }
 
-  salvarChamado() { 
+  salvarChamado() {
     this.submitted = true;
 
     if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
