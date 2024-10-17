@@ -5,11 +5,14 @@ import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../shared/app-popup/app-popup.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe],
+  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe,  HttpClientModule, RouterModule,],
   providers: [provideNgxMask()],
   templateUrl: './empresa.component.html',
   styleUrls: ['./empresa.component.scss'],
@@ -87,7 +90,7 @@ export class EmpresaComponent {
             this.showPopupMessage('Dados da empresa preenchidos com sucesso!', false);
           } else {
             this.isCompanyDataFilled = false;
-            this.showPopupMessage('CNPJ não encontrado!', true);
+            this.showPopupMessage('Empresa já cadastrada!', true);
           }
         },
         (error) => {
