@@ -21,7 +21,7 @@ export class EmpresaComponent {
   isError: boolean = false;
   showPopup: boolean = false;
   isAdminStep = false;
-  isCompanyDataFilled: boolean = true; // Inicialmente true para permitir o preenchimento
+  isCompanyDataFilled: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.empresaForm = this.fb.group({
@@ -66,31 +66,28 @@ export class EmpresaComponent {
 
   onCnpjBlur() {
     const cnpj = this.empresaForm.get('cnpj')?.value;
-
+  
     if (cnpj) {
       const cleanedCnpj = cnpj.replace(/[^\d]+/g, '');
-
+  
       console.log('CNPJ Limpo:', cleanedCnpj); // Log do CNPJ limpo
-
+  
       this.http.get(`http://localhost:8081/company/cnpj/${cleanedCnpj}`).subscribe(
         (response: any) => {
           console.log('Resposta do servidor:', response); // Adicione este log
-
+  
           if (response && (response.companyName || response.name)) {
-            // CNPJ já cadastrado
-            this.showPopupMessage('CNPJ já cadastrado!', true);
-            this.isCompanyDataFilled = false;
-
-            // Opcional: Limpar os campos do formulário
             this.empresaForm.patchValue({
-              companyName: '',
-              address: '',
-              phone: ''
+              companyName: response.companyName || response.name || '',
+              address: response.address || '',
+              phone: response.phone || ''
             });
-          } else {
-            // CNPJ não encontrado, podemos prosseguir com o cadastro
+  
             this.isCompanyDataFilled = true;
-            this.showPopupMessage('CNPJ não encontrado na base, prossiga com o cadastro.', false);
+            this.showPopupMessage('Dados da empresa preenchidos com sucesso!', false);
+          } else {
+            this.isCompanyDataFilled = false;
+            this.showPopupMessage('CNPJ não encontrado!', true);
           }
         },
         (error) => {
@@ -100,18 +97,14 @@ export class EmpresaComponent {
         }
       );
     }
-  }
+  }  
 
   onSubmitEmpresa() {
-    if (this.empresaForm.valid && this.isCompanyDataFilled) {
+    if (this.empresaForm.valid) {
       this.isAdminStep = true;
     } else {
-      if (!this.isCompanyDataFilled) {
-        this.showPopupMessage('CNPJ já cadastrado!', true);
-      } else {
-        this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-        this.markAllFieldsAsTouched();
-      }
+      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();
     }
   }
 
