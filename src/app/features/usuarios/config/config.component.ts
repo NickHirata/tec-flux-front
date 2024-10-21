@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Importando o Router
 
 @Component({
   selector: 'app-config',
@@ -17,25 +17,18 @@ import { Router } from '@angular/router';
     CommonModule
   ],
   templateUrl: './config.component.html',
-  styleUrl: './config.component.scss'
+  styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent {
-  changePasswordVisible = false;
-  newPassword: string = '';
-  confirmPassword: string = '';
+
+  constructor(private router: Router) {} // Injetando o Router
 
   togglePasswordForm() {
-    this.changePasswordVisible = !this.changePasswordVisible;
+    // Aqui pode ser usada para exibir/ocultar a interface se necessário
   }
 
   changePassword() {
-    if (this.newPassword === this.confirmPassword) {
-      // Implementar a lógica para salvar a nova senha
-      console.log('Senha alterada com sucesso:', this.newPassword);
-      this.changePasswordVisible = false; // Oculta o formulário após salvar
-    } else {
-      // Implementar a lógica para lidar com a senha incorreta
-      console.error('As senhas não coincidem!');
-    }
+    // Redireciona diretamente para a página de reset
+    this.router.navigate(['/reset']);
   }
 }
