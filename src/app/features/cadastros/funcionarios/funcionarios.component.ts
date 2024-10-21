@@ -10,6 +10,8 @@ import { MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+
 
 @Component({
   selector: 'app-funcionarios',
@@ -23,9 +25,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
     ButtonModule,
     ToolbarModule,
     DropdownModule,
-    MultiSelectModule
+    MultiSelectModule,
+    NgxMaskPipe,
+    NgxMaskDirective,
   ],
-  providers: [MessageService],
+  providers: [MessageService, provideNgxMask()],
   templateUrl: './funcionarios.component.html',
   styleUrls: ['./funcionarios.component.scss']
 })
@@ -83,6 +87,26 @@ export class FuncionariosComponent implements OnInit {
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
     }
+  }
+
+  formatPhone(phone: string): string {
+    if (!phone) return '';
+  
+    // Remove todos os caracteres não numéricos
+    const cleaned = ('' + phone).replace(/\D/g, '');
+  
+    // Divide o número em partes e aplica o formato (XX) XXXXX-XXXX
+    const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+  
+    return phone;
+  }
+
+  onPhoneInput(event: any) {
+    const input = event.target;
+    input.value = this.formatPhone(input.value);
   }
 
   formatRoles(roles: string[]): string {

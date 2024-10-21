@@ -41,7 +41,7 @@
           <tr>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
+            <td>{{ formatPhone(user.phone) }}</td>
             <td>{{ getDepartmentName(user.departmentId) }}</td>
             <td>{{ user.position }}</td>
             <td>{{ formatRoles(user.roles) }}</td>
@@ -69,11 +69,11 @@
             </div>
             <div class="field">
               <label for="phone">Telefone do Funcionário</label>
-              <input id="phone" pInputText formControlName="phone" />
+              <input id="phone" pInputText formControlName="phone" (input)="onPhoneInput($event)" />
               <div *ngIf="userForm.controls['phone'].invalid && userForm.controls['phone'].touched" class="error">
                 Telefone é obrigatório.
               </div>
-            </div>
+            </div>            
             <div class="field">
               <label for="position">Cargo do Funcionário</label>
               <input id="position" pInputText formControlName="position" />
