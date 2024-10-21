@@ -1,16 +1,9 @@
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
-
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-/>
-
 <div class="chatbot-container">
-
   <div class="chatbot-main">
+    <h2>
+      <img src="../../../assets/chatbot-icon.png" alt="FluxBot" class="robot-icon" />
+      FluxBot
+    </h2>
     <div class="chatbot-messages">
       <div
         *ngFor="let message of messages"
@@ -18,19 +11,20 @@
           'user-message': message.isUser,
           'bot-message': !message.isUser
         }"
-        [innerHTML]="message.content"
-      ></div>
+      >
+        <p-message [severity]="message.isUser ? 'success' : 'info'" [text]="message.content"></p-message>
+      </div>
     </div>
 
     <div class="chatbot-input">
       <input
-        [(ngModel)]="userInput"
-        (keydown.enter)="sendMessage()"
-        placeholder="Digite sua mensagem..."
-      />
-      <button (click)="sendMessage()">
-        <span class="material-symbols-outlined">send</span>
-      </button>
+      [(ngModel)]="userInput"
+      (keydown.enter)="sendMessage()"
+      placeholder="Digite sua mensagem..."
+      style="width: 100%; background-color: white; color: rgba(55, 55, 55, 0.618); border: 1px solid #ccc;"
+    />
+
+      <p-button (click)="sendMessage()" label="Enviar" icon="material-symbols-outlined:send" styleClass="p-button-outlined"></p-button>
     </div>
   </div>
 </div>

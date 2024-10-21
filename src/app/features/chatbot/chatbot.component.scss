@@ -1,77 +1,53 @@
 .chatbot-container {
   display: flex;
-  height: 100vh;
-  /* Remova o width: 100vw; */
-  width: calc(100vw - 250px); /* Ajusta a largura conforme o sidebar */
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(45deg, #0079BF, #00A1E0);
   flex-direction: column;
+  height: 100%; /* Ocupa toda a altura do container */
 }
 
 .chatbot-main {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
+  flex-grow: 1;
+  padding: 10px;
+  background-color: #f9f9f9; /* Cor de fundo do chatbot */
+  border: 1px solid #ccc; /* Borda para definir a área do chatbot */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
 }
 
 .chatbot-messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto; /* Permitir scroll vertical */
-  background-color: rgba(255, 255, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  max-width: 100%; /* Impedir rolagem horizontal */
-}
-
-
-.user-message, .bot-message {
-  max-width: 70%; /* Limita a largura das mensagens */
-  padding: 15px;
-  border-radius: 10px;
-  word-wrap: break-word; /* Para quebrar palavras longas */
-  margin: 5px 0; /* Espaçamento entre as mensagens */
+  flex-grow: 1; /* Permite que as mensagens ocupem o espaço restante */
+  overflow-y: auto; /* Permite rolagem vertical se as mensagens excederem a altura */
+  margin-bottom: 10px; /* Espaço inferior entre mensagens e input */
 }
 
 .user-message {
-  background-color: #005f8d;
-  color: #ffffff;
-  align-self: flex-end;
+  text-align: right; /* Alinha mensagens do usuário à direita */
 }
 
 .bot-message {
-  background-color: #e0e0e0;
-  color: #293e40;
-  align-self: flex-start;
+  text-align: left; /* Alinha mensagens do bot à esquerda */
 }
 
+/* Estilo do botão e campo de entrada */
 .chatbot-input {
   display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: rgba(255, 255, 255, 0.1);
+  gap: 10px; /* Espaço entre o campo de entrada e o botão */
+  z-index: 10
+}
+.chatbot-input p-inputText {
+  background-color: rgb(187, 187, 187); /* Tente uma cor clara */
+  border: 1px solid #ccc; /* Borda para visualizar melhor */
 }
 
-.chatbot-input input {
-  width: 60%;
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  font-size: 1.4em;
-  box-sizing: border-box;
+.chatbot-input p-inputText {
+  color: rgb(27, 27, 27); /* Altere para uma cor que contraste com o fundo */
 }
 
-.chatbot-input button {
-  padding: 10px;
-  background-color: #0079BF;
-  border-radius: 20px;
-  border: none;
-  color: #ffffff;
-  font-size: 1.3em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.robot-icon {
+  width: 40px; /* ajuste conforme necessário */
+  height: 40px; /* ajuste conforme necessário */
+  border-radius: 50%; /* deixa a imagem redonda */
+  margin-right: 10px; /* espaçamento entre o ícone e o texto */
 }
+

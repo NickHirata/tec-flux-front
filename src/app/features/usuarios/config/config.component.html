@@ -7,8 +7,35 @@
       <p-panel header="Ações">
         <div class="my-3">
           <!-- Botão de Alterar Senha com redirecionamento -->
-          <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="redirectToReset()"></button>
+          <button
+            pButton
+            pRipple
+            label="Alterar Senha"
+            icon="pi pi-key"
+            class="p-button-warning mr-2"
+            (click)="togglePasswordForm()">
+          </button>
         </div>
+      </p-panel>
+
+      <!-- Formulário de Alteração de Senha -->
+      <p-panel *ngIf="changePasswordVisible" header="Alterar Senha">
+        <div class="field">
+          <label for="novaSenha">Nova Senha</label>
+          <input id="novaSenha" type="password" pInputText [(ngModel)]="newPassword" placeholder="Digite a nova senha" style="width: 300px;" />
+        </div>
+        <div class="field mt-2">
+          <label for="confirmarSenha">Confirmar Senha</label>
+          <input id="confirmarSenha" type="password" pInputText [(ngModel)]="confirmPassword" placeholder="Confirme a nova senha" style="width: 300px;" />
+        </div>
+        <button
+          pButton
+          pRipple
+          label="Salvar"
+          icon="pi pi-check"
+          class="p-button-success mt-2"
+          (click)="changePassword()">
+        </button>
       </p-panel>
     </div>
   </div>

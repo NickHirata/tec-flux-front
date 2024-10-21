@@ -3,17 +3,27 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChatbotService } from '../../services/chatbot.service';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    InputTextModule,
+    ButtonModule,
+    MessageModule
+
+  ],
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
 export class ChatbotComponent implements OnInit {
   userInput: string = '';
-  messages: { content: string, isUser: boolean }[] = [];
+  messages: { content: string; isUser: boolean }[] = [];
   userId: string | null = '3';
 
   constructor(private router: Router, private chatbotService: ChatbotService) {}

@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
@@ -33,7 +33,8 @@ export class ResetNewPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute // Injetar ActivatedRoute
   ) {
     this.resetForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -42,15 +43,17 @@ export class ResetNewPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Obtain the reset token from query parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    this.resetToken = urlParams.get('token');
+    // Obter o token dos parâmetros de consulta da URL
+    this.route.queryParams.subscribe(params => {
+      this.resetToken = params['token'];
+      console.log('Token obtido da URL:', this.resetToken);
 
-    if (!this.resetToken) {
-      this.message = 'Token de redefinição de senha não encontrado ou inválido.';
-    }
+      if (!this.resetToken) {
+        this.message = 'Token de redefinição de senha não encontrado ou inválido.';
+      }
+    });
 
-    // Add password match validation
+    // Adicionar validação de correspondência de senhas
     this.resetForm.get('confirmPassword')?.valueChanges.subscribe(() => {
       this.checkPasswords();
     });
@@ -76,17 +79,17 @@ export class ResetNewPasswordComponent implements OnInit {
       const newPassword = this.resetForm.get('newPassword')?.value;
 
       const payload = {
-        password: newPassword,
+        newPassword: newPassword,
         token: this.resetToken,
       };
 
-      // Perform POST request to reset password endpoint
+      // Realiza a requisição POST para o endpoint de redefinição de senha
       this.http
         .post('http://localhost:8081/user/reset-password', payload)
         .subscribe(
           (response) => {
             this.message = 'Senha redefinida com sucesso!';
-            // Redirect to login after a short delay
+            // Redireciona para o login após um curto atraso
             setTimeout(() => {
               this.router.navigate(['/login']);
             }, 2000);
