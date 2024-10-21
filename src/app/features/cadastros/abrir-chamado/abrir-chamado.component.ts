@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -19,6 +19,7 @@ import { TaskService } from '../../../shared/task.service';
 import { CadastroService } from '../../../services/cadastro.service'; // Ajuste o caminho conforme necessário
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-abrir-chamado',
@@ -42,6 +43,7 @@ import { PanelModule } from 'primeng/panel';
     InputMaskModule,
     PanelModule
   ],
+  providers: [MessageService],
   templateUrl: './abrir-chamado.component.html',
   styleUrls: ['./abrir-chamado.component.scss']
 })
@@ -55,116 +57,71 @@ export class AbrirChamadoComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedChamado: any;
 
-
   departamentos: any[] = [];
   categorias: any[] = [];
+  prioridades: any[] = [
+    { label: 'CRITICO', value: '10' },
+    { label: 'URGENTE', value: '11' },
+    { label: 'ALTA', value: '12' },
+    { label: 'MEDIA', value: '13' },
+    { label: 'BAIXA', value: '14' },
+  ];
+  companyId: number | null = null;
 
   constructor(
-    private http: HttpClient, // Injetado
+    private http: HttpClient,
     private cadastroService: CadastroService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
-    this.loadDepartamentos();
-    this.loadCategorias();
-    this.loadChamados();
-    this.loadChamadosTestData();
-  }
-  attachedItems: any[] = []; // Inicializa a lista de itens anexados
-
-  onFileUpload(event: any) {
-    for (let file of event.files) {
-      this.attachedItems.push(file);
+    const storedCompanyId = sessionStorage.getItem('companyId');
+    if (storedCompanyId) {
+      this.companyId = Number(storedCompanyId);
+      this.loadDepartamentos();
+      this.loadChamados();
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
     }
   }
 
-  // Método para carregar chamados de teste
-  loadChamadosTestData() {
-    this.chamados = [
-      {
-        id: 1,
-        nome: 'Problema no servidor',
-        prioridade: 'Alta',
-        progresso: 50,
-        status: 'Em andamento',
-        departamento: { id: 1, nome: 'TI' },
-        categoria: { id: 1, nome: 'Hardware' },
-        assunto: 'Falha no servidor de produção',
-        descricao: 'O servidor está apresentando falhas intermitentes desde a última atualização.',
-        dataCriacao: '2024-09-01',
-        dataResolucao: null,
-        historico: [
-          { data: '2024-09-02', responsavel: 'João', descricao: 'Investigação inicial do problema.' },
-          { data: '2024-09-03', responsavel: 'Maria', descricao: 'Reinicialização do servidor e aplicação de patch.' }
-        ]
-      },
-      {
-        id: 2,
-        nome: 'Erro na aplicação web',
-        prioridade: 'Média',
-        progresso: 75,
-        status: 'Em andamento',
-        departamento: { id: 2, nome: 'Desenvolvimento' },
-        categoria: { id: 2, nome: 'Software' },
-        assunto: 'Aplicação web não carrega corretamente',
-        descricao: 'Usuários relatam que a aplicação não carrega em determinados navegadores.',
-        dataCriacao: '2024-09-05',
-        dataResolucao: null,
-        historico: [
-          { data: '2024-09-06', responsavel: 'Carlos', descricao: 'Análise de compatibilidade com navegadores.' },
-          { data: '2024-09-07', responsavel: 'Ana', descricao: 'Correção de bug na renderização.' }
-        ]
-      },
-      {
-        id: 3,
-        nome: 'Atualização de sistema',
-        prioridade: 'Baixa',
-        progresso: 100,
-        status: 'Resolvido',
-        departamento: { id: 3, nome: 'Suporte' },
-        categoria: { id: 3, nome: 'Infraestrutura' },
-        assunto: 'Atualização do sistema de backup',
-        descricao: 'Necessidade de atualizar o sistema de backup para a versão mais recente.',
-        dataCriacao: '2024-08-25',
-        dataResolucao: '2024-09-01',
-        historico: [
-          { data: '2024-08-26', responsavel: 'Pedro', descricao: 'Agendada atualização.' },
-          { data: '2024-09-01', responsavel: 'Lucas', descricao: 'Atualização realizada com sucesso.' }
-        ]
-      }
-    ];
-  }
-
-
-  // Método loadCategorias sem parâmetros corrigido
-  loadCategorias() {
-    this.cadastroService.getCategorias().subscribe(
-      (data) => {
-        this.categorias = data;
-      },
-      (error) => {
-        console.error('Erro ao carregar categorias', error);
-      }
-    );
+  // Método para obter os cabeçalhos de autenticação
+  private getAuthHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('accessToken');
+    const tokenType = sessionStorage.getItem('tokenType');
+    if (token && tokenType) {
+      return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
+    } else {
+      return new HttpHeaders();
+    }
   }
 
   loadDepartamentos() {
-    this.http.get<any[]>('http://localhost:8081/departments/1').subscribe(
-      (data) => {
-        this.departamentos = data;
-      },
-      (error) => {
-        console.error('Erro ao carregar departamentos', error);
-      }
-    );
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+        (response) => {
+          this.departamentos = response.map((department: any) => ({
+            label: department.name,
+            value: department.id
+          }));
+        },
+        (error) => {
+          console.error('Erro ao carregar departamentos', error);
+        }
+      );
+    }
   }
 
-  // Renomeado para evitar duplicação
   loadCategoriasByDepartamento(departamentoId: number) {
-    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`).subscribe(
-      (data) => {
-        this.categorias = data;
+    const headers = this.getAuthHeaders();
+    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`, { headers }).subscribe(
+      (response) => {
+        this.categorias = response.map((category: any) => ({
+          label: category.name,
+          value: category.id
+        }));
       },
       (error) => {
         console.error('Erro ao carregar categorias', error);
@@ -173,27 +130,69 @@ export class AbrirChamadoComponent implements OnInit {
   }
 
   loadChamados() {
-    this.http.get<any[]>('http://localhost:8081/chamados').subscribe(
-      (data) => {
-        this.chamados = data;
-      },
-      (error) => {
-        console.error('Erro ao carregar chamados', error);
-      }
-    );
+    const userId = sessionStorage.getItem('id');
+    if (userId !== null) {
+      const headers = this.getAuthHeaders();
+      const params = new HttpParams().set('userId', userId);
+  
+      this.http.get<any[]>(`http://localhost:8081/tickets`, { headers, params }).subscribe(
+        (data) => {
+          this.chamados = data;  // Popula o array chamados com os dados retornados
+        },
+        (error) => {
+          console.error('Erro ao carregar chamados', error);
+        }
+      );
+    } else {
+      console.error('User ID não encontrado no sessionStorage.');
+    }
+  }
+  
+
+  fetchSetores() {
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+  
+      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+        (response) => {
+          console.log('Response:', response);  
+
+          if (response && Array.isArray(response.content)) {
+            this.departamentos = response.content.map((department: any) => ({
+              label: department.name,  
+              value: department.id   
+            }));
+          } else {
+            console.error('Formato inesperado de resposta da API');
+          }
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao buscar departamentos!' });
+        }
+      );
+    }
   }
 
-  // Corrigido o nome do método
   openChamadoDialog() {
-    this.chamado = {};
+    this.chamado = {};  
     this.submitted = false;
     this.chamadoDialog = true;
+    this.fetchSetores();
   }
 
+  onPriorityChange(event: any) {
+    const prioridadeSelecionada = event.value;
+    if (prioridadeSelecionada) {
+      this.chamado.priority = prioridadeSelecionada; // Usando o value diretamente
+    } else {
+      this.chamado.priority = null; // Ajusta para quando não houver prioridade selecionada
+    }
+  }
+  
   onDepartamentoChange(event: any) {
     const departamentoSelecionado = event.value;
-    if (departamentoSelecionado && departamentoSelecionado.id) {
-      this.loadCategoriasByDepartamento(departamentoSelecionado.id);
+    if (departamentoSelecionado) {
+      this.loadCategoriasByDepartamento(departamentoSelecionado);
     } else {
       this.categorias = [];
     }
@@ -201,35 +200,56 @@ export class AbrirChamadoComponent implements OnInit {
 
   salvarChamado() {
     this.submitted = true;
-
-    if (this.chamado.departamento && this.chamado.categoria && this.chamado.assunto && this.chamado.descricao) {
+    console.log('salvar');
+  
+    if (this.chamado.departamento && this.chamado.title && this.chamado.descricao) {
       const chamadoData = {
-        departamentoId: this.chamado.departamento.id,
-        categoriaId: this.chamado.categoria.id,
-        assunto: this.chamado.assunto,
-        descricao: this.chamado.descricao
+        departmentId: this.chamado.departamento,
+        title: this.chamado.title,
+        description: this.chamado.descricao,
+        companyId: this.companyId,
+        userId: sessionStorage.getItem('id'),
+        priorityId: this.chamado.prioridade // Agora usa o valor correto da prioridade
       };
-      this.http.post<any>('http://localhost:8081/chamados', chamadoData).subscribe(
+      console.log(chamadoData);
+      const headers = this.getAuthHeaders();
+      this.http.post<any>('http://localhost:8081/tickets', chamadoData, { headers }).subscribe(
         (response) => {
           this.chamados.push(response);
           this.chamadoDialog = false;
           this.chamado = {};
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Chamado criado com sucesso!' });
         },
         (error) => {
           console.error('Erro ao salvar chamado', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao salvar chamado' });
         }
       );
     }
-  }
+  }  
 
   hideDialog() {
     this.chamadoDialog = false;
     this.submitted = false;
   }
 
-
   verDetalhes(chamado: any) {
-    this.selectedChamado = chamado; // Armazena o chamado selecionado
-    this.detalheDialog = true; // Abre o diálogo de detalhes
+    this.selectedChamado = chamado;
+    this.detalheDialog = true;
+  }
+
+  getDepartmentName(departmentId: number): string {
+    const department = this.departamentos.find(d => d.value === departmentId);
+    return department ? department.label : 'Não Encontrado';
+  }
+
+  getPriorityName(priorityId: number): string {
+    const priority = this.prioridades.find(d => d.value === priorityId);
+    return priority ? priority.label : 'Não Encontrado';
+  }
+
+  getCategoryName(categoryId: number): string {
+    const category = this.categorias.find(c => c.value === categoryId);
+    return category ? category.label : 'Não Encontrado';
   }
 }
