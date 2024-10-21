@@ -129,7 +129,7 @@ export class EmpresaComponent {
 
           // Redireciona após sucesso
           setTimeout(() => {
-            this.router.navigate(['empresa/dashboard']);
+            this.router.navigate(['/login']);
           }, 2000);
         },
         (error) => {
