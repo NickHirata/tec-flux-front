@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
   <!-- Conteúdo principal -->
   <div class="main-content">
     <header class="header">
@@ -71,4 +72,102 @@
         </li>
       </ul>
     </section>
+=======
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <header class="header">
+        <div class="user-info">
+          <h2>Relatórios</h2>
+          <p>Aqui está o resumo do seu departamento.</p>
+        </div>
+      </header>
+
+      <div class="grid">
+        <div class="col-6 md:col-3">
+            <p-card>
+                <div class="card-content">
+                    <i class="pi pi-check"></i>
+                    <h2>Total Chamados</h2>
+                    <h3>{{ totalChamados }}</h3>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-6 md:col-3">
+            <p-card>
+                <div class="card-content">
+                    <i class="pi pi-folder-open"></i>
+                    <h2>Chamados Abertos</h2>
+                    <h3>{{ chamadosAbertos }}</h3>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-6 md:col-3">
+          <p-card>
+              <div class="card-content">
+                  <i class="pi pi-exclamation-triangle"></i>
+                  <h2>Chamados em progresso</h2>
+                  <h3>{{ chamadosProgresso }}</h3>
+              </div>
+          </p-card>
+        </div>
+        <div class="col-6 md:col-3">
+            <p-card>
+                <div class="card-content">
+                    <i class="pi pi-check-circle"></i>
+                    <h2>Chamados Fechados</h2>
+                    <h3>{{ chamadosFechados }}</h3>
+                </div>
+            </p-card>
+        </div>
+    </div>
+
+      <!-- Relatórios -->
+      <section class="charts">
+        <div class="p-grid">
+          <div class="p-col-12 p-md-4 chart">
+            <h3>Quantidade de chamados abertos por setor:</h3>
+            <ngx-charts-bar-vertical
+              [view]="view"
+              [results]="tempoMedioResolucaoData"
+              [legend]="true"
+              [xAxis]="true"
+              [yAxis]="true"
+              xAxisLabel="Técnico"
+              yAxisLabel="Tempo Médio (horas)"
+              [gradient]="false">
+            </ngx-charts-bar-vertical>
+            <p-button label="Exportar para CSV" icon="pi pi-download" class="p-button-secondary" (click)="exportToCSV('tempoMedioResolucaoData')"></p-button>
+            <p-button label="Exportar para PDF" icon="pi pi-file-pdf" class="p-button-secondary ml-2" (click)="exportToPDF('Tempo Médio de Resolução dos Chamados')"></p-button>
+          </div>
+
+          <div class="p-col-12 p-md-4 chart">
+            <h3>Top 5 Técnicos - Resolução de Chamados</h3>
+            <ngx-charts-bar-horizontal
+              [view]="view"
+              [results]="topTecnicosData"
+              [legend]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              xAxisLabel="Chamados Resolvidos"
+              yAxisLabel="Técnico"
+              [gradient]="false">
+            </ngx-charts-bar-horizontal>
+            <p-button label="Exportar para CSV" icon="pi pi-download" class="p-button-secondary" (click)="exportToCSV('topTecnicosData')"></p-button>
+            <p-button label="Exportar para PDF" icon="pi pi-file-pdf" class="p-button-secondary ml-2" (click)="exportToPDF('Top 5 Técnicos - Resolução de Chamados')"></p-button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seção de Chamados Recentes -->
+      <section class="recent-tickets">
+        <h3>Últimos Chamados</h3>
+        <ul class="p-list">
+          <li *ngFor="let chamado of ultimosChamados">
+            <a>{{ chamado.titulo }} - {{ chamado.status }}</a>
+          </li>
+        </ul>
+      </section>
+    </div>
+>>>>>>> Stashed changes
   </div>

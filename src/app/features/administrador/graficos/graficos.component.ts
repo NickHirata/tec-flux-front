@@ -12,7 +12,7 @@ export class GraficosComponent {
   totalChamados: number = 100;
   chamadosAbertos: number = 25;
   chamadosFechados: number = 70;
-  chamadosUrgentes: number = 5;
+  chamadosProgresso: number = 5;
 
 
   chamadosData = [
