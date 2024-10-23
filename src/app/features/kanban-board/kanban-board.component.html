@@ -70,8 +70,8 @@
   <ng-template pTemplate="content">
     <div *ngIf="selectedTask">
       <div class="field">
-        <label>Nome</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
+        <label>Assunto</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
       </div>
       <div class="field">
         <label>Departamento</label>
@@ -95,10 +95,6 @@
           placeholder="Selecione a Categoria"
           required
         ></p-dropdown>
-      </div>
-      <div class="field">
-        <label>Assunto</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
       </div>
       <div class="field">
         <label>Comentários</label>
