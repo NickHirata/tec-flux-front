@@ -4,36 +4,7 @@
       <h2>Kanban Board</h2>
       <p-toast></p-toast>
 
-      <!-- Barra de ferramentas com formulário para adicionar tarefa -->
-      <p-toolbar class="mb-4">
-        <ng-template pTemplate="start">
-          <div class="add-task-form">
-            <input
-              pInputText
-              type="text"
-              placeholder="Nova tarefa"
-              [(ngModel)]="newTask"
-              class="task-input"
-            />
-            <p-dropdown
-              [options]="dropdownOptions"
-              [(ngModel)]="selectedColumn"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Selecionar Coluna"
-              class="task-dropdown"
-            ></p-dropdown>
-            <button
-              pButton
-              label="Adicionar Tarefa"
-              icon="pi pi-plus"
-              class="p-button-success add-task-button"
-              (click)="addTask(newTask, selectedColumn)"
-            ></button>
-          </div>
-        </ng-template>
-      </p-toolbar>
-
+    
       <!-- Tabuleiro Kanban -->
       <div class="kanban-board">
         <div
@@ -47,7 +18,8 @@
             [cdkDropListData]="column.tasks"
             [cdkDropListConnectedTo]="getConnectedDropLists()"
             class="task-list"
-            (cdkDropListDropped)="onTaskDrop($event)"
+            (cdkDropListDropped)="onTaskDrop($event, i)"
+            id="cdk-drop-list-{{ i }}"
           >
             <div
               *ngFor="let task of column.tasks"
@@ -63,28 +35,30 @@
     </div>
   </div>
 </div>
+
+<!-- Diálogo de detalhes da tarefa -->
 <p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes da Tarefa" [modal]="true" class="p-fluid">
   <ng-template pTemplate="content">
     <div *ngIf="selectedTask">
-      <div class="field">
-        <label>Nome</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
-      </div>
-      <div class="field">
-        <label>Departamento</label>
-        <p-dropdown id="departamento" [(ngModel)]="selectedTask.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
-      </div>
-      <div class="field">
-        <label>Categoria</label>
-        <p-dropdown id="categoria" [(ngModel)]="selectedTask.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
-      </div>
       <div class="field">
         <label>Assunto</label>
         <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
       </div>
       <div class="field">
-        <label>Comentários</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.comentarios"/>
+        <label>Departamento</label>
+        <p-dropdown
+          [(ngModel)]="selectedTask.departamento"
+          [options]="departamentos"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione o Departamento"
+          (onChange)="onDepartamentoChange($event)"
+          required
+        ></p-dropdown>
+      </div>
+      <div class="field">
+        <label>Descrição do chamado</label>
+        <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
       </div>
       <div class="field">
         <label>Progresso</label>
@@ -121,7 +95,7 @@
           placeholder="Pesquisar usuário">
         </p-autoComplete>
         <label>Descrição da Atividade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"s/>
+        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
         <button
           pButton
           label="Adicionar ao Histórico"
@@ -138,7 +112,7 @@
           <tr>
             <th>Data</th>
             <th>Responsável</th>
-            <th>Descrição</th>
+            <th>Descrição da Atividade</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-hist>
