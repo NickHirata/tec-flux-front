@@ -21,12 +21,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 // Definir a interface para a tarefa
 interface Task {
-  id: number; // Tipo ajustado para number
+  id: number;
   nome: string;
-  departamento: number; // Tipo ajustado para number
-  categoria: number;    // Tipo ajustado para number
+  departamento: number;
   assunto: string;
-  comentarios: string;
   descricao: string;
   progresso: number;
   dataCriacao: Date;
@@ -66,8 +64,6 @@ interface BoardColumn {
   styleUrls: ['./kanban-board.component.scss']
 })
 export class KanbanBoardComponent implements OnInit {
-  newTask: string = '';
-  selectedColumn: number | null = null;
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
 
@@ -77,13 +73,6 @@ export class KanbanBoardComponent implements OnInit {
   selectedUser: string | null = null; // Usuário selecionado para atribuição
   departamentos: any[] = [];
   categorias: any[] = [];
-  prioridades: any[] = [
-    { label: 'CRITICO', value: '10' },
-    { label: 'URGENTE', value: '11' },
-    { label: 'ALTA', value: '12' },
-    { label: 'MEDIA', value: '13' },
-    { label: 'BAIXA', value: '14' },
-  ];
   companyId: number | null = null;
 
   boardColumns: BoardColumn[] = [
@@ -92,24 +81,16 @@ export class KanbanBoardComponent implements OnInit {
     { name: 'Concluído', tasks: [], color: '#0288D1' }
   ];
 
-  dropdownOptions: { label: string, value: number }[] = [];
-
   constructor(private messageService: MessageService, private http: HttpClient) {}
 
   ngOnInit() {
     const storedCompanyId = sessionStorage.getItem('companyId');
     if (storedCompanyId) {
       this.companyId = Number(storedCompanyId);
-      this.loadDepartamentos();
       this.loadTickets();
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
     }
-
-    this.dropdownOptions = this.boardColumns.map((col, index) => ({
-      label: col.name,
-      value: index
-    }));
   }
 
   // Função para filtrar usuários
@@ -140,23 +121,6 @@ export class KanbanBoardComponent implements OnInit {
       return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
     } else {
       return new HttpHeaders();
-    }
-  }
-
-  loadDepartamentos() {
-    if (this.companyId !== null) {
-      const headers = this.getAuthHeaders();
-      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
-        (response) => {
-          this.departamentos = response.map((department: any) => ({
-            label: department.name,
-            value: department.id
-          }));
-        },
-        (error) => {
-          console.error('Erro ao carregar departamentos', error);
-        }
-      );
     }
   }
 
@@ -207,15 +171,13 @@ export class KanbanBoardComponent implements OnInit {
       const task: Task = {
         id: ticket.id,
         nome: ticket.title,
-        departamento: ticket.departmentId,  // Ajustado para departmentId
-        categoria: ticket.categoryId,      // Ajustado para categoryId
+        departamento: ticket.departmentId,
         assunto: ticket.subject,
-        comentarios: ticket.comments,
         descricao: ticket.description,
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-        historico: [] // Popule se tiver dados de histórico
+        historico: [] // Podemos deixar vazio aqui, pois carregaremos ao abrir o diálogo
       };
 
       // Mapeie o status do ticket para a coluna correspondente
@@ -230,7 +192,6 @@ export class KanbanBoardComponent implements OnInit {
           this.boardColumns[2].tasks.push(task);
           break;
         default:
-          // Coloque em uma coluna padrão ou trate conforme necessário
           this.boardColumns[0].tasks.push(task);
           break;
       }
@@ -307,12 +268,36 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   openTaskDialog(task: Task) {
-    this.selectedTask = { ...task }; // Clonar o objeto para evitar alterações diretas
-    this.detalheDialog = true;
+    const headers = this.getAuthHeaders();
+    this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
+      (response) => {
+        // Atualizar `selectedTask` com os dados completos do chamado
+        this.selectedTask = {
+          id: response.id,
+          nome: response.title,
+          departamento: response.departmentId,
+          assunto: response.subject,
+          descricao: response.description,
+          progresso: this.getProgressValue(response.statusId),
+          dataCriacao: new Date(response.createdAt),
+          dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
+          historico: response.history || []
+        };
 
-    if (this.selectedTask.departamento) {
-      this.loadCategoriasByDepartamento(this.selectedTask.departamento);
-    }
+        // Carregar departamentos e categorias
+        this.loadDepartamentos();
+
+        if (this.selectedTask.departamento) {
+          this.loadCategoriasByDepartamento(this.selectedTask.departamento);
+        }
+
+        this.detalheDialog = true;
+      },
+      (error) => {
+        console.error('Erro ao carregar detalhes do chamado', error);
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao carregar detalhes do chamado' });
+      }
+    );
   }
 
   saveTaskDetails() {
@@ -322,7 +307,6 @@ export class KanbanBoardComponent implements OnInit {
         title: this.selectedTask.nome,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
-        categoryId: this.selectedTask.categoria,
         // Inclua outros campos necessários
       };
 
@@ -330,12 +314,28 @@ export class KanbanBoardComponent implements OnInit {
         response => {
           this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Chamado atualizado' });
           this.detalheDialog = false;
-          // Recarregue os chamados para refletir as mudanças
           this.loadTickets();
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o chamado' });
           console.error('Erro ao atualizar chamado', error);
+        }
+      );
+    }
+  }
+
+  loadDepartamentos() {
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+        (response) => {
+          this.departamentos = response.map((department: any) => ({
+            label: department.name,
+            value: department.id
+          }));
+        },
+        (error) => {
+          console.error('Erro ao carregar departamentos', error);
         }
       );
     }
@@ -347,55 +347,6 @@ export class KanbanBoardComponent implements OnInit {
       this.loadCategoriasByDepartamento(departamentoSelecionado);
     } else {
       this.categorias = [];
-    }
-  }
-
-  // onPriorityChange(event: any) {
-  //   const prioridadeSelecionada = event.value;
-  //   if (prioridadeSelecionada) {
-  //     this.chamado.priority = prioridadeSelecionada; // Usando o value diretamente
-  //   } else {
-  //     this.chamado.priority = null; // Ajusta para quando não houver prioridade selecionada
-  //   }
-  // }
-
-  addTask(taskName: string, columnIndex: number | null) {
-    if (taskName.trim() && columnIndex !== null && this.boardColumns[columnIndex]) {
-      const headers = this.getAuthHeaders();
-      const newTicket = {
-        title: taskName.trim(),
-        statusId: this.getStatusIdFromColumnIndex(columnIndex),
-        companyId: this.companyId,
-        userId: sessionStorage.getItem('id'),
-        // Inclua outros campos necessários, como departmentId, priorityId, etc.
-      };
-
-      this.http.post<any>('http://localhost:8081/tickets', newTicket, { headers }).subscribe(
-        (response) => {
-          const newTask: Task = {
-            id: response.id,
-            nome: response.title,
-            departamento: response.departmentId, // Ajustado para departmentId
-            categoria: response.categoryId,     // Ajustado para categoryId
-            assunto: response.subject,
-            comentarios: response.comments,
-            descricao: response.description,
-            progresso: this.getProgressValue(response.statusId),
-            dataCriacao: new Date(response.createdAt),
-            dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
-            historico: []
-          };
-          this.boardColumns[columnIndex].tasks.push(newTask);
-          this.newTask = '';
-          this.selectedColumn = null;
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tarefa adicionada!' });
-        },
-        (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao adicionar tarefa' });
-        }
-      );
-    } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Selecione uma coluna válida!' });
     }
   }
 }

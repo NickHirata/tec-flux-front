@@ -4,36 +4,7 @@
       <h2>Kanban Board</h2>
       <p-toast></p-toast>
 
-      <!-- Barra de ferramentas com formulário para adicionar tarefa -->
-      <p-toolbar class="mb-4">
-        <ng-template pTemplate="start">
-          <div class="add-task-form">
-            <input
-              pInputText
-              type="text"
-              placeholder="Nova tarefa"
-              [(ngModel)]="newTask"
-              class="task-input"
-            />
-            <p-dropdown
-              [options]="dropdownOptions"
-              [(ngModel)]="selectedColumn"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Selecionar Coluna"
-              class="task-dropdown"
-            ></p-dropdown>
-            <button
-              pButton
-              label="Adicionar Tarefa"
-              icon="pi pi-plus"
-              class="p-button-success add-task-button"
-              (click)="addTask(newTask, selectedColumn)"
-            ></button>
-          </div>
-        </ng-template>
-      </p-toolbar>
-
+    
       <!-- Tabuleiro Kanban -->
       <div class="kanban-board">
         <div
@@ -81,18 +52,7 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Selecione o Departamento"
-          (onChange)="loadCategoriasByDepartamento($event.value)"
-          required
-        ></p-dropdown>
-      </div>
-      <div class="field">
-        <label>Categoria</label>
-        <p-dropdown
-          [(ngModel)]="selectedTask.categoria"
-          [options]="categorias"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Selecione a Categoria"
+          (onChange)="onDepartamentoChange($event)"
           required
         ></p-dropdown>
       </div>
@@ -152,7 +112,7 @@
           <tr>
             <th>Data</th>
             <th>Responsável</th>
-            <th>Descrição da Atividade/th>
+            <th>Descrição da Atividade</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-hist>
