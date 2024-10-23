@@ -21,10 +21,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 // Definir a interface para a tarefa
 interface Task {
-  id: number; // Alterado para number
+  id: number; // Tipo ajustado para number
   nome: string;
-  departamento: number; // Alterado para number
-  categoria: number;    // Alterado para number
+  departamento: number; // Tipo ajustado para number
+  categoria: number;    // Tipo ajustado para number
   assunto: string;
   comentarios: string;
   descricao: string;
@@ -179,8 +179,14 @@ export class KanbanBoardComponent implements OnInit {
     const headers = this.getAuthHeaders();
     const userId = sessionStorage.getItem('id');
     if (userId !== null) {
-      const params = new HttpParams().set('userId', userId);
-      this.http.get<any[]>(`http://localhost:8081/tickets`, { headers, params }).subscribe(
+      let params = new HttpParams();
+
+      // Adicionar apenas parâmetros com valores definidos
+      if (userId) {
+        params = params.set('userId', userId);
+      }
+
+      this.http.get<any[]>('http://localhost:8081/tickets', { headers, params }).subscribe(
         (data) => {
           this.initializeBoardColumns(data);
         },
@@ -188,6 +194,8 @@ export class KanbanBoardComponent implements OnInit {
           console.error('Erro ao carregar chamados', error);
         }
       );
+    } else {
+      console.error('User ID não encontrado no sessionStorage.');
     }
   }
 
