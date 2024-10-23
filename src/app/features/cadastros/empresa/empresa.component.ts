@@ -5,11 +5,14 @@ import { CommonModule } from '@angular/common';
 import { PopupComponent } from '../../../shared/app-popup/app-popup.component';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-empresa',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe],
+  imports: [ReactiveFormsModule, CommonModule, PopupComponent, NgxMaskDirective, NgxMaskPipe,  HttpClientModule, RouterModule,],
   providers: [provideNgxMask()],
   templateUrl: './empresa.component.html',
   styleUrls: ['./empresa.component.scss'],
@@ -21,23 +24,23 @@ export class EmpresaComponent {
   isError: boolean = false;
   showPopup: boolean = false;
   isAdminStep = false;
+  isCompanyDataFilled: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.empresaForm = this.fb.group({
-      name: ['', Validators.required],
+      companyName: ['', Validators.required],
       cnpj: ['', Validators.required],
       address: ['', Validators.required],
       phone: ['', Validators.required],
     });
 
     this.adminForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      phone: ['', Validators.required],
-      companyId: ['', Validators.required],
-      departmentId: ['', Validators.required],
-      roles: [['ROLE_ADMINISTRADOR'], Validators.required]
+      userName: ['', Validators.required],
+      userEmail: ['', [Validators.required, Validators.email]],
+      userPassword: ['', Validators.required],
+      userPhone: ['', Validators.required],
+      userPosition: ['', Validators.required],
+      roles: [['ROLE_MASTER'], Validators.required],
     });
   }
 
@@ -64,73 +67,78 @@ export class EmpresaComponent {
     }, 2000);
   }
 
-// Método para verificar se o CNPJ já está cadastrado
-checkCnpjExists(cnpj: string) {
-  // Ajuste da URL conforme seu endpoint
-  return this.http.get(`http://localhost:8081/company/cnpj/?cnpj=${cnpj}`);
-}
-
-onSubmitEmpresa() {
-  if (this.empresaForm.valid) {
-    // Captura o valor do CNPJ do formulário
-    let cnpj = this.empresaForm.get('cnpj')?.value;
-
-    // Remove caracteres especiais do CNPJ
-    cnpj = cnpj.replace(/[^\d]+/g, '');
-
-    // Faz a requisição para verificar se o CNPJ existe
-    this.http.get(`http://localhost:8081/company/cnpj/${cnpj}`).subscribe(
-      (response: any) => {
-        // Log da resposta para garantir que estamos vendo o retorno correto
-        console.log(response);
-
-        // Verifica se a mensagem indica que a empresa já está cadastrada
-        if (response && response.message && response.message === 'Empresa já cadastrada') {
-          // Mostra a mensagem de erro se o CNPJ já estiver cadastrado
-          this.showPopupMessage('CNPJ já cadastrado!', true);
-        } else {
-          // Se a mensagem não indicar isso, avança para a próxima etapa
-          this.isAdminStep = true;
-        }
-      },
-      (error) => {
-        // Mostra uma mensagem de erro se houver um problema com a requisição
-        this.showPopupMessage('Erro ao verificar CNPJ!', true);
-      }
-    );
-  } else {
-    this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
-    this.markAllFieldsAsTouched();
-  }
-}
-
+  onCnpjBlur() {
+    const cnpj = this.empresaForm.get('cnpj')?.value;
   
-  onSubmitAdmin() {
-    if (this.adminForm.valid) {
-      this.http.post('http://localhost:8081/auth/signup', this.adminForm.value).subscribe(
-        (response) => {
-          // Se o administrador for cadastrado com sucesso, cadastra a empresa
-          this.http.post('http://localhost:8081/company', this.empresaForm.value).subscribe(
-            (response) => {
-              this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
+    if (cnpj) {
+      const cleanedCnpj = cnpj.replace(/[^\d]+/g, '');
   
-              // Adicionando um delay de 2 segundos antes de redirecionar
-              setTimeout(() => {
-                this.router.navigate(['empresa/dashboard']);
-              }, 2000);
-            },
-            (error) => {
-              this.showPopupMessage('Erro ao cadastrar empresa!', true);
-            }
-          );
+      console.log('CNPJ Limpo:', cleanedCnpj); // Log do CNPJ limpo
+  
+      this.http.get(`http://localhost:8081/company/cnpj/${cleanedCnpj}`).subscribe(
+        (response: any) => {
+          console.log('Resposta do servidor:', response); // Adicione este log
+  
+          if (response && (response.companyName || response.name)) {
+            this.empresaForm.patchValue({
+              companyName: response.companyName || response.name || '',
+              address: response.address || '',
+              phone: response.phone || ''
+            });
+  
+            this.isCompanyDataFilled = true;
+            this.showPopupMessage('Dados da empresa preenchidos com sucesso!', false);
+          } else {
+            this.isCompanyDataFilled = false;
+            this.showPopupMessage('Empresa já cadastrada!', true);
+          }
         },
         (error) => {
-          this.showPopupMessage('Email de administrador já cadastrado!', true);
+          console.error('Erro ao buscar dados da empresa:', error); // Log do erro
+          this.isCompanyDataFilled = false;
+          this.showPopupMessage('Erro ao buscar os dados da empresa!', true);
+        }
+      );
+    }
+  }  
+
+  onSubmitEmpresa() {
+    if (this.empresaForm.valid) {
+      this.isAdminStep = true;
+    } else {
+      this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
+      this.markAllFieldsAsTouched();
+    }
+  }
+
+  onSubmitAdmin() {
+    if (this.adminForm.valid && this.empresaForm.valid) {
+      const companyData = { ...this.empresaForm.value };
+      const adminData = { ...this.adminForm.value };
+
+      companyData.cnpj = companyData.cnpj.replace(/[^\d]+/g, '');
+
+      const requestData = {
+        ...companyData,
+        ...adminData,
+      };
+
+      this.http.post('http://localhost:8081/company/create-with-department-user', requestData).subscribe(
+        (response: any) => {
+          this.showPopupMessage('Empresa e administrador cadastrados com sucesso!', false);
+
+          // Redireciona após sucesso
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        },
+        (error) => {
+          this.showPopupMessage('Erro ao cadastrar empresa e administrador!', true);
         }
       );
     } else {
       this.showPopupMessage('Por favor, preencha todos os campos corretamente.', true);
       this.markAllFieldsAsTouched();
     }
-  }  
+  }
 }

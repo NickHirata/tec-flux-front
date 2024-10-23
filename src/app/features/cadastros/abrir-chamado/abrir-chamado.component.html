@@ -6,7 +6,7 @@
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="center">
           <div class="my-2">
-            <button pButton pRipple label="Abrir Chamado" icon="pi pi-plus"  class="p-button" (click)="openChamadoDialog()"></button>
+            <button pButton pRipple label="Abrir Chamado" icon="pi pi-plus" class="p-button" (click)="openChamadoDialog()"></button>
           </div>
         </ng-template>
       </p-toolbar>
@@ -23,19 +23,22 @@
         >
           <ng-template pTemplate="header">
             <tr>
-              <th pSortableColumn="nome">Nome do Chamado <p-sortIcon field="nome"></p-sortIcon></th>
-              <th pSortableColumn="prioridade">Prioridade <p-sortIcon field="prioridade"></p-sortIcon></th>
-              <th>Progresso</th>
+              <th>Assunto</th>
+              <th>Departamento</th>
               <th>Status</th>
-              <th>Ações</th>
+              <th>Prioridade</th>
+              <th>Atribuído a</th>
+              <th>Detalhes</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-chamado>
             <tr>
-              <td>{{ chamado.nome }}</td>
-              <td>{{ chamado.prioridade }}</td>
-              <td>{{ chamado.progresso }}%</td>
-              <td>{{ chamado.status }}</td>
+              <tr>
+                <td>{{ chamado.title }}</td> <!-- Exibe o título do chamado -->
+                <td>{{ chamado.departmentName }}</td> <!-- Exibe o nome do departamento -->
+                <td>{{ chamado.statusName }}</td> <!-- Exibe o status do chamado -->
+                <td>{{ chamado.priorityName }}</td> <!-- Exibe a prioridade do chamado -->
+                <td>{{ chamado.userAssignedName ? chamado.userAssignedName : 'Não atribuído' }}</td> <!-- Exibe o usuário atribuído ou "Não atribuído" -->
               <td>
                 <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="verDetalhes(chamado)"></button>
               </td>
@@ -48,22 +51,40 @@
         </ng-template>
       </div>
 
-
       <!-- Diálogo para abrir/criar chamado -->
-      <p-dialog [(visible)]="chamadoDialog" [style]="{width: '450px'}" header="Cadastrar Chamado" [modal]="true" class="p-fluid">
+      <p-dialog [(visible)]="chamadoDialog" [style]="{ width: '450px' }" header="Cadastrar Chamado" [modal]="true" class="p-fluid">
         <ng-template pTemplate="content">
           <div class="field">
+            <label for="title">Assunto</label>
+            <input id="title" pInputText [(ngModel)]="chamado.title" required />
+          </div>
+          <div class="field">
             <label for="departamento">Departamento</label>
-            <p-dropdown id="departamento" [(ngModel)]="chamado.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
+            <p-dropdown
+              id="departamento"
+              [(ngModel)]="chamado.departamento"
+              [options]="departamentos"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione o Departamento"
+              (onChange)="onDepartamentoChange($event)"
+              required
+            ></p-dropdown>
           </div>
           <div class="field">
-            <label for="categoria">Categoria</label>
-            <p-dropdown id="categoria" [(ngModel)]="chamado.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
+            <label for="prioridade">Prioridade</label>
+            <p-dropdown
+              id="prioridade"
+              [(ngModel)]="chamado.prioridade"
+              [options]="prioridades"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecione a Prioridade"
+              (onChange)="onPriorityChange($event)"
+              required
+            ></p-dropdown>
           </div>
-          <div class="field">
-            <label for="assunto">Assunto</label>
-            <input id="assunto" pInputText [(ngModel)]="chamado.assunto" required />
-          </div>
+
           <div class="field">
             <label for="descricao">Descrição</label>
             <textarea id="descricao" pInputTextarea [(ngModel)]="chamado.descricao" required></textarea>
@@ -77,58 +98,29 @@
       </p-dialog>
 
       <!-- Diálogo de detalhes do chamado -->
-      <p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes do Chamado" [modal]="true" class="p-fluid">
+      <p-dialog [(visible)]="detalheDialog" [style]="{ width: '600px' }" header="Detalhes do Chamado" [modal]="true" class="p-fluid">
         <ng-template pTemplate="content">
           <div *ngIf="selectedChamado">
             <div class="field">
-              <label>Nome</label>
-              <p>{{ selectedChamado.nome }}</p>
+              <label>Assunto</label>
+              <p>{{ selectedChamado.subject }}</p>
             </div>
             <div class="field">
               <label>Departamento</label>
-              <p>{{ selectedChamado.departamento }}</p>
+              <p>{{ getDepartmentName(selectedChamado.departmentId) }}</p>
             </div>
             <div class="field">
-              <label>Categoria</label>
-              <p>{{ selectedChamado.categoria }}</p>
+              <label>Prioridade</label>
+              <p>{{ getPriorityName(selectedChamado.priorityId) }}</p>
             </div>
             <div class="field">
-              <label>Assunto</label>
-              <p>{{ selectedChamado.assunto }}</p>
+              <label>Descrição</label>
+              <p>{{ selectedChamado.description }}</p>
             </div>
-            <div class="field">
-              <label>Progresso</label>
-              <p>{{ selectedChamado.progresso }}%</p>
-            </div>
-            <div class="field">
-              <label>Data de Criação</label>
-              <p>{{ selectedChamado.dataCriacao }}</p>
-            </div>
-            <div class="field">
-              <label>Data de Resolução</label>
-              <p>{{ selectedChamado.dataResolucao ? selectedChamado.dataResolucao : '--' }}</p>
-            </div>
-
-            <h3>Histórico</h3>
-            <p-table [value]="selectedChamado.historico" responsiveLayout="scroll">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Data</th>
-                  <th>Responsável</th>
-                  <th>Descrição</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-hist>
-                <tr>
-                  <td>{{ hist.data }}</td>
-                  <td>{{ hist.responsavel }}</td>
-                  <td>{{ hist.descricao }}</td>
-                </tr>
-              </ng-template>
-            </p-table>
+            <!-- Outros campos conforme necessário -->
           </div>
         </ng-template>
-        
+
         <ng-template pTemplate="footer">
           <button pButton pRipple label="Fechar" icon="pi pi-times" class="p-button-text" (click)="detalheDialog = false"></button>
         </ng-template>

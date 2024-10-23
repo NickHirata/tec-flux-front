@@ -4,32 +4,31 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; // Importando o Router
 
 @Component({
   selector: 'app-config',
   standalone: true,
   imports: [
-    FormsModule, 
-    DropdownModule, 
-    PanelModule, 
+    FormsModule,
+    DropdownModule,
+    PanelModule,
     ButtonModule,
     CommonModule
   ],
   templateUrl: './config.component.html',
-  styleUrl: './config.component.scss'
+  styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent {
-  changePasswordVisible: boolean = false;
-  changeEmailVisible: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {} // Injetando o Router
 
-  resetVisibility() {
-    this.changePasswordVisible = false;
+  togglePasswordForm() {
+    // Aqui pode ser usada para exibir/ocultar a interface se necessário
   }
 
-  redirectToReset() {
+  changePassword() {
+    // Redireciona diretamente para a página de reset
     this.router.navigate(['/reset']);
   }
 }

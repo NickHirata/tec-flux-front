@@ -175,8 +175,13 @@ body {
     display: flex;
     height: 100vh;
   }
-  
-  .sidebar {
+
+  .dashboard-container {
+    display: flex;
+    height: 100vh; /* Mantenha o 100vh para o container principal */
+}
+
+.sidebar {
     width: 250px;
     background-color: #2c3e50;
     color: #fff;
@@ -184,42 +189,35 @@ body {
     transition: width 0.3s ease;
     display: flex;
     flex-direction: column;
-  }
-  
+    position: sticky; /* Usar sticky em vez de fixed */
+    top: 0; /* Fica fixo na parte superior do viewport */
+    height: 100%; /* Ocupa toda a altura da tela */
+    overflow-y: auto; /* Adiciona rolagem ao sidebar se o conteúdo exceder a altura */
+    z-index: 1000; /* Garante que o sidebar esteja acima de outros conteúdos */
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 50px; /* Adiciona margem esquerda igual à largura do sidebar */
+}
+
+
   .sidebar.collapsed {
     width: 80px;
   }
-  
-  .logo {
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .hamburger-menu {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .hamburger-icon {
-    width: 25px;
-    height: 3px;
-    background-color: #fff;
-    display: block;
-    margin: 5px 0;
-  }
-  
+
+
   .nav-links {
     list-style-type: none;
     padding: 0;
     flex-grow: 1;
   }
-  
+
   .nav-links li {
     margin-bottom: 20px;
   }
-  
+
   .nav-links a {
     color: #fff;
     text-decoration: none;
@@ -230,19 +228,19 @@ body {
     border-radius: 4px;
     transition: background-color 0.3s ease;
   }
-  
+
   .nav-links a:hover {
     background-color: #34495e;
   }
-  
+
   .nav-links a.active {
     background-color: #0079bf;
   }
-  
+
   .logout {
     margin-top: auto; /* Move o logout para o fim da sidebar */
   }
-  
+
   .logout-button {
     width: 100%;
     background: none;
@@ -254,18 +252,12 @@ body {
     align-items: center;
     font-size: 18px;
   }
-  
+
   .logout-button i {
     margin-right: 10px;
   }
-  
+
   .logout-button:hover {
     background-color: transparent; /* Remove o efeito de hover */
   }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #ecf0f1;
-  }
-  
+

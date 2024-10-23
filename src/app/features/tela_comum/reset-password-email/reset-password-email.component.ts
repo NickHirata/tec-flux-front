@@ -27,9 +27,9 @@ export class ResetPasswordEmailComponent {
       const email = this.emailForm.value.email;
 
       // Chamada para o backend (ajuste a URL conforme necessário)
-      this.http.post('http://localhost:8081/user/reset-password', { email }).subscribe(
+      this.http.post('http://localhost:8081/user/forgot-password', { email }).subscribe(
         response => {
-          this.message = 'Um e-mail de redefinição de senha foi enviado!';
+          this.message = 'Um e-mail de redefinição de senha  foi enviado!';
         },
         error => {
           this.message = 'Erro ao enviar o e-mail. Tente novamente.';

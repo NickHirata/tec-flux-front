@@ -9,7 +9,7 @@
     <a href="#">Contato</a>
     <a routerLink="/trabalhe-conosco">Trabalhe Conosco</a>
     <a routerLink="/faq">FAQ</a>
-    <a routerLink="/sobre-nos">Quem Somos</a>    
+    <a routerLink="/sobre-nos">Quem Somos</a>
   </div>
 </div>
 
@@ -47,6 +47,7 @@
     <!-- Formulário de cadastro da empresa -->
     <div class="register-company-form" *ngIf="!isAdminStep">
       <form [formGroup]="empresaForm" (ngSubmit)="onSubmitEmpresa()">
+        <!-- Campo CNPJ -->
         <div class="form-group" [ngClass]="{ error: isFieldInvalid('cnpj') }">
           <label for="cnpj">CNPJ</label>
           <input
@@ -54,20 +55,24 @@
             id="cnpj"
             formControlName="cnpj"
             mask="00.000.000/0000-00"
+            (blur)="onCnpjBlur()"
             required
           />
           <div *ngIf="isFieldInvalid('cnpj')" class="error-message">
             CNPJ inválido.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
-          <label for="name">Nome da Empresa</label>
-          <input type="text" id="name" formControlName="name" required />
-          <div *ngIf="isFieldInvalid('name')" class="error-message">
+
+        <!-- Campo Nome da Empresa -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('companyName') }">
+          <label for="companyName">Nome da Empresa</label>
+          <input type="text" id="companyName" formControlName="companyName" required />
+          <div *ngIf="isFieldInvalid('companyName')" class="error-message">
             Campo obrigatório.
           </div>
         </div>
-        
+
+        <!-- Campo Endereço -->
         <div class="form-group" [ngClass]="{ error: isFieldInvalid('address') }">
           <label for="address">Endereço</label>
           <input type="text" id="address" formControlName="address" required />
@@ -75,8 +80,10 @@
             Campo obrigatório.
           </div>
         </div>
+
+        <!-- Campo Telefone da Empresa -->
         <div class="form-group" [ngClass]="{ error: isFieldInvalid('phone') }">
-          <label for="phone">Telefone</label>
+          <label for="phone">Telefone da Empresa</label>
           <input
             type="text"
             id="phone"
@@ -88,42 +95,69 @@
             Telefone inválido.
           </div>
         </div>
-        <button type="submit" class="cta-button">Cadastrar Empresa</button>
+
+        <button type="submit" class="cta-button">Avançar</button>
       </form>
     </div>
 
     <!-- Formulário de cadastro do administrador -->
     <div class="register-admin-form" *ngIf="isAdminStep">
       <form [formGroup]="adminForm" (ngSubmit)="onSubmitAdmin()">
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('name') }">
-          <label for="name">Nome do Administrador</label>
-          <input type="text" id="name" formControlName="name" required />
-          <div *ngIf="isFieldInvalid('name')" class="error-message">
+        <!-- Campo Nome do Administrador -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('userName') }">
+          <label for="userName">Nome do Administrador</label>
+          <input type="text" id="userName" formControlName="userName" required />
+          <div *ngIf="isFieldInvalid('userName')" class="error-message">
             Campo obrigatório.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('email') }">
-          <label for="email">Email do Administrador</label>
-          <input type="email" id="email" formControlName="email" required />
-          <div *ngIf="isFieldInvalid('email')" class="error-message">
+
+        <!-- Campo Email do Administrador -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('userEmail') }">
+          <label for="userEmail">Email do Administrador</label>
+          <input type="email" id="userEmail" formControlName="userEmail" required />
+          <div *ngIf="isFieldInvalid('userEmail')" class="error-message">
             Email inválido.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('phone') }">
-          <label for="phone">Telefone</label>
-          <input type="phone" id="phone" formControlName="phone" required />
-          <div *ngIf="isFieldInvalid('phone')" class="error-message">
+
+        <!-- Campo Telefone do Administrador -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('userPhone') }">
+          <label for="userPhone">Telefone do Administrador</label>
+          <input
+            type="text"
+            id="userPhone"
+            formControlName="userPhone"
+            mask="(00) 00000-0000"
+            required
+          />
+          <div *ngIf="isFieldInvalid('userPhone')" class="error-message">
+            Telefone inválido.
+          </div>
+        </div>
+
+        <!-- Campo Cargo do Administrador -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('userPosition') }">
+          <label for="userPosition">Cargo do Administrador</label>
+          <input type="text" id="userPosition" formControlName="userPosition" required />
+          <div *ngIf="isFieldInvalid('userPosition')" class="error-message">
             Campo obrigatório.
           </div>
         </div>
-        <div class="form-group" [ngClass]="{ error: isFieldInvalid('password') }">
-          <label for="password">Senha</label>
-          <input type="password" id="password" formControlName="password" required />
-          <div *ngIf="isFieldInvalid('password')" class="error-message">
+
+        <!-- Campo Senha do Administrador -->
+        <div class="form-group" [ngClass]="{ error: isFieldInvalid('userPassword') }">
+          <label for="userPassword">Senha</label>
+          <input type="password" id="userPassword" formControlName="userPassword" required />
+          <div *ngIf="isFieldInvalid('userPassword')" class="error-message">
             Campo obrigatório.
           </div>
         </div>
-        <button type="submit" class="cta-button">Cadastrar Administrador</button>
+
+        <!-- Campo Roles (oculto ou pré-definido) -->
+        <!-- Se quiser que o usuário selecione o papel, pode adicionar um campo aqui. Caso contrário, o campo pode ser omitido do HTML, já que o valor padrão é definido no FormGroup -->
+
+        <button type="submit" class="cta-button">Cadastrar</button>
       </form>
     </div>
   </div>

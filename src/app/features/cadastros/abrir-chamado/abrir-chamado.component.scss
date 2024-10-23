@@ -98,3 +98,14 @@ footer.footer {
 footer p {
   margin: 0;
 }
+::ng-deep .progress-bar-low .p-progressbar-value {
+  background-color: #f44336; /* Vermelho para progresso baixo */
+}
+
+::ng-deep .progress-bar-medium .p-progressbar-value {
+  background-color: #ff9800; /* Laranja para progresso médio */
+}
+
+::ng-deep .progress-bar-high .p-progressbar-value {
+  background-color: #4caf50; /* Verde para progresso alto ou completo */
+}
