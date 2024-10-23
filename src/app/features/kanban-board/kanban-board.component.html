@@ -97,11 +97,7 @@
         ></p-dropdown>
       </div>
       <div class="field">
-        <label>Comentários</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.comentarios"/>
-      </div>
-      <div class="field">
-        <label>Descrição</label>
+        <label>Descrição do chamado</label>
         <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
       </div>
       <div class="field">
@@ -156,7 +152,7 @@
           <tr>
             <th>Data</th>
             <th>Responsável</th>
-            <th>Descrição</th>
+            <th>Descrição da Atividade/th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-hist>

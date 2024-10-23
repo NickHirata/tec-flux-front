@@ -341,6 +341,24 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
+  onDepartamentoChange(event: any) {
+    const departamentoSelecionado = event.value;
+    if (departamentoSelecionado) {
+      this.loadCategoriasByDepartamento(departamentoSelecionado);
+    } else {
+      this.categorias = [];
+    }
+  }
+
+  // onPriorityChange(event: any) {
+  //   const prioridadeSelecionada = event.value;
+  //   if (prioridadeSelecionada) {
+  //     this.chamado.priority = prioridadeSelecionada; // Usando o value diretamente
+  //   } else {
+  //     this.chamado.priority = null; // Ajusta para quando não houver prioridade selecionada
+  //   }
+  // }
+
   addTask(taskName: string, columnIndex: number | null) {
     if (taskName.trim() && columnIndex !== null && this.boardColumns[columnIndex]) {
       const headers = this.getAuthHeaders();
