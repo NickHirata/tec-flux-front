@@ -17,12 +17,14 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { SliderModule } from 'primeng/slider';
 import { FileUploadModule } from 'primeng/fileupload';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 // Definir a interface para a tarefa
 interface Task {
+  id: number; // Alterado para number
   nome: string;
-  departamento: string;
-  categoria: string;
+  departamento: number; // Alterado para number
+  categoria: number;    // Alterado para number
   assunto: string;
   comentarios: string;
   descricao: string;
@@ -31,7 +33,6 @@ interface Task {
   dataResolucao: Date | null;
   historico: { data: Date, responsavel: string, descricao: string }[];
 }
-
 
 interface BoardColumn {
   name: string;
@@ -57,7 +58,7 @@ interface BoardColumn {
     TableModule,
     DragDropModule,
     AutoCompleteModule,
-    ProgressBarModule, 
+    ProgressBarModule,
     SliderModule,
     FileUploadModule
   ],
@@ -74,8 +75,42 @@ export class KanbanBoardComponent implements OnInit {
   filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
 
   selectedUser: string | null = null; // Usuário selecionado para atribuição
-  departamentos: any[]|undefined;
-  categorias: any[]|undefined;
+  departamentos: any[] = [];
+  categorias: any[] = [];
+  prioridades: any[] = [
+    { label: 'CRITICO', value: '10' },
+    { label: 'URGENTE', value: '11' },
+    { label: 'ALTA', value: '12' },
+    { label: 'MEDIA', value: '13' },
+    { label: 'BAIXA', value: '14' },
+  ];
+  companyId: number | null = null;
+
+  boardColumns: BoardColumn[] = [
+    { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
+    { name: 'Em Progresso', tasks: [], color: '#64B5F6' },
+    { name: 'Concluído', tasks: [], color: '#0288D1' }
+  ];
+
+  dropdownOptions: { label: string, value: number }[] = [];
+
+  constructor(private messageService: MessageService, private http: HttpClient) {}
+
+  ngOnInit() {
+    const storedCompanyId = sessionStorage.getItem('companyId');
+    if (storedCompanyId) {
+      this.companyId = Number(storedCompanyId);
+      this.loadDepartamentos();
+      this.loadTickets();
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
+    }
+
+    this.dropdownOptions = this.boardColumns.map((col, index) => ({
+      label: col.name,
+      value: index
+    }));
+  }
 
   // Função para filtrar usuários
   filterUsers(event: any) {
@@ -98,119 +133,120 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  boardColumns: BoardColumn[] = [
-    {
-      name: 'A Fazer',
-      tasks: [
-        {
-          nome: 'Tarefa 1',
-          departamento: '',
-          categoria: '',
-          assunto: '',
-          comentarios: '',
-          descricao: '',
-          progresso: 0,
-          dataCriacao: new Date(),
-          dataResolucao: null,
-          historico: []
-        },
-        {
-          nome: 'Tarefa 2',
-          departamento: '',
-          categoria: '',
-          assunto: '',
-          comentarios: '',
-          descricao: '',
-          progresso: 0,
-          dataCriacao: new Date(),
-          dataResolucao: null,
-          historico: []
-        }
-      ],
-      color: '#B3E5FC'
-    },
-    {
-      name: 'Em Progresso',
-      tasks: [
-        {
-          nome: 'Tarefa 3',
-          departamento: '',
-          categoria: '',
-          assunto: '',
-          comentarios: '',
-          descricao: '',
-          progresso: 50, // Ajustando progresso para indicar andamento
-          dataCriacao: new Date(),
-          dataResolucao: null,
-          historico: []
-        }
-      ],
-      color: '#64B5F6'
-    },
-    {
-      name: 'Concluído',
-      tasks: [
-        {
-          nome: 'Tarefa 4',
-          departamento: '',
-          categoria: '',
-          assunto: '',
-          comentarios: '',
-          descricao: '',
-          progresso: 100, // Progresso completo
-          dataCriacao: new Date(),
-          dataResolucao: new Date(), // Data de resolução preenchida para indicar conclusão
-          historico: []
-        }
-      ],
-      color: '#0288D1'
-    }
-  ];
-  
-
-  dropdownOptions: { label: string, value: number }[] = [];
-
-  constructor(private messageService: MessageService) {}
-
-  ngOnInit() {
-    this.dropdownOptions = this.boardColumns.map((col, index) => ({
-      label: col.name,
-      value: index
-    }));
-  }
-
-  addTask(task: string, columnIndex: number | null) {
-    if (task.trim() && columnIndex !== null && this.boardColumns[columnIndex]) {
-      const newTask: Task = {
-        nome: task.trim(),
-        departamento: '',
-        categoria: '',
-        assunto: '',
-        comentarios: '', // Novo campo
-        descricao: '',   // Novo campo
-        progresso: 0,
-        dataCriacao: new Date(),
-        dataResolucao: null,
-        historico: []
-      };
-      this.boardColumns[columnIndex].tasks.push(newTask);
-      this.newTask = '';
-      this.selectedColumn = null;
-  
-      // Exibir toast de sucesso
-      this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tarefa adicionada!' });
+  private getAuthHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('accessToken');
+    const tokenType = sessionStorage.getItem('tokenType');
+    if (token && tokenType) {
+      return new HttpHeaders().set('Authorization', `${tokenType} ${token}`);
     } else {
-      // Exibir toast de erro se a coluna não for válida
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Selecione uma coluna válida!' });
+      return new HttpHeaders();
     }
   }
-  
-  
+
+  loadDepartamentos() {
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+        (response) => {
+          this.departamentos = response.map((department: any) => ({
+            label: department.name,
+            value: department.id
+          }));
+        },
+        (error) => {
+          console.error('Erro ao carregar departamentos', error);
+        }
+      );
+    }
+  }
+
+  loadCategoriasByDepartamento(departamentoId: number) {
+    const headers = this.getAuthHeaders();
+    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`, { headers }).subscribe(
+      (response) => {
+        this.categorias = response.map((category: any) => ({
+          label: category.name,
+          value: category.id
+        }));
+      },
+      (error) => {
+        console.error('Erro ao carregar categorias', error);
+      }
+    );
+  }
+
+  loadTickets() {
+    const headers = this.getAuthHeaders();
+    const userId = sessionStorage.getItem('id');
+    if (userId !== null) {
+      const params = new HttpParams().set('userId', userId);
+      this.http.get<any[]>(`http://localhost:8081/tickets`, { headers, params }).subscribe(
+        (data) => {
+          this.initializeBoardColumns(data);
+        },
+        (error) => {
+          console.error('Erro ao carregar chamados', error);
+        }
+      );
+    }
+  }
+
+  initializeBoardColumns(tickets: any[]) {
+    // Limpar tarefas existentes
+    this.boardColumns.forEach(column => column.tasks = []);
+
+    tickets.forEach(ticket => {
+      const task: Task = {
+        id: ticket.id,
+        nome: ticket.title,
+        departamento: ticket.departmentId,  // Ajustado para departmentId
+        categoria: ticket.categoryId,      // Ajustado para categoryId
+        assunto: ticket.subject,
+        comentarios: ticket.comments,
+        descricao: ticket.description,
+        progresso: this.getProgressValue(ticket.statusId),
+        dataCriacao: new Date(ticket.createdAt),
+        dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
+        historico: [] // Popule se tiver dados de histórico
+      };
+
+      // Mapeie o status do ticket para a coluna correspondente
+      switch (ticket.statusId) {
+        case 1: // Status ID para 'A Fazer'
+          this.boardColumns[0].tasks.push(task);
+          break;
+        case 2: // Status ID para 'Em Progresso'
+          this.boardColumns[1].tasks.push(task);
+          break;
+        case 3: // Status ID para 'Concluído'
+          this.boardColumns[2].tasks.push(task);
+          break;
+        default:
+          // Coloque em uma coluna padrão ou trate conforme necessário
+          this.boardColumns[0].tasks.push(task);
+          break;
+      }
+    });
+  }
+
+  getProgressValue(statusId: number): number {
+    switch (statusId) {
+      case 1:
+        return 0; // A Fazer
+      case 2:
+        return 50; // Em Progresso
+      case 3:
+        return 100; // Concluído
+      default:
+        return 0;
+    }
+  }
+
   getConnectedDropLists() {
     return this.boardColumns.map((_, index) => `cdk-drop-list-${index}`);
   }
 
-  onTaskDrop(event: CdkDragDrop<Task[]>) {
+  onTaskDrop(event: CdkDragDrop<Task[]>, columnIndex: number) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -224,16 +260,116 @@ export class KanbanBoardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+
+      const movedTask = event.container.data[event.currentIndex];
+      const newStatusId = this.getStatusIdFromColumnIndex(columnIndex);
+
+      // Atualize o status do chamado via API
+      this.updateTicketStatus(movedTask.id, newStatusId);
     }
+  }
+
+  getStatusIdFromColumnIndex(columnIndex: number): number {
+    // Mapear os índices das colunas para os IDs de status correspondentes
+    switch (columnIndex) {
+      case 0:
+        return 1; // Status ID para 'A Fazer'
+      case 1:
+        return 2; // Status ID para 'Em Progresso'
+      case 2:
+        return 3; // Status ID para 'Concluído'
+      default:
+        return 1; // Padrão
+    }
+  }
+
+  updateTicketStatus(ticketId: number, statusId: number) {
+    const headers = this.getAuthHeaders();
+    const body = { statusId };
+
+    this.http.put(`http://localhost:8081/tickets/${ticketId}/status`, body, { headers }).subscribe(
+      response => {
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
+        console.error('Erro ao atualizar status do chamado', error);
+      }
+    );
   }
 
   openTaskDialog(task: Task) {
     this.selectedTask = { ...task }; // Clonar o objeto para evitar alterações diretas
     this.detalheDialog = true;
+
+    if (this.selectedTask.departamento) {
+      this.loadCategoriasByDepartamento(this.selectedTask.departamento);
+    }
   }
 
   saveTaskDetails() {
-    // Implementar lógica para salvar ou atualizar a tarefa
-    this.detalheDialog = false;
+    if (this.selectedTask) {
+      const headers = this.getAuthHeaders();
+      const updatedTicket = {
+        title: this.selectedTask.nome,
+        description: this.selectedTask.descricao,
+        departmentId: this.selectedTask.departamento,
+        categoryId: this.selectedTask.categoria,
+        // Inclua outros campos necessários
+      };
+
+      this.http.put(`http://localhost:8081/tickets/${this.selectedTask.id}`, updatedTicket, { headers }).subscribe(
+        response => {
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Chamado atualizado' });
+          this.detalheDialog = false;
+          // Recarregue os chamados para refletir as mudanças
+          this.loadTickets();
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o chamado' });
+          console.error('Erro ao atualizar chamado', error);
+        }
+      );
+    }
+  }
+
+  addTask(taskName: string, columnIndex: number | null) {
+    if (taskName.trim() && columnIndex !== null && this.boardColumns[columnIndex]) {
+      const headers = this.getAuthHeaders();
+      const newTicket = {
+        title: taskName.trim(),
+        statusId: this.getStatusIdFromColumnIndex(columnIndex),
+        companyId: this.companyId,
+        userId: sessionStorage.getItem('id'),
+        // Inclua outros campos necessários, como departmentId, priorityId, etc.
+      };
+
+      this.http.post<any>('http://localhost:8081/tickets', newTicket, { headers }).subscribe(
+        (response) => {
+          const newTask: Task = {
+            id: response.id,
+            nome: response.title,
+            departamento: response.departmentId, // Ajustado para departmentId
+            categoria: response.categoryId,     // Ajustado para categoryId
+            assunto: response.subject,
+            comentarios: response.comments,
+            descricao: response.description,
+            progresso: this.getProgressValue(response.statusId),
+            dataCriacao: new Date(response.createdAt),
+            dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
+            historico: []
+          };
+          this.boardColumns[columnIndex].tasks.push(newTask);
+          this.newTask = '';
+          this.selectedColumn = null;
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Tarefa adicionada!' });
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao adicionar tarefa' });
+        }
+      );
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Selecione uma coluna válida!' });
+    }
   }
 }

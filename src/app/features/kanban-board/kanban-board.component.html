@@ -47,7 +47,8 @@
             [cdkDropListData]="column.tasks"
             [cdkDropListConnectedTo]="getConnectedDropLists()"
             class="task-list"
-            (cdkDropListDropped)="onTaskDrop($event)"
+            (cdkDropListDropped)="onTaskDrop($event, i)"
+            id="cdk-drop-list-{{ i }}"
           >
             <div
               *ngFor="let task of column.tasks"
@@ -63,6 +64,8 @@
     </div>
   </div>
 </div>
+
+<!-- Diálogo de detalhes da tarefa -->
 <p-dialog [(visible)]="detalheDialog" [style]="{width: '600px'}" header="Detalhes da Tarefa" [modal]="true" class="p-fluid">
   <ng-template pTemplate="content">
     <div *ngIf="selectedTask">
@@ -72,11 +75,26 @@
       </div>
       <div class="field">
         <label>Departamento</label>
-        <p-dropdown id="departamento" [(ngModel)]="selectedTask.departamento" [options]="departamentos" optionLabel="nome" placeholder="Selecione o Departamento" required></p-dropdown>
+        <p-dropdown
+          [(ngModel)]="selectedTask.departamento"
+          [options]="departamentos"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione o Departamento"
+          (onChange)="loadCategoriasByDepartamento($event.value)"
+          required
+        ></p-dropdown>
       </div>
       <div class="field">
         <label>Categoria</label>
-        <p-dropdown id="categoria" [(ngModel)]="selectedTask.categoria" [options]="categorias" optionLabel="nome" placeholder="Selecione a Categoria" required></p-dropdown>
+        <p-dropdown
+          [(ngModel)]="selectedTask.categoria"
+          [options]="categorias"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione a Categoria"
+          required
+        ></p-dropdown>
       </div>
       <div class="field">
         <label>Assunto</label>
@@ -85,6 +103,10 @@
       <div class="field">
         <label>Comentários</label>
         <input type="text" pInputText [(ngModel)]="selectedTask.comentarios"/>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
       </div>
       <div class="field">
         <label>Progresso</label>
@@ -121,7 +143,7 @@
           placeholder="Pesquisar usuário">
         </p-autoComplete>
         <label>Descrição da Atividade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"s/>
+        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
         <button
           pButton
           label="Adicionar ao Histórico"
