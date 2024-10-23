@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/tela_comum/home/home.component';
 import { LoginComponent } from './features/tela_comum/login/login.component';
-import { UsuarioComponent } from './features/cadastros/usuario/usuario.component';
 import { EmpresaComponent } from './features/cadastros/empresa/empresa.component';
 import { DashboardComponent } from './features/administrador/dashboard/dashboard.component';
 import { SobreNosComponent } from './features/tela_comum/sobre-nos/sobre-nos.component';
@@ -25,7 +24,6 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'cad_adm', component: UsuarioComponent },
   { path: 'cad_empresa', component: EmpresaComponent },
   { path: 'sobre-nos', component: SobreNosComponent },
   { path: 'faq', component: FaqComponent },
