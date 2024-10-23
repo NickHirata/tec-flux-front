@@ -6,9 +6,6 @@
           <h2>Relatórios</h2>
           <p>Aqui está o resumo do seu departamento.</p>
         </div>
-        <div class="quick-actions">
-          <button pButton label="Abrir Novo Chamado" routerLink="/abrir-chamado" class="cta-button"></button>
-        </div>
       </header>
 
       <div class="grid">
@@ -34,50 +31,27 @@
             <p-card>
                 <div class="card-content">
                     <i class="pi pi-check-circle"></i>
-                    <h2>Chamados Fechados</h2>
-                    <h3>{{ chamadosFechados }}</h3>
+                    <h2>Chamados em Progresso</h2>
+                    <h3>{{ chamadosProgresso }}</h3>
                 </div>
             </p-card>
         </div>
         <div class="col-6 md:col-3">
-            <p-card>
-                <div class="card-content">
-                    <i class="pi pi-exclamation-triangle"></i>
-                    <h2>Chamados Urgentes</h2>
-                    <h3>{{ chamadosUrgentes }}</h3>
-                </div>
-            </p-card>
-        </div>
+          <p-card>
+              <div class="card-content">
+                  <i class="pi pi-check-circle"></i>
+                  <h2>Chamados Fechados</h2>
+                  <h3>{{ chamadosFechados }}</h3>
+              </div>
+          </p-card>
+      </div>
     </div>
-
-
-      <p-table [value]="data" [ngClass]="{'custom-table': true}">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Nome</th>
-                <th>Tempo Médio de Solução</th>
-                <th>Resolução (%)</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-item>
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.averageResolutionTime }} hrs</td>
-                <td>
-                    <p-progressBar [value]="item.resolutionRate" [showValue]="true"></p-progressBar>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-
-
-
 
       <!-- Relatórios -->
       <section class="charts">
         <div class="p-grid">
           <div class="p-col-12 p-md-4 chart">
-            <h3>Tempo Médio de Resolução dos Chamados</h3>
+            <h3>Quantidade de chamados aberetos por setores:</h3>
             <ngx-charts-bar-vertical
               [view]="view"
               [results]="tempoMedioResolucaoData"
@@ -108,20 +82,6 @@
             <p-button label="Exportar para PDF" icon="pi pi-file-pdf" class="p-button-secondary ml-2" (click)="exportToPDF('Top 5 Técnicos - Resolução de Chamados')"></p-button>
           </div>
 
-          <div class="p-col-12 p-md-4 chart">
-            <h3>Quantidade de Soluções em Relação ao Total de Chamados</h3>
-            <ngx-charts-pie-chart
-              [view]="view"
-              [results]="quantidadeSolucoesData"
-              [legend]="true"
-              [explodeSlices]="false"
-              [labels]="true"
-              [doughnut]="true"
-              [gradient]="false">
-            </ngx-charts-pie-chart>
-            <p-button label="Exportar para CSV" icon="pi pi-download" class="p-button-secondary" (click)="exportToCSV('quantidadeSolucoesData')"></p-button>
-            <p-button label="Exportar para PDF" icon="pi pi-file-pdf" class="p-button-secondary ml-2" (click)="exportToPDF('Quantidade de Soluções em Relação ao Total de Chamados')"></p-button>
-          </div>
         </div>
       </section>
 

@@ -40,7 +40,7 @@ export class GraficosComponent {
   totalChamados: number = 100;
   chamadosAbertos: number = 25;
   chamadosFechados: number = 70;
-  chamadosUrgentes: number = 5;
+  chamadosProgresso: number = 5;
 
   data: Technician[] = [
     { name: 'Malik Wiwoho', averageResolutionTime: 2.5, resolutionRate: 95 },

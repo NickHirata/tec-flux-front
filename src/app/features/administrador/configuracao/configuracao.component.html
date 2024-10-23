@@ -7,24 +7,10 @@
       <!-- Botões de ações -->
       <p-panel header="Ações">
         <div class="my-3">
-          <button pButton pRipple label="Alterar Setor" icon="pi pi-pencil" class="p-button-info mr-2" (click)="showChangeDepartment()"></button>
           <button pButton pRipple label="Alterar Senha" icon="pi pi-key" class="p-button-warning mr-2" (click)="redirectToReset()"></button>
           <button pButton pRipple label="Excluir Usuário" icon="pi pi-trash" class="p-button-danger" (click)="showDeleteUser()"></button>
-          <button pButton pRipple label="Excluir Departamento" icon="pi pi-trash" class="p-button-danger" (click)="showDeleteDepartament()"></button>
+          <button pButton pRipple label="Excluir Setor" icon="pi pi-trash" class="p-button-danger" (click)="showDeleteDepartament()"></button>
         </div>
-      </p-panel>
-
-      <!-- Formulário de Alteração de Departamento -->
-      <p-panel *ngIf="changeDepartmentVisible" header="Alterar Setor do Usuário">
-        <div class="field">
-          <label for="funcionario">Funcionário</label>
-          <p-dropdown id="funcionario" [(ngModel)]="selectedEmployee" [options]="employees" optionLabel="label" placeholder="Selecione um Funcionário"></p-dropdown>
-        </div>
-        <div class="field">
-          <label for="departamento">Novo Departamento</label>
-          <p-dropdown id="departamento" [(ngModel)]="newDepartment" [options]="departamentos" optionLabel="label" placeholder="Selecione o Departamento"></p-dropdown>
-        </div>
-        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-success mt-2" (click)="changeDepartment()"></button>
       </p-panel>
 
       <!-- Confirmação de Exclusão de Usuário -->
