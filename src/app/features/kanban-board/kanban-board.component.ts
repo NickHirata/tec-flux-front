@@ -11,7 +11,6 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-// Definir a interface para a tarefa
 interface Task {
   id: number;
   nome: string;
@@ -110,7 +109,7 @@ export class KanbanBoardComponent implements OnInit {
     tickets.forEach(ticket => {
       const task: Task = {
         id: ticket.id,
-        nome: ticket.title, // Usando 'title' do ticket como 'nome' da tarefa
+        nome: ticket.title,
         departamento: ticket.departmentId,
         descricao: ticket.description,
         progresso: this.getProgressValue(ticket.statusId),
@@ -121,13 +120,13 @@ export class KanbanBoardComponent implements OnInit {
 
       // Mapeie o status do ticket para a coluna correspondente
       switch (ticket.statusId) {
-        case 1: // Status ID para 'A Fazer'
+        case 1:
           this.boardColumns[0].tasks.push(task);
           break;
-        case 2: // Status ID para 'Em Progresso'
+        case 2:
           this.boardColumns[1].tasks.push(task);
           break;
-        case 3: // Status ID para 'Concluído'
+        case 3:
           this.boardColumns[2].tasks.push(task);
           break;
         default:
@@ -140,11 +139,11 @@ export class KanbanBoardComponent implements OnInit {
   getProgressValue(statusId: number): number {
     switch (statusId) {
       case 1:
-        return 0; // A Fazer
+        return 0;
       case 2:
-        return 50; // Em Progresso
+        return 50;
       case 3:
-        return 100; // Concluído
+        return 100;
       default:
         return 0;
     }
@@ -178,16 +177,15 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getStatusIdFromColumnIndex(columnIndex: number): number {
-    // Mapear os índices das colunas para os IDs de status correspondentes
     switch (columnIndex) {
       case 0:
-        return 1; // Status ID para 'A Fazer'
+        return 1;
       case 1:
-        return 2; // Status ID para 'Em Progresso'
+        return 2;
       case 2:
-        return 3; // Status ID para 'Concluído'
+        return 3;
       default:
-        return 1; // Padrão
+        return 1;
     }
   }
 
@@ -213,7 +211,7 @@ export class KanbanBoardComponent implements OnInit {
         // Atualizar `selectedTask` com os dados completos do chamado
         this.selectedTask = {
           id: response.id,
-          nome: response.title, // Usando 'title' como 'nome'
+          nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
           progresso: this.getProgressValue(response.statusId),
@@ -238,7 +236,7 @@ export class KanbanBoardComponent implements OnInit {
     if (this.selectedTask) {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
-        title: this.selectedTask.nome, // Usando 'nome' para atualizar o 'title' do ticket
+        title: this.selectedTask.nome,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         // Inclua outros campos necessários
@@ -261,9 +259,10 @@ export class KanbanBoardComponent implements OnInit {
   loadDepartamentos() {
     if (this.companyId !== null) {
       const headers = this.getAuthHeaders();
-      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
         (response) => {
-          this.departamentos = response.map((department: any) => ({
+          // Use response.content se a API retornar os departamentos dentro de 'content'
+          this.departamentos = response.content.map((department: any) => ({
             label: department.name,
             value: department.id
           }));
