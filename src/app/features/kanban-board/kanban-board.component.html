@@ -54,6 +54,17 @@
           required
         ></p-dropdown>
       </div>      
+      <div class="field">
+        <label>Atribuir para:</label>
+        <p-dropdown
+          [(ngModel)]="selectedTask.assignedUserId"
+          [options]="employees"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione o usuário"
+          required
+        ></p-dropdown>
+      </div>   
       
       <div class="field">
         <label>Data de Criação</label>

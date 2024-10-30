@@ -19,6 +19,7 @@ interface Task {
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
+  assignedUserId: number | null; // Adicionado para armazenar o ID do usuário atribuído
   historico: { data: Date, responsavel: string, descricao: string }[];
 }
 
@@ -49,6 +50,7 @@ export class KanbanBoardComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
   departamentos: any[] = [];
+  employees: any[] = []; // Array para armazenar os funcionários
   companyId: number | null = null;
   departmentId: number | null = null;
 
@@ -115,6 +117,7 @@ export class KanbanBoardComponent implements OnInit {
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
+        assignedUserId: ticket.assignedUserId || null, // Adicionado
         historico: [] // Podemos deixar vazio aqui, pois carregaremos ao abrir o diálogo
       };
 
@@ -217,11 +220,15 @@ export class KanbanBoardComponent implements OnInit {
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
+          assignedUserId: response.assignedUserId || null, // Adicionado
           historico: response.history || []
         };
 
         // Carregar departamentos
         this.loadDepartamentos();
+
+        // Carregar funcionários
+        this.fetchEmployees();
 
         this.detalheDialog = true;
       },
@@ -239,6 +246,7 @@ export class KanbanBoardComponent implements OnInit {
         title: this.selectedTask.nome,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
+        assignedUserId: this.selectedTask.assignedUserId, // Incluído para atualizar o usuário atribuído
         // Inclua outros campos necessários
       };
 
@@ -269,6 +277,26 @@ export class KanbanBoardComponent implements OnInit {
         },
         (error) => {
           console.error('Erro ao carregar departamentos', error);
+        }
+      );
+    }
+  }
+
+  fetchEmployees(event?: any) {
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+
+      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/users`, { headers }).subscribe(
+        (response) => {
+          // Mapear os funcionários para o formato correto para o dropdown
+          console.log('Lista de Funcionários:', response.content); // Adicione este log para depuração
+          this.employees = response.content.map((employee: any) => ({
+            label: employee.name, // Certifique-se de que 'name' seja o campo correto
+            value: employee.id // ID para o valor do dropdown
+          }));
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao buscar funcionários!' });
         }
       );
     }
