@@ -61,7 +61,7 @@
           [options]="employees"
           optionLabel="label"
           optionValue="value"
-          placeholder="Selecione o usuário"
+          [placeholder]="getAssignedUserName()"
           required
         >
           <ng-template pTemplate="selectedItem" let-selectedItem>
@@ -69,7 +69,8 @@
             <span *ngIf="!selectedItem">{{ getAssignedUserName() }}</span>
           </ng-template>
         </p-dropdown>
-      </div>   
+      </div>
+      
       <div class="field">
         <label>Prioridade</label>
         <p-dropdown
