@@ -42,7 +42,7 @@
     <div *ngIf="selectedTask">
       <div class="field">
         <label>Assunto</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+        <input type="text" pInputText [(ngModel)]="selectedTask.title" />
       </div>
       <div class="field">
         <label>Departamento</label>
@@ -55,16 +55,8 @@
           (onChange)="onDepartamentoChange($event)"
           required
         ></p-dropdown>
-      </div>
-      <div class="field">
-        <label>Descrição do chamado</label>
-        <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
-      </div>
-      <div class="field">
-        <label>Progresso</label>
-        <p-progressBar [value]="selectedTask.progresso"></p-progressBar>
-        <p-slider [(ngModel)]="selectedTask.progresso" [min]="0" [max]="100"></p-slider>
-      </div>
+      </div>      
+      
       <div class="field">
         <label>Data de Criação</label>
         <p-calendar [(ngModel)]="selectedTask.dataCriacao"></p-calendar>
@@ -73,17 +65,9 @@
         <label>Data de Resolução</label>
         <p-calendar [(ngModel)]="selectedTask.dataResolucao"></p-calendar>
       </div>
-
       <div class="field">
-        <label>Adicione arquivos se necessário</label>
-        <p-fileUpload name="file" url="http://seu-endpoint-api/upload"
-          accept=".pdf,.docx,.png,.jpg"
-          maxFileSize="1000000"
-          [auto]="true"
-          chooseLabel="Selecionar Arquivo"
-          uploadLabel="Enviar"
-          cancelLabel="Cancelar">
-        </p-fileUpload>
+        <label>Descrição da Atividade</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
       </div>
 
       <div class="field">
@@ -93,35 +77,7 @@
           [suggestions]="filteredUsers"
           placeholder="Pesquisar usuário">
         </p-autoComplete>
-        <label>Descrição da Atividade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
-        <button
-          pButton
-          label="Adicionar ao Histórico"
-          icon="pi pi-user-plus"
-          class="p-button-sm p-button"
-          (click)="assignUser()"
-          [disabled]="!selectedUser">
-        </button>
       </div>
-
-      <h3>Histórico</h3>
-      <p-table [value]="selectedTask.historico" responsiveLayout="scroll">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Data</th>
-            <th>Responsável</th>
-            <th>Descrição da Atividade</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-hist>
-          <tr>
-            <td>{{ hist.data }}</td>
-            <td>{{ hist.responsavel }}</td>
-            <td>{{ hist.descricao }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
     </div>
   </ng-template>
   <!-- Botões de Ação -->

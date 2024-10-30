@@ -24,7 +24,7 @@ interface Task {
   id: number;
   nome: string;
   departamento: number;
-  assunto: string;
+  title: string;
   descricao: string;
   progresso: number;
   dataCriacao: Date;
@@ -164,7 +164,7 @@ export class KanbanBoardComponent implements OnInit {
         id: ticket.id,
         nome: ticket.title,
         departamento: ticket.departmentId,
-        assunto: ticket.subject,
+        title: ticket.subject,
         descricao: ticket.description,
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
@@ -268,7 +268,7 @@ export class KanbanBoardComponent implements OnInit {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
-          assunto: response.subject,
+          title: response.subject,
           descricao: response.description,
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
