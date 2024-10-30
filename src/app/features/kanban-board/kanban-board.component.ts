@@ -2,21 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ToolbarModule } from 'primeng/toolbar';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { RippleModule } from 'primeng/ripple';
-import { CardModule } from 'primeng/card';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
-import { TableModule } from 'primeng/table';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { SliderModule } from 'primeng/slider';
-import { FileUploadModule } from 'primeng/fileupload';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 // Definir a interface para a tarefa
@@ -44,21 +36,13 @@ interface BoardColumn {
   imports: [
     CommonModule,
     FormsModule,
-    ToolbarModule,
     InputTextModule,
     DropdownModule,
     ButtonModule,
     ToastModule,
-    CardModule,
-    RippleModule,
     DialogModule,
     CalendarModule,
-    TableModule,
-    DragDropModule,
-    AutoCompleteModule,
-    ProgressBarModule,
-    SliderModule,
-    FileUploadModule
+    DragDropModule
   ],
   templateUrl: './kanban-board.component.html',
   styleUrls: ['./kanban-board.component.scss']
@@ -66,12 +50,7 @@ interface BoardColumn {
 export class KanbanBoardComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
-
-  filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
-
-  selectedUser: string | null = null; // Usuário selecionado para atribuição
   departamentos: any[] = [];
-  categorias: any[] = [];
   companyId: number | null = null;
   departmentId: number | null = null;
 
@@ -95,21 +74,6 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  // Função para adicionar o usuário ao histórico
-  assignUser() {
-    if (this.selectedUser && this.selectedTask) {
-      // Adicionar ao histórico
-      this.selectedTask.historico.push({
-        data: new Date(),
-        responsavel: this.selectedUser,
-        descricao: 'Usuário atribuído ao chamado'
-      });
-
-      // Limpar campo de usuário selecionado
-      this.selectedUser = null;
-    }
-  }
-
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('accessToken');
     const tokenType = sessionStorage.getItem('tokenType');
@@ -118,21 +82,6 @@ export class KanbanBoardComponent implements OnInit {
     } else {
       return new HttpHeaders();
     }
-  }
-
-  loadCategoriasByDepartamento(departamentoId: number) {
-    const headers = this.getAuthHeaders();
-    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`, { headers }).subscribe(
-      (response) => {
-        this.categorias = response.map((category: any) => ({
-          label: category.name,
-          value: category.id
-        }));
-      },
-      (error) => {
-        console.error('Erro ao carregar categorias', error);
-      }
-    );
   }
 
   loadTickets() {
@@ -276,12 +225,8 @@ export class KanbanBoardComponent implements OnInit {
           historico: response.history || []
         };
 
-        // Carregar departamentos e categorias
+        // Carregar departamentos
         this.loadDepartamentos();
-
-        if (this.selectedTask.departamento) {
-          this.loadCategoriasByDepartamento(this.selectedTask.departamento);
-        }
 
         this.detalheDialog = true;
       },
@@ -296,7 +241,7 @@ export class KanbanBoardComponent implements OnInit {
     if (this.selectedTask) {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
-        title: this.selectedTask.nome,
+        title: this.selectedTask.title,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         // Inclua outros campos necessários
@@ -330,15 +275,6 @@ export class KanbanBoardComponent implements OnInit {
           console.error('Erro ao carregar departamentos', error);
         }
       );
-    }
-  }
-
-  onDepartamentoChange(event: any) {
-    const departamentoSelecionado = event.value;
-    if (departamentoSelecionado) {
-      this.loadCategoriasByDepartamento(departamentoSelecionado);
-    } else {
-      this.categorias = [];
     }
   }
 }
