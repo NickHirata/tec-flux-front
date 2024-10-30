@@ -63,7 +63,12 @@
           optionValue="value"
           placeholder="Selecione o usuário"
           required
-        ></p-dropdown>
+        >
+          <ng-template pTemplate="selectedItem" let-selectedItem>
+            <span *ngIf="selectedItem && selectedItem.label">{{ selectedItem.label }}</span>
+            <span *ngIf="!selectedItem">{{ getAssignedUserName() }}</span>
+          </ng-template>
+        </p-dropdown>
       </div>   
       <div class="field">
         <label>Prioridade</label>

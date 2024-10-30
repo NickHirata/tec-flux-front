@@ -10,13 +10,14 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
 interface Task {
   id: number;
   nome: string;
   departamento: number;
   descricao: string;
-  prioridadeId: number; // Adicionado para armazenar o ID da prioridade
+  prioridadeId: number;
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
@@ -220,14 +221,14 @@ export class KanbanBoardComponent implements OnInit {
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
     this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
-      (response) => {
+      async (response) => {
         // Atualizar `selectedTask` com os dados completos do chamado
         this.selectedTask = {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 14, // Definir prioridade padrão se não estiver definida
+          prioridadeId: response.priorityId || 14,
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
@@ -235,10 +236,13 @@ export class KanbanBoardComponent implements OnInit {
           historico: response.history || []
         };
 
-        // Carregar departamentos e funcionários
+        // Carregar departamentos
         this.loadDepartamentos();
-        this.fetchEmployees();
 
+        // Carregar funcionários e aguardar o término
+        await this.fetchEmployees();
+
+        // Abrir o diálogo após os funcionários serem carregados
         this.detalheDialog = true;
       },
       (error) => {
@@ -256,7 +260,7 @@ export class KanbanBoardComponent implements OnInit {
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         assignedUserId: this.selectedTask.assignedUserId,
-        priorityId: this.selectedTask.prioridadeId, // Incluído para atualizar a prioridade
+        priorityId: this.selectedTask.prioridadeId,
         // Inclua outros campos necessários
       };
 
@@ -292,11 +296,11 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  fetchEmployees(event?: any) {
+  fetchEmployees(): Promise<void> {
     if (this.companyId !== null) {
       const headers = this.getAuthHeaders();
 
-      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/users`, { headers }).subscribe(
+      return lastValueFrom(this.http.get<any>(`http://localhost:8081/company/${this.companyId}/users`, { headers })).then(
         (response) => {
           // Mapear os funcionários para o formato correto para o dropdown
           this.employees = response.content.map((employee: any) => ({
@@ -309,5 +313,19 @@ export class KanbanBoardComponent implements OnInit {
         }
       );
     }
+    return Promise.resolve();
   }
+
+  getAssignedUserName(): string {
+    if (this.selectedTask && this.selectedTask.assignedUserId != null) {
+      if (this.employees && this.employees.length > 0) {
+        const assignedUser = this.employees.find(emp => emp.value === this.selectedTask!.assignedUserId);
+        return assignedUser ? assignedUser.label : 'Usuário não encontrado';
+      } else {
+        return 'Carregando funcionários...';
+      }
+    }
+    return 'Usuário não atribuído';
+  }
+  
 }
