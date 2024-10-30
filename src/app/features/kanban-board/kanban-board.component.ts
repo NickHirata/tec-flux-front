@@ -16,7 +16,6 @@ interface Task {
   id: number;
   nome: string;
   departamento: number;
-  title: string;
   descricao: string;
   progresso: number;
   dataCriacao: Date;
@@ -111,9 +110,8 @@ export class KanbanBoardComponent implements OnInit {
     tickets.forEach(ticket => {
       const task: Task = {
         id: ticket.id,
-        nome: ticket.title,
+        nome: ticket.title, // Usando 'title' do ticket como 'nome' da tarefa
         departamento: ticket.departmentId,
-        title: ticket.subject,
         descricao: ticket.description,
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
@@ -215,9 +213,8 @@ export class KanbanBoardComponent implements OnInit {
         // Atualizar `selectedTask` com os dados completos do chamado
         this.selectedTask = {
           id: response.id,
-          nome: response.title,
+          nome: response.title, // Usando 'title' como 'nome'
           departamento: response.departmentId,
-          title: response.subject,
           descricao: response.description,
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
@@ -241,7 +238,7 @@ export class KanbanBoardComponent implements OnInit {
     if (this.selectedTask) {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
-        title: this.selectedTask.title,
+        title: this.selectedTask.nome, // Usando 'nome' para atualizar o 'title' do ticket
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         // Inclua outros campos necessários
