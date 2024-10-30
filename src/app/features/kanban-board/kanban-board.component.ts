@@ -67,13 +67,13 @@ export class KanbanBoardComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
 
-  users = ['João', 'Maria', 'José', 'Ana', 'Carlos']; // Lista de usuários
   filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
 
   selectedUser: string | null = null; // Usuário selecionado para atribuição
   departamentos: any[] = [];
   categorias: any[] = [];
   companyId: number | null = null;
+  departmentId: number | null = null;
 
   boardColumns: BoardColumn[] = [
     { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
@@ -85,18 +85,14 @@ export class KanbanBoardComponent implements OnInit {
 
   ngOnInit() {
     const storedCompanyId = sessionStorage.getItem('companyId');
-    if (storedCompanyId) {
+    const storedDepartmentId = sessionStorage.getItem('departmentId');
+    if (storedCompanyId && storedDepartmentId) {
       this.companyId = Number(storedCompanyId);
+      this.departmentId = Number(storedDepartmentId);
       this.loadTickets();
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID ou Department ID não encontrado. Por favor, faça login novamente.' });
     }
-  }
-
-  // Função para filtrar usuários
-  filterUsers(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredUsers = this.users.filter(user => user.toLowerCase().includes(query));
   }
 
   // Função para adicionar o usuário ao histórico
@@ -141,14 +137,10 @@ export class KanbanBoardComponent implements OnInit {
 
   loadTickets() {
     const headers = this.getAuthHeaders();
-    const userId = sessionStorage.getItem('id');
-    if (userId !== null) {
+    const departmentId = this.departmentId;
+    if (departmentId !== null) {
       let params = new HttpParams();
-
-      // Adicionar apenas parâmetros com valores definidos
-      if (userId) {
-        params = params.set('userId', userId);
-      }
+      params = params.set('departmentId', departmentId.toString());
 
       this.http.get<any[]>('http://localhost:8081/tickets', { headers, params }).subscribe(
         (data) => {
@@ -159,7 +151,7 @@ export class KanbanBoardComponent implements OnInit {
         }
       );
     } else {
-      console.error('User ID não encontrado no sessionStorage.');
+      console.error('Department ID não encontrado.');
     }
   }
 
