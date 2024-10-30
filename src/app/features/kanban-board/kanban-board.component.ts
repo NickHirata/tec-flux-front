@@ -16,10 +16,11 @@ interface Task {
   nome: string;
   departamento: number;
   descricao: string;
+  prioridadeId: number; // Adicionado para armazenar o ID da prioridade
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
-  assignedUserId: number | null; // Adicionado para armazenar o ID do usuário atribuído
+  assignedUserId: number | null;
   historico: { data: Date, responsavel: string, descricao: string }[];
 }
 
@@ -50,9 +51,17 @@ export class KanbanBoardComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
   departamentos: any[] = [];
-  employees: any[] = []; // Array para armazenar os funcionários
+  employees: any[] = [];
   companyId: number | null = null;
   departmentId: number | null = null;
+
+  prioridades: any[] = [
+    { label: 'CRÍTICO', value: 10 },
+    { label: 'URGENTE', value: 11 },
+    { label: 'ALTA', value: 12 },
+    { label: 'MÉDIA', value: 13 },
+    { label: 'BAIXA', value: 14 },
+  ];
 
   boardColumns: BoardColumn[] = [
     { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
@@ -114,11 +123,12 @@ export class KanbanBoardComponent implements OnInit {
         nome: ticket.title,
         departamento: ticket.departmentId,
         descricao: ticket.description,
+        prioridadeId: ticket.priorityId || 14, // Definir prioridade padrão como 'BAIXA' (14) se não estiver definida
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-        assignedUserId: ticket.assignedUserId || null, // Adicionado
-        historico: [] // Podemos deixar vazio aqui, pois carregaremos ao abrir o diálogo
+        assignedUserId: ticket.assignedUserId || null,
+        historico: [] // Carregado ao abrir o diálogo
       };
 
       // Mapeie o status do ticket para a coluna correspondente
@@ -217,17 +227,16 @@ export class KanbanBoardComponent implements OnInit {
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
+          prioridadeId: response.priorityId || 14, // Definir prioridade padrão se não estiver definida
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
-          assignedUserId: response.assignedUserId || null, // Adicionado
+          assignedUserId: response.assignedUserId || null,
           historico: response.history || []
         };
 
-        // Carregar departamentos
+        // Carregar departamentos e funcionários
         this.loadDepartamentos();
-
-        // Carregar funcionários
         this.fetchEmployees();
 
         this.detalheDialog = true;
@@ -246,7 +255,8 @@ export class KanbanBoardComponent implements OnInit {
         title: this.selectedTask.nome,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
-        assignedUserId: this.selectedTask.assignedUserId, // Incluído para atualizar o usuário atribuído
+        assignedUserId: this.selectedTask.assignedUserId,
+        priorityId: this.selectedTask.prioridadeId, // Incluído para atualizar a prioridade
         // Inclua outros campos necessários
       };
 
@@ -289,10 +299,9 @@ export class KanbanBoardComponent implements OnInit {
       this.http.get<any>(`http://localhost:8081/company/${this.companyId}/users`, { headers }).subscribe(
         (response) => {
           // Mapear os funcionários para o formato correto para o dropdown
-          console.log('Lista de Funcionários:', response.content); // Adicione este log para depuração
           this.employees = response.content.map((employee: any) => ({
-            label: employee.name, // Certifique-se de que 'name' seja o campo correto
-            value: employee.id // ID para o valor do dropdown
+            label: employee.name,
+            value: employee.id
           }));
         },
         (error) => {
