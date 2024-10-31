@@ -2,33 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ToolbarModule } from 'primeng/toolbar';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
-import { RippleModule } from 'primeng/ripple';
-import { CardModule } from 'primeng/card';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
-import { TableModule } from 'primeng/table';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { SliderModule } from 'primeng/slider';
-import { FileUploadModule } from 'primeng/fileupload';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 
-// Definir a interface para a tarefa
 interface Task {
   id: number;
   nome: string;
   departamento: number;
-  assunto: string;
   descricao: string;
+  prioridadeId: number;
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
+  assignedUserId: number | null;
   historico: { data: Date, responsavel: string, descricao: string }[];
 }
 
@@ -44,21 +37,13 @@ interface BoardColumn {
   imports: [
     CommonModule,
     FormsModule,
-    ToolbarModule,
     InputTextModule,
     DropdownModule,
     ButtonModule,
     ToastModule,
-    CardModule,
-    RippleModule,
     DialogModule,
     CalendarModule,
-    TableModule,
-    DragDropModule,
-    AutoCompleteModule,
-    ProgressBarModule,
-    SliderModule,
-    FileUploadModule
+    DragDropModule
   ],
   templateUrl: './kanban-board.component.html',
   styleUrls: ['./kanban-board.component.scss']
@@ -66,14 +51,18 @@ interface BoardColumn {
 export class KanbanBoardComponent implements OnInit {
   detalheDialog: boolean = false;
   selectedTask: Task | null = null;
-
-  users = ['João', 'Maria', 'José', 'Ana', 'Carlos']; // Lista de usuários
-  filteredUsers: string[] = []; // Lista para armazenar os resultados filtrados
-
-  selectedUser: string | null = null; // Usuário selecionado para atribuição
   departamentos: any[] = [];
-  categorias: any[] = [];
+  employees: any[] = [];
   companyId: number | null = null;
+  departmentId: number | null = null;
+
+  prioridades: any[] = [
+    { label: 'CRÍTICO', value: 10 },
+    { label: 'URGENTE', value: 11 },
+    { label: 'ALTA', value: 12 },
+    { label: 'MÉDIA', value: 13 },
+    { label: 'BAIXA', value: 14 },
+  ];
 
   boardColumns: BoardColumn[] = [
     { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
@@ -85,32 +74,13 @@ export class KanbanBoardComponent implements OnInit {
 
   ngOnInit() {
     const storedCompanyId = sessionStorage.getItem('companyId');
-    if (storedCompanyId) {
+    const storedDepartmentId = sessionStorage.getItem('departmentId');
+    if (storedCompanyId && storedDepartmentId) {
       this.companyId = Number(storedCompanyId);
+      this.departmentId = Number(storedDepartmentId);
       this.loadTickets();
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID não encontrado. Por favor, faça login novamente.' });
-    }
-  }
-
-  // Função para filtrar usuários
-  filterUsers(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredUsers = this.users.filter(user => user.toLowerCase().includes(query));
-  }
-
-  // Função para adicionar o usuário ao histórico
-  assignUser() {
-    if (this.selectedUser && this.selectedTask) {
-      // Adicionar ao histórico
-      this.selectedTask.historico.push({
-        data: new Date(),
-        responsavel: this.selectedUser,
-        descricao: 'Usuário atribuído ao chamado'
-      });
-
-      // Limpar campo de usuário selecionado
-      this.selectedUser = null;
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID ou Department ID não encontrado. Por favor, faça login novamente.' });
     }
   }
 
@@ -124,31 +94,12 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  loadCategoriasByDepartamento(departamentoId: number) {
-    const headers = this.getAuthHeaders();
-    this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`, { headers }).subscribe(
-      (response) => {
-        this.categorias = response.map((category: any) => ({
-          label: category.name,
-          value: category.id
-        }));
-      },
-      (error) => {
-        console.error('Erro ao carregar categorias', error);
-      }
-    );
-  }
-
   loadTickets() {
     const headers = this.getAuthHeaders();
-    const userId = sessionStorage.getItem('id');
-    if (userId !== null) {
+    const departmentId = this.departmentId;
+    if (departmentId !== null) {
       let params = new HttpParams();
-
-      // Adicionar apenas parâmetros com valores definidos
-      if (userId) {
-        params = params.set('userId', userId);
-      }
+      params = params.set('departmentId', departmentId.toString());
 
       this.http.get<any[]>('http://localhost:8081/tickets', { headers, params }).subscribe(
         (data) => {
@@ -159,7 +110,7 @@ export class KanbanBoardComponent implements OnInit {
         }
       );
     } else {
-      console.error('User ID não encontrado no sessionStorage.');
+      console.error('Department ID não encontrado.');
     }
   }
 
@@ -172,23 +123,24 @@ export class KanbanBoardComponent implements OnInit {
         id: ticket.id,
         nome: ticket.title,
         departamento: ticket.departmentId,
-        assunto: ticket.subject,
         descricao: ticket.description,
+        prioridadeId: ticket.priorityId || 14, // Definir prioridade padrão como 'BAIXA' (14) se não estiver definida
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-        historico: [] // Podemos deixar vazio aqui, pois carregaremos ao abrir o diálogo
+        assignedUserId: ticket.assignedUserId || null,
+        historico: [] // Carregado ao abrir o diálogo
       };
 
       // Mapeie o status do ticket para a coluna correspondente
       switch (ticket.statusId) {
-        case 1: // Status ID para 'A Fazer'
+        case 1:
           this.boardColumns[0].tasks.push(task);
           break;
-        case 2: // Status ID para 'Em Progresso'
+        case 2:
           this.boardColumns[1].tasks.push(task);
           break;
-        case 3: // Status ID para 'Concluído'
+        case 3:
           this.boardColumns[2].tasks.push(task);
           break;
         default:
@@ -201,11 +153,11 @@ export class KanbanBoardComponent implements OnInit {
   getProgressValue(statusId: number): number {
     switch (statusId) {
       case 1:
-        return 0; // A Fazer
+        return 0;
       case 2:
-        return 50; // Em Progresso
+        return 50;
       case 3:
-        return 100; // Concluído
+        return 100;
       default:
         return 0;
     }
@@ -239,16 +191,15 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getStatusIdFromColumnIndex(columnIndex: number): number {
-    // Mapear os índices das colunas para os IDs de status correspondentes
     switch (columnIndex) {
       case 0:
-        return 1; // Status ID para 'A Fazer'
+        return 1;
       case 1:
-        return 2; // Status ID para 'Em Progresso'
+        return 2;
       case 2:
-        return 3; // Status ID para 'Concluído'
+        return 3;
       default:
-        return 1; // Padrão
+        return 1;
     }
   }
 
@@ -270,27 +221,28 @@ export class KanbanBoardComponent implements OnInit {
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
     this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
-      (response) => {
+      async (response) => {
         // Atualizar `selectedTask` com os dados completos do chamado
         this.selectedTask = {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
-          assunto: response.subject,
           descricao: response.description,
+          prioridadeId: response.priorityId || 14,
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
+          assignedUserId: response.assignedUserId || null,
           historico: response.history || []
         };
 
-        // Carregar departamentos e categorias
+        // Carregar departamentos
         this.loadDepartamentos();
 
-        if (this.selectedTask.departamento) {
-          this.loadCategoriasByDepartamento(this.selectedTask.departamento);
-        }
+        // Carregar funcionários e aguardar o término
+        await this.fetchEmployees();
 
+        // Abrir o diálogo após os funcionários serem carregados
         this.detalheDialog = true;
       },
       (error) => {
@@ -307,6 +259,8 @@ export class KanbanBoardComponent implements OnInit {
         title: this.selectedTask.nome,
         description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
+        assignedUserId: this.selectedTask.assignedUserId,
+        priorityId: this.selectedTask.prioridadeId,
         // Inclua outros campos necessários
       };
 
@@ -327,9 +281,10 @@ export class KanbanBoardComponent implements OnInit {
   loadDepartamentos() {
     if (this.companyId !== null) {
       const headers = this.getAuthHeaders();
-      this.http.get<any[]>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
+      this.http.get<any>(`http://localhost:8081/company/${this.companyId}/departments`, { headers }).subscribe(
         (response) => {
-          this.departamentos = response.map((department: any) => ({
+          // Use response.content se a API retornar os departamentos dentro de 'content'
+          this.departamentos = response.content.map((department: any) => ({
             label: department.name,
             value: department.id
           }));
@@ -341,12 +296,36 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  onDepartamentoChange(event: any) {
-    const departamentoSelecionado = event.value;
-    if (departamentoSelecionado) {
-      this.loadCategoriasByDepartamento(departamentoSelecionado);
-    } else {
-      this.categorias = [];
+  fetchEmployees(): Promise<void> {
+    if (this.companyId !== null) {
+      const headers = this.getAuthHeaders();
+
+      return lastValueFrom(this.http.get<any>(`http://localhost:8081/company/${this.companyId}/users`, { headers })).then(
+        (response) => {
+          // Mapear os funcionários para o formato correto para o dropdown
+          this.employees = response.content.map((employee: any) => ({
+            label: employee.name,
+            value: employee.id
+          }));
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao buscar funcionários!' });
+        }
+      );
     }
+    return Promise.resolve();
   }
+
+  getAssignedUserName(): string {
+    if (this.selectedTask && this.selectedTask.assignedUserId != null) {
+      if (this.employees && this.employees.length > 0) {
+        const assignedUser = this.employees.find(emp => emp.value === this.selectedTask!.assignedUserId);
+        return assignedUser ? assignedUser.label : 'Usuário não encontrado';
+      } else {
+        return 'Carregando funcionários...';
+      }
+    }
+    return 'Usuário não atribuído';
+  }
+  
 }

@@ -3,7 +3,6 @@
     <div class="card kanban-card">
       <h2>Kanban Board</h2>
       <p-toast></p-toast>
-
     
       <!-- Tabuleiro Kanban -->
       <div class="kanban-board">
@@ -42,7 +41,7 @@
     <div *ngIf="selectedTask">
       <div class="field">
         <label>Assunto</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.assunto" />
+        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
       </div>
       <div class="field">
         <label>Departamento</label>
@@ -52,18 +51,36 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Selecione o Departamento"
-          (onChange)="onDepartamentoChange($event)"
           required
         ></p-dropdown>
-      </div>
+      </div>      
       <div class="field">
-        <label>Descrição do chamado</label>
-        <textarea pInputTextarea [(ngModel)]="selectedTask.descricao"></textarea>
+        <label>Atribuir para:</label>
+        <p-dropdown
+          [(ngModel)]="selectedTask.assignedUserId"
+          [options]="employees"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="getAssignedUserName()"
+          required
+        >
+          <ng-template pTemplate="selectedItem" let-selectedItem>
+            <span *ngIf="selectedItem && selectedItem.label">{{ selectedItem.label }}</span>
+            <span *ngIf="!selectedItem">{{ getAssignedUserName() }}</span>
+          </ng-template>
+        </p-dropdown>
       </div>
+      
       <div class="field">
-        <label>Progresso</label>
-        <p-progressBar [value]="selectedTask.progresso"></p-progressBar>
-        <p-slider [(ngModel)]="selectedTask.progresso" [min]="0" [max]="100"></p-slider>
+        <label>Prioridade</label>
+        <p-dropdown
+          [(ngModel)]="selectedTask.prioridadeId"
+          [options]="prioridades"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecione a Prioridade"
+          required
+        ></p-dropdown>
       </div>
       <div class="field">
         <label>Data de Criação</label>
@@ -73,56 +90,10 @@
         <label>Data de Resolução</label>
         <p-calendar [(ngModel)]="selectedTask.dataResolucao"></p-calendar>
       </div>
-
       <div class="field">
-        <label>Adicione arquivos se necessário</label>
-        <p-fileUpload name="file" url="http://seu-endpoint-api/upload"
-          accept=".pdf,.docx,.png,.jpg"
-          maxFileSize="1000000"
-          [auto]="true"
-          chooseLabel="Selecionar Arquivo"
-          uploadLabel="Enviar"
-          cancelLabel="Cancelar">
-        </p-fileUpload>
-      </div>
-
-      <div class="field">
-        <label>Atribuir a Usuário</label>
-        <p-autoComplete
-          [(ngModel)]="selectedUser"
-          [suggestions]="filteredUsers"
-          (completeMethod)="filterUsers($event)"
-          placeholder="Pesquisar usuário">
-        </p-autoComplete>
         <label>Descrição da Atividade</label>
         <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
-        <button
-          pButton
-          label="Adicionar ao Histórico"
-          icon="pi pi-user-plus"
-          class="p-button-sm p-button"
-          (click)="assignUser()"
-          [disabled]="!selectedUser">
-        </button>
       </div>
-
-      <h3>Histórico</h3>
-      <p-table [value]="selectedTask.historico" responsiveLayout="scroll">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Data</th>
-            <th>Responsável</th>
-            <th>Descrição da Atividade</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-hist>
-          <tr>
-            <td>{{ hist.data }}</td>
-            <td>{{ hist.responsavel }}</td>
-            <td>{{ hist.descricao }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
     </div>
   </ng-template>
   <!-- Botões de Ação -->
