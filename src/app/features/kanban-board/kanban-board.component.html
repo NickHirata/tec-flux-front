@@ -41,8 +41,8 @@
     <div *ngIf="selectedTask">
       <div class="field">
         <label>Assunto</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
-      </div>
+        <input type="text" pInputText [(ngModel)]="selectedTask.nome" readonly />
+    </div>    
       <div class="field">
         <label>Departamento</label>
         <p-dropdown
@@ -73,6 +73,7 @@
       
       <div class="field">
         <label>Prioridade</label>
+        <input type="text" pInputText [(ngModel)]="selectedTask.prioridadeId" />
         <p-dropdown
           [(ngModel)]="selectedTask.prioridadeId"
           [options]="prioridades"
@@ -92,7 +93,7 @@
       </div>
       <div class="field">
         <label>Descrição da Atividade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
+        <input type="text" pInputText [(ngModel)]="selectedTask.descricao" readonly />
       </div>
     </div>
   </ng-template>

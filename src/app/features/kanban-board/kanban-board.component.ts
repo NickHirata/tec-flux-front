@@ -124,7 +124,7 @@ export class KanbanBoardComponent implements OnInit {
         nome: ticket.title,
         departamento: ticket.departmentId,
         descricao: ticket.description,
-        prioridadeId: ticket.priorityId || 14, // Definir prioridade padrão como 'BAIXA' (14) se não estiver definida
+        prioridadeId: ticket.priorityId,
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
@@ -256,8 +256,6 @@ export class KanbanBoardComponent implements OnInit {
     if (this.selectedTask) {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
-        title: this.selectedTask.nome,
-        description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         assignedUserId: this.selectedTask.assignedUserId,
         priorityId: this.selectedTask.prioridadeId,
