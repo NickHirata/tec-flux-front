@@ -70,19 +70,10 @@
           </ng-template>
         </p-dropdown>
       </div>
-      
       <div class="field">
         <label>Prioridade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.prioridadeId" />
-        <p-dropdown
-          [(ngModel)]="selectedTask.prioridadeId"
-          [options]="prioridades"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Selecione a Prioridade"
-          required
-        ></p-dropdown>
-      </div>
+        <input type="text" pInputText [(ngModel)]="selectedTask.prioridadeNome" readonly />
+      </div>      
       <div class="field">
         <label>Data de Criação</label>
         <p-calendar [(ngModel)]="selectedTask.dataCriacao"></p-calendar>
