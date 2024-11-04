@@ -18,7 +18,7 @@ interface Task {
   departamento: number;
   descricao: string;
   prioridadeId: number;
-  prioridadeNome: string; // Novo campo para o nome da prioridade
+  prioridadeNome: string;
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
@@ -63,7 +63,7 @@ export class KanbanBoardComponent implements OnInit {
     { label: 'ALTA', value: 12 },
     { label: 'MÉDIA', value: 13 },
     { label: 'BAIXA', value: 14 },
-  ];
+  ];  
 
   boardColumns: BoardColumn[] = [
     { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
@@ -115,42 +115,43 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
-  // Inicializar o campo `prioridadeNome` ao carregar os tickets
-initializeBoardColumns(tickets: any[]) {
-  this.boardColumns.forEach(column => column.tasks = []);
+  initializeBoardColumns(tickets: any[]) {
+    this.boardColumns.forEach(column => column.tasks = []);
 
-  tickets.forEach(ticket => {
-    const prioridade = this.prioridades.find(p => p.value === ticket.priorityId);
-    const task: Task = {
-      id: ticket.id,
-      nome: ticket.title,
-      departamento: ticket.departmentId,
-      descricao: ticket.description,
-      prioridadeId: ticket.priorityId,
-      prioridadeNome: prioridade ? prioridade.label : 'Desconhecida', // Definir prioridadeNome
-      progresso: this.getProgressValue(ticket.statusId),
-      dataCriacao: new Date(ticket.createdAt),
-      dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-      assignedUserId: ticket.assignedUserId || null,
-      historico: [] // Carregado ao abrir o diálogo
-    };
+    tickets.forEach(ticket => {
+      const prioridade = this.prioridades.find(p => p.value === ticket.priorityId);
+      console.log('Ticket ID:', ticket.id, 'Priority ID:', ticket.priorityId, 'Prioridade Encontrada:', prioridade);
+      
+      const task: Task = {
+        id: ticket.id,
+        nome: ticket.title,
+        departamento: ticket.departmentId,
+        descricao: ticket.description,
+        prioridadeId: ticket.priorityId,
+        prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
+        progresso: this.getProgressValue(ticket.statusId),
+        dataCriacao: new Date(ticket.createdAt),
+        dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
+        assignedUserId: ticket.assignedUserId || null,
+        historico: []
+      };
 
-    switch (ticket.statusId) {
-      case 1:
-        this.boardColumns[0].tasks.push(task);
-        break;
-      case 2:
-        this.boardColumns[1].tasks.push(task);
-        break;
-      case 3:
-        this.boardColumns[2].tasks.push(task);
-        break;
-      default:
-        this.boardColumns[0].tasks.push(task);
-        break;
-    }
-  });
-}
+      switch (ticket.statusId) {
+        case 1:
+          this.boardColumns[0].tasks.push(task);
+          break;
+        case 2:
+          this.boardColumns[1].tasks.push(task);
+          break;
+        case 3:
+          this.boardColumns[2].tasks.push(task);
+          break;
+        default:
+          this.boardColumns[0].tasks.push(task);
+          break;
+      }
+    });
+  }
 
   getProgressValue(statusId: number): number {
     switch (statusId) {
@@ -231,8 +232,8 @@ initializeBoardColumns(tickets: any[]) {
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 14,
-          prioridadeNome: prioridade ? prioridade.label : 'Desconhecida', // Definir prioridadeNome aqui
+          prioridadeId: response.priorityId || 10,
+          prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
@@ -329,5 +330,4 @@ initializeBoardColumns(tickets: any[]) {
     }
     return 'Usuário não atribuído';
   }
-  
 }
