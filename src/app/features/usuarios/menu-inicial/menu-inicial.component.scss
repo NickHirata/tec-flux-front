@@ -5,7 +5,9 @@ body {
   background-color: #F4F5F7;
   margin: 0;
   padding: 0;
+  height: 50vh; /* Mantendo a altura em 50vh */
 }
+
 .system-header {
   text-align: center;
   margin-top: 20px;
@@ -13,9 +15,9 @@ body {
 
 .menu-section {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 100%; /* Faz a seção ocupar toda a altura do body */
 }
 
 .menu-grid {
@@ -23,9 +25,14 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
   max-width: 800px;
+  margin: 0 auto; /* Centraliza a grid */
 }
 
 .menu-item {
+  display: flex; /* Flex para centralizar conteúdo */
+  flex-direction: column; /* Coloca os itens em coluna */
+  align-items: center; /* Centraliza horizontalmente */
+  justify-content: center; /* Centraliza verticalmente */
   text-align: center;
   background-color: #f8f9fa;
   padding: 20px;
@@ -47,12 +54,14 @@ body {
   margin-top: 0;
   font-size: 18px;
 }
+
 .router-link-active {
   border: 2px solid #61AFFF;
   border-radius: 8px;
   padding: 10px;
   background-color: #e0f3ff;
 }
+
 a {
   text-decoration: none;
   color: inherit;
