@@ -24,7 +24,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
-  max-width: 800px;
+  max-width: 90%; /* Ajuste a largura máxima para 90% da tela */
   margin: 0 auto; /* Centraliza a grid */
 }
 
@@ -70,4 +70,34 @@ a {
 
 a:hover {
   color: #0079BF;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+  .menu-item {
+    padding: 15px; /* Menor padding em telas menores */
+  }
+
+  .menu-item img {
+    width: 40px; /* Reduzir tamanho da imagem */
+    height: 40px;
+  }
+
+  .menu-item h3 {
+    font-size: 16px; /* Reduzir tamanho da fonte */
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-section {
+    flex-direction: column; /* Altera para coluna em telas muito pequenas */
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr; /* Um item por linha */
+  }
+
+  .menu-item {
+    margin-bottom: 20px; /* Espaço entre itens */
+  }
 }
