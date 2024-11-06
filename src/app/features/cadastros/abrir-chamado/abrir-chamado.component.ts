@@ -114,6 +114,22 @@ export class AbrirChamadoComponent implements OnInit {
     }
   }
 
+  excluirChamado(chamadoId: number) {
+    if (confirm('Tem certeza que deseja excluir este chamado?')) {
+      const headers = this.getAuthHeaders();
+      this.http.delete(`http://localhost:8081/tickets/${chamadoId}`, { headers }).subscribe(
+        () => {
+          this.chamados = this.chamados.filter(chamado => chamado.id !== chamadoId);
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Chamado excluído com sucesso!' });
+        },
+        (error) => {
+          console.error('Erro ao excluir chamado', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao excluir chamado' });
+        }
+      );
+    }
+  }
+  
   loadCategoriasByDepartamento(departamentoId: number) {
     const headers = this.getAuthHeaders();
     this.http.get<any[]>(`http://localhost:8081/departments/${departamentoId}/categories`, { headers }).subscribe(
