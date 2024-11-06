@@ -60,12 +60,12 @@ export class AbrirChamadoComponent implements OnInit {
   departamentos: any[] = [];
   categorias: any[] = [];
   prioridades: any[] = [
-    { label: 'CRITICO', value: '10' },
-    { label: 'URGENTE', value: '11' },
-    { label: 'ALTA', value: '12' },
-    { label: 'MEDIA', value: '13' },
-    { label: 'BAIXA', value: '14' },
-  ];
+    { label: 'CRÍTICO', value: 10 },
+    { label: 'URGENTE', value: 11 },
+    { label: 'ALTA', value: 12 },
+    { label: 'MÉDIA', value: 13 },
+    { label: 'BAIXA', value: 14 },
+  ];  
   companyId: number | null = null;
 
   constructor(
