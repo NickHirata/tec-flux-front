@@ -58,17 +58,17 @@ export class KanbanBoardComponent implements OnInit {
   departmentId: number | null = null;
 
   prioridades: any[] = [
-    { label: 'CRÍTICO', value: 10 },
+    { label: 'CRITICO', value: 10 },
     { label: 'URGENTE', value: 11 },
     { label: 'ALTA', value: 12 },
-    { label: 'MÉDIA', value: 13 },
+    { label: 'MEDIA', value: 13 },
     { label: 'BAIXA', value: 14 },
   ];  
 
   boardColumns: BoardColumn[] = [
-    { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
-    { name: 'Em Progresso', tasks: [], color: '#64B5F6' },
-    { name: 'Concluído', tasks: [], color: '#0288D1' }
+    { name: 'A Fazer', tasks: [], color: '#B3E5FC' }, // OPEN
+    { name: 'Em Progresso', tasks: [], color: '#64B5F6' }, // IN_PROGRESS
+    { name: 'Concluído', tasks: [], color: '#0288D1' } // RESOLVED
   ];
 
   constructor(private messageService: MessageService, private http: HttpClient) {}
@@ -80,10 +80,13 @@ export class KanbanBoardComponent implements OnInit {
       this.companyId = Number(storedCompanyId);
       this.departmentId = Number(storedDepartmentId);
       this.loadTickets();
+      this.loadDepartamentos(); // Verifique se esta chamada está presente
+      this.fetchEmployees(); // Verifique se esta chamada está presente
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID ou Department ID não encontrado. Por favor, faça login novamente.' });
     }
   }
+  
 
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('accessToken');
@@ -115,40 +118,45 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
+  // Função para normalizar strings (remover acentos)
+  private normalizeString(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   initializeBoardColumns(tickets: any[]) {
     this.boardColumns.forEach(column => column.tasks = []);
-
+  
     tickets.forEach(ticket => {
-      const prioridade = this.prioridades.find(p => p.value === ticket.priorityId);
-      console.log('Ticket ID:', ticket.id, 'Priority ID:', ticket.priorityId, 'Prioridade Encontrada:', prioridade);
-      
-      const task: Task = {
-        id: ticket.id,
-        nome: ticket.title,
-        departamento: ticket.departmentId,
-        descricao: ticket.description,
-        prioridadeId: ticket.priorityId,
-        prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
-        progresso: this.getProgressValue(ticket.statusId),
-        dataCriacao: new Date(ticket.createdAt),
-        dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-        assignedUserId: ticket.assignedUserId || null,
-        historico: []
-      };
-
-      switch (ticket.statusId) {
-        case 1:
-          this.boardColumns[0].tasks.push(task);
-          break;
-        case 2:
-          this.boardColumns[1].tasks.push(task);
-          break;
-        case 3:
-          this.boardColumns[2].tasks.push(task);
-          break;
-        default:
-          this.boardColumns[0].tasks.push(task);
-          break;
+      // Verifica se o status da tarefa está entre os três desejados
+      if (['OPEN', 'IN_PROGRESS', 'RESOLVED'].includes(ticket.statusName)) {
+        const prioridade = this.prioridades.find(p => this.normalizeString(p.label) === this.normalizeString(ticket.priorityName));
+  
+        const task: Task = {
+          id: ticket.id,
+          nome: ticket.title,
+          departamento: ticket.departmentId,
+          descricao: ticket.description,
+          prioridadeId: prioridade ? prioridade.value : 0,
+          prioridadeNome: ticket.priorityName || 'Desconhecida',
+          progresso: this.getProgressValue(ticket.statusId),
+          dataCriacao: new Date(ticket.createdAt),
+          dataResolucao: ticket.dueDate ? new Date(ticket.dueDate) : null,
+          assignedUserId: ticket.userAssignedName ? ticket.userAssignedName : null,
+          historico: []
+        };
+  
+        // Adiciona a tarefa na coluna correta com base no status
+        switch (ticket.statusName) {
+          case 'OPEN':
+            this.boardColumns[0].tasks.push(task);
+            break;
+          case 'IN_PROGRESS':
+            this.boardColumns[1].tasks.push(task);
+            break;
+          case 'RESOLVED':
+            this.boardColumns[2].tasks.push(task);
+            break;
+        }
       }
     });
   }
@@ -172,82 +180,85 @@ export class KanbanBoardComponent implements OnInit {
 
   onTaskDrop(event: CdkDragDrop<Task[]>, columnIndex: number) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+  
       const movedTask = event.container.data[event.currentIndex];
-      const newStatusId = this.getStatusIdFromColumnIndex(columnIndex);
-
+      const newStatusName = this.getStatusNameFromColumnIndex(columnIndex);
+  
       // Atualize o status do chamado via API
-      this.updateTicketStatus(movedTask.id, newStatusId);
+      this.updateTicketStatus(movedTask.id, newStatusName);
     }
   }
-
-  getStatusIdFromColumnIndex(columnIndex: number): number {
+  
+  getStatusNameFromColumnIndex(columnIndex: number): string {
     switch (columnIndex) {
       case 0:
-        return 1;
+        return 'OPEN';
       case 1:
-        return 2;
+        return 'IN_PROGRESS';
       case 2:
-        return 3;
+        return 'RESOLVED';
       default:
-        return 1;
+        return 'OPEN';
     }
   }
 
-  updateTicketStatus(ticketId: number, statusId: number) {
+  updateTicketStatus(ticketId: number, statusName: string) {
     const headers = this.getAuthHeaders();
-    const body = { statusId };
-
-    this.http.put(`http://localhost:8081/tickets/${ticketId}/status`, body, { headers }).subscribe(
-      response => {
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
-      },
-      error => {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
-        console.error('Erro ao atualizar status do chamado', error);
-      }
-    );
+    
+    // Mapeie o nome do status para o ID correspondente
+    const statusIdMap: { [key: string]: number } = {
+      'OPEN': 1,
+      'IN_PROGRESS': 2,
+      'RESOLVED': 3
+    };
+  
+    const statusId = statusIdMap[statusName];
+  
+    if (statusId) {
+      const body = { statusId }; // Envia o ID do status no corpo da solicitação
+  
+      this.http.put(`http://localhost:8081/tickets/${ticketId}`, body, { headers }).subscribe(
+        response => {
+          console.log('Resposta da API após atualização:', response); // Log para verificar o retorno
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
+  
+          // Opcional: Atualize a interface após a confirmação da API
+          this.loadTickets();
+        },
+        error => {
+          console.error('Erro ao atualizar status do chamado', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
+        }
+      );
+    } else {
+      console.error('Status inválido fornecido:', statusName);
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Status inválido fornecido' });
+    }
   }
+  
 
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
     this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
-      async (response) => {
-        const prioridade = this.prioridades.find(p => p.value === response.priorityId);
-        // Atualizar `selectedTask` com os dados completos do chamado
+      (response) => {
         this.selectedTask = {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 10,
-          prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
+          prioridadeId: response.priorityId || 10, // ajuste conforme necessário
+          prioridadeNome: response.priorityName || 'Desconhecida',
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
           assignedUserId: response.assignedUserId || null,
           historico: response.history || []
         };
-  
-        // Carregar departamentos
-        this.loadDepartamentos();
-  
-        // Carregar funcionários e aguardar o término
-        await this.fetchEmployees();
-  
-        // Abrir o diálogo após os funcionários serem carregados
+
+        console.log('Prioridade selecionada:', this.selectedTask.prioridadeNome);
         this.detalheDialog = true;
       },
       (error) => {
@@ -255,7 +266,7 @@ export class KanbanBoardComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao carregar detalhes do chamado' });
       }
     );
-  }  
+  }
 
   saveTaskDetails() {
     if (this.selectedTask) {
