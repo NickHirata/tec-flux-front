@@ -208,8 +208,11 @@ export class KanbanBoardComponent implements OnInit {
   
     this.http.put(`http://localhost:8081/tickets/${ticketId}`, body, { headers }).subscribe(
       response => {
-        console.log('Resposta da API:', response); // Log para verificar a resposta da API
+        console.log('Resposta da API após atualização:', response); // Log para verificar o retorno
         this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
+  
+        // Opcional: Atualize a interface após a confirmação da API
+        this.loadTickets();
       },
       error => {
         console.error('Erro ao atualizar status do chamado', error);
