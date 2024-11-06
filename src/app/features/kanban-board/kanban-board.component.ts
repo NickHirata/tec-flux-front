@@ -115,25 +115,30 @@ export class KanbanBoardComponent implements OnInit {
     }
   }
 
+  // Função para normalizar strings (remover acentos)
+  private normalizeString(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   initializeBoardColumns(tickets: any[]) {
     this.boardColumns.forEach(column => column.tasks = []);
 
     tickets.forEach(ticket => {
-      const prioridade = this.prioridades.find(p => p.value === ticket.priorityId);
-      console.log('Ticket ID:', ticket.id, 'Priority ID:', ticket.priorityId, 'Prioridade Encontrada:', prioridade);
+      const normalizedPriorityName = this.normalizeString(ticket.priorityName);
+      const prioridade = this.prioridades.find(p => this.normalizeString(p.label) === normalizedPriorityName);
       
       const task: Task = {
         id: ticket.id,
         nome: ticket.title,
-        departamento: ticket.departmentId,
+        departamento: ticket.departmentId, // Certifique-se de que este campo existe
         descricao: ticket.description,
-        prioridadeId: ticket.priorityId,
-        prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
+        prioridadeId: prioridade ? prioridade.value : 0, // Ajuste conforme necessário
+        prioridadeNome: ticket.priorityName || 'Desconhecida',
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
-        dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
-        assignedUserId: ticket.assignedUserId || null,
-        historico: []
+        dataResolucao: ticket.dueDate ? new Date(ticket.dueDate) : null,
+        assignedUserId: ticket.userAssignedName ? ticket.userAssignedName : null,
+        historico: [] // Se houver um histórico a ser carregado, ajuste aqui
       };
 
       switch (ticket.statusId) {
@@ -224,30 +229,22 @@ export class KanbanBoardComponent implements OnInit {
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
     this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
-      async (response) => {
-        const prioridade = this.prioridades.find(p => p.value === response.priorityId);
-        // Atualizar `selectedTask` com os dados completos do chamado
+      (response) => {
         this.selectedTask = {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 10,
-          prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
+          prioridadeId: response.priorityId || 10, // ajuste conforme necessário
+          prioridadeNome: response.priorityName || 'Desconhecida',
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
           assignedUserId: response.assignedUserId || null,
           historico: response.history || []
         };
-  
-        // Carregar departamentos
-        this.loadDepartamentos();
-  
-        // Carregar funcionários e aguardar o término
-        await this.fetchEmployees();
-  
-        // Abrir o diálogo após os funcionários serem carregados
+
+        console.log('Prioridade selecionada:', this.selectedTask.prioridadeNome);
         this.detalheDialog = true;
       },
       (error) => {
@@ -255,7 +252,7 @@ export class KanbanBoardComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao carregar detalhes do chamado' });
       }
     );
-  }  
+  }
 
   saveTaskDetails() {
     if (this.selectedTask) {

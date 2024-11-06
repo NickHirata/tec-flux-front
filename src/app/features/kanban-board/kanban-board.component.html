@@ -75,14 +75,14 @@
       <div class="field">
         <label>Prioridade</label>
         <p-dropdown
-          [(ngModel)]="selectedTask.prioridadeId"
+          [(ngModel)]="selectedTask.prioridadeNome"
           [options]="prioridades"
           optionLabel="label"
-          optionValue="value"
+          optionValue="label"
           placeholder="Selecione a Prioridade"
           [disabled]="true"
         ></p-dropdown>
-      </div>      
+      </div>          
       <div class="field">
         <label>Data de Criação</label>
         <p-calendar [(ngModel)]="selectedTask.dataCriacao" [disabled]="true"></p-calendar>
