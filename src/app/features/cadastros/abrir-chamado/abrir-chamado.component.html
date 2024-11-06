@@ -28,7 +28,6 @@
               <th>Status</th>
               <th>Prioridade</th>
               <th>Atribuído a</th>
-              <th>Detalhes</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-chamado>
@@ -39,9 +38,6 @@
                 <td>{{ chamado.statusName }}</td> <!-- Exibe o status do chamado -->
                 <td>{{ chamado.priorityName }}</td> <!-- Exibe a prioridade do chamado -->
                 <td>{{ chamado.userAssignedName ? chamado.userAssignedName : 'Não atribuído' }}</td> <!-- Exibe o usuário atribuído ou "Não atribuído" -->
-              <td>
-                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="verDetalhes(chamado)"></button>
-              </td>
             </tr>
           </ng-template>
         </p-table>
