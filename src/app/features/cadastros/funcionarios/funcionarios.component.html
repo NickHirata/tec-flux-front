@@ -69,11 +69,17 @@
             </div>
             <div class="field">
               <label for="phone">Telefone do Funcionário</label>
-              <input id="phone" pInputText formControlName="phone" (input)="onPhoneInput($event)" />
+              <input 
+                id="phone" 
+                pInputText 
+                formControlName="phone" 
+                (input)="onPhoneInput($event)" 
+                maxlength="15" 
+              />
               <div *ngIf="userForm.controls['phone'].invalid && userForm.controls['phone'].touched" class="error">
                 Telefone é obrigatório.
               </div>
-            </div>            
+            </div>                      
             <div class="field">
               <label for="position">Cargo do Funcionário</label>
               <input id="position" pInputText formControlName="position" />
