@@ -204,22 +204,38 @@ export class KanbanBoardComponent implements OnInit {
 
   updateTicketStatus(ticketId: number, statusName: string) {
     const headers = this.getAuthHeaders();
-    const body = { status: statusName }; // Envia o status no corpo da solicitação
+    
+    // Mapeie o nome do status para o ID correspondente
+    const statusIdMap: { [key: string]: number } = {
+      'OPEN': 1,
+      'IN_PROGRESS': 2,
+      'RESOLVED': 3
+    };
   
-    this.http.put(`http://localhost:8081/tickets/${ticketId}`, body, { headers }).subscribe(
-      response => {
-        console.log('Resposta da API após atualização:', response); // Log para verificar o retorno
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
+    const statusId = statusIdMap[statusName];
   
-        // Opcional: Atualize a interface após a confirmação da API
-        this.loadTickets();
-      },
-      error => {
-        console.error('Erro ao atualizar status do chamado', error);
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
-      }
-    );
-  }  
+    if (statusId) {
+      const body = { statusId }; // Envia o ID do status no corpo da solicitação
+  
+      this.http.put(`http://localhost:8081/tickets/${ticketId}`, body, { headers }).subscribe(
+        response => {
+          console.log('Resposta da API após atualização:', response); // Log para verificar o retorno
+          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
+  
+          // Opcional: Atualize a interface após a confirmação da API
+          this.loadTickets();
+        },
+        error => {
+          console.error('Erro ao atualizar status do chamado', error);
+          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
+        }
+      );
+    } else {
+      console.error('Status inválido fornecido:', statusName);
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Status inválido fornecido' });
+    }
+  }
+  
 
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
