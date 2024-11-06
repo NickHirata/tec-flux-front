@@ -80,10 +80,13 @@ export class KanbanBoardComponent implements OnInit {
       this.companyId = Number(storedCompanyId);
       this.departmentId = Number(storedDepartmentId);
       this.loadTickets();
+      this.loadDepartamentos(); // Verifique se esta chamada está presente
+      this.fetchEmployees(); // Verifique se esta chamada está presente
     } else {
       this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Company ID ou Department ID não encontrado. Por favor, faça login novamente.' });
     }
   }
+  
 
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('accessToken');
