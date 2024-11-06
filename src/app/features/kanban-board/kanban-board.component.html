@@ -27,6 +27,8 @@
               (click)="openTaskDialog(task)"
             >
               {{ task.nome }}
+              <br>
+              <strong>Prioridade:</strong> {{ task.prioridadeNome }}
             </div>
           </div>
         </div>
@@ -41,8 +43,8 @@
     <div *ngIf="selectedTask">
       <div class="field">
         <label>Assunto</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.nome" />
-      </div>
+        <input type="text" pInputText [(ngModel)]="selectedTask.nome" readonly />
+      </div>    
       <div class="field">
         <label>Departamento</label>
         <p-dropdown
@@ -70,7 +72,6 @@
           </ng-template>
         </p-dropdown>
       </div>
-      
       <div class="field">
         <label>Prioridade</label>
         <p-dropdown
@@ -79,20 +80,20 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Selecione a Prioridade"
-          required
+          [disabled]="true"
         ></p-dropdown>
-      </div>
+      </div>      
       <div class="field">
         <label>Data de Criação</label>
-        <p-calendar [(ngModel)]="selectedTask.dataCriacao"></p-calendar>
+        <p-calendar [(ngModel)]="selectedTask.dataCriacao" [disabled]="true"></p-calendar>
       </div>
       <div class="field">
         <label>Data de Resolução</label>
-        <p-calendar [(ngModel)]="selectedTask.dataResolucao"></p-calendar>
+        <p-calendar [(ngModel)]="selectedTask.dataResolucao" [disabled]="true"></p-calendar>
       </div>
       <div class="field">
         <label>Descrição da Atividade</label>
-        <input type="text" pInputText [(ngModel)]="selectedTask.descricao"/>
+        <input type="text" pInputText [(ngModel)]="selectedTask.descricao" readonly />
       </div>
     </div>
   </ng-template>

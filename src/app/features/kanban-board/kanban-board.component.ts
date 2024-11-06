@@ -18,6 +18,7 @@ interface Task {
   departamento: number;
   descricao: string;
   prioridadeId: number;
+  prioridadeNome: string;
   progresso: number;
   dataCriacao: Date;
   dataResolucao: Date | null;
@@ -62,7 +63,7 @@ export class KanbanBoardComponent implements OnInit {
     { label: 'ALTA', value: 12 },
     { label: 'MÉDIA', value: 13 },
     { label: 'BAIXA', value: 14 },
-  ];
+  ];  
 
   boardColumns: BoardColumn[] = [
     { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
@@ -115,24 +116,26 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   initializeBoardColumns(tickets: any[]) {
-    // Limpar tarefas existentes
     this.boardColumns.forEach(column => column.tasks = []);
 
     tickets.forEach(ticket => {
+      const prioridade = this.prioridades.find(p => p.value === ticket.priorityId);
+      console.log('Ticket ID:', ticket.id, 'Priority ID:', ticket.priorityId, 'Prioridade Encontrada:', prioridade);
+      
       const task: Task = {
         id: ticket.id,
         nome: ticket.title,
         departamento: ticket.departmentId,
         descricao: ticket.description,
-        prioridadeId: ticket.priorityId || 14, // Definir prioridade padrão como 'BAIXA' (14) se não estiver definida
+        prioridadeId: ticket.priorityId,
+        prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
         progresso: this.getProgressValue(ticket.statusId),
         dataCriacao: new Date(ticket.createdAt),
         dataResolucao: ticket.resolvedAt ? new Date(ticket.resolvedAt) : null,
         assignedUserId: ticket.assignedUserId || null,
-        historico: [] // Carregado ao abrir o diálogo
+        historico: []
       };
 
-      // Mapeie o status do ticket para a coluna correspondente
       switch (ticket.statusId) {
         case 1:
           this.boardColumns[0].tasks.push(task);
@@ -222,26 +225,28 @@ export class KanbanBoardComponent implements OnInit {
     const headers = this.getAuthHeaders();
     this.http.get<any>(`http://localhost:8081/tickets/${task.id}`, { headers }).subscribe(
       async (response) => {
+        const prioridade = this.prioridades.find(p => p.value === response.priorityId);
         // Atualizar `selectedTask` com os dados completos do chamado
         this.selectedTask = {
           id: response.id,
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 14,
+          prioridadeId: response.priorityId || 10,
+          prioridadeNome: prioridade ? prioridade.label : 'Desconhecida',
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
           assignedUserId: response.assignedUserId || null,
           historico: response.history || []
         };
-
+  
         // Carregar departamentos
         this.loadDepartamentos();
-
+  
         // Carregar funcionários e aguardar o término
         await this.fetchEmployees();
-
+  
         // Abrir o diálogo após os funcionários serem carregados
         this.detalheDialog = true;
       },
@@ -250,14 +255,12 @@ export class KanbanBoardComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao carregar detalhes do chamado' });
       }
     );
-  }
+  }  
 
   saveTaskDetails() {
     if (this.selectedTask) {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
-        title: this.selectedTask.nome,
-        description: this.selectedTask.descricao,
         departmentId: this.selectedTask.departamento,
         assignedUserId: this.selectedTask.assignedUserId,
         priorityId: this.selectedTask.prioridadeId,
@@ -327,5 +330,4 @@ export class KanbanBoardComponent implements OnInit {
     }
     return 'Usuário não atribuído';
   }
-  
 }
