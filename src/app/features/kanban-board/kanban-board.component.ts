@@ -66,9 +66,9 @@ export class KanbanBoardComponent implements OnInit {
   ];  
 
   boardColumns: BoardColumn[] = [
-    { name: 'A Fazer', tasks: [], color: '#B3E5FC' },
-    { name: 'Em Progresso', tasks: [], color: '#64B5F6' },
-    { name: 'Concluído', tasks: [], color: '#0288D1' }
+    { name: 'A Fazer', tasks: [], color: '#B3E5FC' }, // OPEN
+    { name: 'Em Progresso', tasks: [], color: '#64B5F6' }, // IN_PROGRESS
+    { name: 'Concluído', tasks: [], color: '#0288D1' } // RESOLVED
   ];
 
   constructor(private messageService: MessageService, private http: HttpClient) {}
@@ -122,38 +122,38 @@ export class KanbanBoardComponent implements OnInit {
 
   initializeBoardColumns(tickets: any[]) {
     this.boardColumns.forEach(column => column.tasks = []);
-
+  
     tickets.forEach(ticket => {
-      const normalizedPriorityName = this.normalizeString(ticket.priorityName);
-      const prioridade = this.prioridades.find(p => this.normalizeString(p.label) === normalizedPriorityName);
-      
-      const task: Task = {
-        id: ticket.id,
-        nome: ticket.title,
-        departamento: ticket.departmentId, // Certifique-se de que este campo existe
-        descricao: ticket.description,
-        prioridadeId: prioridade ? prioridade.value : 0, // Ajuste conforme necessário
-        prioridadeNome: ticket.priorityName || 'Desconhecida',
-        progresso: this.getProgressValue(ticket.statusId),
-        dataCriacao: new Date(ticket.createdAt),
-        dataResolucao: ticket.dueDate ? new Date(ticket.dueDate) : null,
-        assignedUserId: ticket.userAssignedName ? ticket.userAssignedName : null,
-        historico: [] // Se houver um histórico a ser carregado, ajuste aqui
-      };
-
-      switch (ticket.statusId) {
-        case 1:
-          this.boardColumns[0].tasks.push(task);
-          break;
-        case 2:
-          this.boardColumns[1].tasks.push(task);
-          break;
-        case 3:
-          this.boardColumns[2].tasks.push(task);
-          break;
-        default:
-          this.boardColumns[0].tasks.push(task);
-          break;
+      // Verifica se o status da tarefa está entre os três desejados
+      if (['OPEN', 'IN_PROGRESS', 'RESOLVED'].includes(ticket.statusName)) {
+        const prioridade = this.prioridades.find(p => this.normalizeString(p.label) === this.normalizeString(ticket.priorityName));
+  
+        const task: Task = {
+          id: ticket.id,
+          nome: ticket.title,
+          departamento: ticket.departmentId,
+          descricao: ticket.description,
+          prioridadeId: prioridade ? prioridade.value : 0,
+          prioridadeNome: ticket.priorityName || 'Desconhecida',
+          progresso: this.getProgressValue(ticket.statusId),
+          dataCriacao: new Date(ticket.createdAt),
+          dataResolucao: ticket.dueDate ? new Date(ticket.dueDate) : null,
+          assignedUserId: ticket.userAssignedName ? ticket.userAssignedName : null,
+          historico: []
+        };
+  
+        // Adiciona a tarefa na coluna correta com base no status
+        switch (ticket.statusName) {
+          case 'OPEN':
+            this.boardColumns[0].tasks.push(task);
+            break;
+          case 'IN_PROGRESS':
+            this.boardColumns[1].tasks.push(task);
+            break;
+          case 'RESOLVED':
+            this.boardColumns[2].tasks.push(task);
+            break;
+        }
       }
     });
   }
@@ -177,54 +177,46 @@ export class KanbanBoardComponent implements OnInit {
 
   onTaskDrop(event: CdkDragDrop<Task[]>, columnIndex: number) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+  
       const movedTask = event.container.data[event.currentIndex];
-      const newStatusId = this.getStatusIdFromColumnIndex(columnIndex);
-
+      const newStatusName = this.getStatusNameFromColumnIndex(columnIndex);
+  
       // Atualize o status do chamado via API
-      this.updateTicketStatus(movedTask.id, newStatusId);
+      this.updateTicketStatus(movedTask.id, newStatusName);
     }
   }
-
-  getStatusIdFromColumnIndex(columnIndex: number): number {
+  
+  getStatusNameFromColumnIndex(columnIndex: number): string {
     switch (columnIndex) {
       case 0:
-        return 1;
+        return 'OPEN';
       case 1:
-        return 2;
+        return 'IN_PROGRESS';
       case 2:
-        return 3;
+        return 'RESOLVED';
       default:
-        return 1;
+        return 'OPEN';
     }
   }
 
-  updateTicketStatus(ticketId: number, statusId: number) {
+  updateTicketStatus(ticketId: number, statusName: string) {
     const headers = this.getAuthHeaders();
-    const body = { statusId };
-
-    this.http.put(`http://localhost:8081/tickets/${ticketId}/status`, body, { headers }).subscribe(
+    const body = { status: statusName }; // Envia o status no corpo da solicitação
+  
+    this.http.put(`http://localhost:8081/tickets/${ticketId}`, body, { headers }).subscribe(
       response => {
+        console.log('Resposta da API:', response); // Log para verificar a resposta da API
         this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Status do chamado atualizado' });
       },
       error => {
-        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
         console.error('Erro ao atualizar status do chamado', error);
+        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar o status do chamado' });
       }
     );
-  }
+  }  
 
   openTaskDialog(task: Task) {
     const headers = this.getAuthHeaders();
