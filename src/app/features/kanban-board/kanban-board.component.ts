@@ -58,10 +58,10 @@ export class KanbanBoardComponent implements OnInit {
   departmentId: number | null = null;
 
   prioridades: any[] = [
-    { label: 'CRÍTICO', value: 10 },
+    { label: 'CRITICO', value: 10 },
     { label: 'URGENTE', value: 11 },
     { label: 'ALTA', value: 12 },
-    { label: 'MÉDIA', value: 13 },
+    { label: 'MEDIA', value: 13 },
     { label: 'BAIXA', value: 14 },
   ];  
 
