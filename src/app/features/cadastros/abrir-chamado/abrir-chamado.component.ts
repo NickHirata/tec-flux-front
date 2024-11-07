@@ -145,6 +145,21 @@ export class AbrirChamadoComponent implements OnInit {
     );
   }
 
+  searchTerm: string = '';
+
+  filterChamados() {
+    if (this.searchTerm.trim()) {
+      this.chamados = this.chamados.filter(chamado =>
+        chamado.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        chamado.departmentName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        chamado.statusName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        chamado.priorityName.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.loadChamados(); // Recarrega a lista completa de chamados se o termo estiver vazio
+    }
+  }
+
   loadChamados() {
     const userId = sessionStorage.getItem('id');
     if (userId !== null) {
