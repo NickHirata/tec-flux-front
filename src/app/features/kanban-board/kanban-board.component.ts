@@ -254,7 +254,7 @@ export class KanbanBoardComponent implements OnInit {
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
           dataResolucao: response.resolvedAt ? new Date(response.resolvedAt) : null,
-          assignedUserId: response.assignedUserId || null,
+          assignedUserId: response.user_assigned_id || null,
           historico: response.history || []
         };
 
@@ -273,10 +273,11 @@ export class KanbanBoardComponent implements OnInit {
       const headers = this.getAuthHeaders();
       const updatedTicket = {
         departmentId: this.selectedTask.departamento,
-        assignedUserId: this.selectedTask.assignedUserId,
+        user_assigned_id: this.selectedTask.assignedUserId, // Altere para o nome correto do campo no banco de dados
         priorityId: this.selectedTask.prioridadeId,
-        // Inclua outros campos necessários
-      };
+      };      
+
+      console.log('Dados enviados para atualização:', updatedTicket);
 
       this.http.put(`http://localhost:8081/tickets/${this.selectedTask.id}`, updatedTicket, { headers }).subscribe(
         response => {
