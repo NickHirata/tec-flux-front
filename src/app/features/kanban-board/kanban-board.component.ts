@@ -249,7 +249,7 @@ export class KanbanBoardComponent implements OnInit {
           nome: response.title,
           departamento: response.departmentId,
           descricao: response.description,
-          prioridadeId: response.priorityId || 10, // ajuste conforme necessário
+          prioridadeId: response.priorityId,
           prioridadeNome: response.priorityName || 'Desconhecida',
           progresso: this.getProgressValue(response.statusId),
           dataCriacao: new Date(response.createdAt),
