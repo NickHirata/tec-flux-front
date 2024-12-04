@@ -32,7 +32,6 @@
               <th>Departamento</th>
               <th>Status</th>
               <th>Prioridade</th>
-              <th>Atribuído a</th>
               <th>Ações</th>
             </tr>
           </ng-template>
@@ -42,7 +41,6 @@
               <td>{{ chamado.departmentName }}</td>
               <td>{{ chamado.statusName }}</td>
               <td>{{ chamado.priorityName }}</td>
-              <td>{{ chamado.userAssignedName ? chamado.userAssignedName : 'Não atribuído' }}</td>
               <td>
                 <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="excluirChamado(chamado.id)"></button>
               </td>
