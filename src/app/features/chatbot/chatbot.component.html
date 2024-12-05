@@ -4,15 +4,15 @@
       <img src="../../../assets/chatbot-icon.png" alt="FluxBot" class="robot-icon" />
       FluxBot
     </h2>
-    <div class="chatbot-messages">
-      <div
+    <div
         *ngFor="let message of messages"
         [ngClass]="{
           'user-message': message.isUser,
           'bot-message': !message.isUser
         }"
       >
-        <p-message [severity]="message.isUser ? 'success' : 'info'" [text]="message.content"></p-message>
+      <div class="formatted-text">
+          {{ message.content }}
       </div>
     </div>
 

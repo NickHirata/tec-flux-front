@@ -51,3 +51,23 @@
   margin-right: 10px; /* espaçamento entre o ícone e o texto */
 }
 
+.formatted-text {
+  white-space: pre-wrap; /* Quebra linhas com \n */
+  word-wrap: break-word; /* Quebra linhas muito longas */
+}
+ 
+.user-message {
+  text-align: right;
+  background-color: #d1e7dd;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+ 
+.bot-message {
+  text-align: left;
+  background-color: #b1e4fa;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+}

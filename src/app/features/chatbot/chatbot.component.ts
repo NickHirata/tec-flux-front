@@ -58,7 +58,7 @@ export class ChatbotComponent implements OnInit {
 
   formatResponse(response: string): string {
     // Converte quebras de linha para <br> tags
-    return response.replace(/\n/g, '<br>');
+    return response;
   }
 
   goBack() {
